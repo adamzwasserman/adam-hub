@@ -1,0 +1,297 @@
+/* Adam Zachary Wasserman — Hub Page */
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #111116;
+  --border: #1e1e26;
+  --border-warm: #2a2520;
+  --text: #c8c8d0;
+  --text-dim: #9a9aa8;
+  --text-bright: #e8e8f0;
+  --red: #e63946;
+  --red-dim: #e6394618;
+  --green: #2a9d8f;
+  --green-dim: #2a9d8f18;
+  --gold: #e9c46a;
+  --gold-dim: #e9c46a18;
+  --mono: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
+  --serif: 'Literata', 'Literata Fallback', Georgia, serif;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Courier New'), local('Courier');
+  size-adjust: 95%;
+  ascent-override: 100%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Literata Fallback';
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 103%;
+  ascent-override: 95%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ===== LAYOUT ===== */
+
+.hub {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 6rem 2rem 4rem;
+}
+
+/* ===== IDENTITY BLOCK ===== */
+
+.hub__identity {
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.hub__name {
+  font-family: var(--mono);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.hub__tagline {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 0.25rem;
+}
+
+.hub__location {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ===== SECTIONS ===== */
+
+.hub__section {
+  margin-bottom: 3.5rem;
+}
+
+.hub__section-title {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--red-dim);
+}
+
+.hub__section-title--green {
+  color: var(--green);
+  border-bottom-color: var(--green-dim);
+}
+
+.hub__section-title--gold {
+  color: var(--gold);
+  border-bottom-color: var(--gold-dim);
+}
+
+/* ===== ITEMS ===== */
+
+.hub__item {
+  margin-bottom: 1.5rem;
+}
+
+.hub__item-name {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 0.2rem;
+}
+
+.hub__item-name a {
+  color: var(--text-bright);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.2s;
+}
+
+.hub__item-name a:hover {
+  border-color: var(--red);
+}
+
+.hub__item-desc {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ===== PROJECT TABLE ===== */
+
+.hub__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.hub__table th {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.hub__table td {
+  font-size: 0.9rem;
+  padding: 0.6rem 0.75rem 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.hub__table td:first-child {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  white-space: nowrap;
+}
+
+.hub__table td:first-child a {
+  color: var(--text-bright);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.2s;
+}
+
+.hub__table td:first-child a:hover {
+  border-color: var(--green);
+}
+
+.hub__table td:last-child {
+  color: var(--text-dim);
+}
+
+/* ===== BACKGROUND BLOCK ===== */
+
+.hub__prose {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+.hub__prose p + p {
+  margin-top: 1rem;
+}
+
+/* ===== LINKS LIST ===== */
+
+.hub__links {
+  list-style: none;
+}
+
+.hub__links li {
+  margin-bottom: 0.6rem;
+}
+
+.hub__links a {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.hub__links a:hover {
+  color: var(--text-bright);
+  border-color: var(--text-dim);
+}
+
+.hub__links .hub__link-label {
+  color: var(--text-dim);
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+
+/* ===== CONTACT ===== */
+
+.hub__contact {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.hub__contact-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.hub__contact-list a {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.hub__contact-list a:hover {
+  color: var(--text-bright);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 600px) {
+  .hub {
+    padding: 4rem 1.25rem 3rem;
+  }
+
+  .hub__table td:first-child {
+    white-space: normal;
+  }
+
+  .hub__contact-list {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}

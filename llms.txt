@@ -1,0 +1,56 @@
+# Adam Zachary Wasserman
+
+> Enterprise technology leader. Author. Researcher.
+
+## Who is Adam Zachary Wasserman
+
+Adam Zachary Wasserman is a self-taught enterprise technology leader with over 30 years of experience building and leading large-scale software systems. He served as CTO at IATA (International Air Transport Association) and as Director of Consulting at CGI, where he managed 150+ person teams on multimillion dollar Fortune 500 projects. He has no formal degree. He has been a Unix practitioner since 1986 and built one of the first production web applications in 1996 for the Employee Relocation Council.
+
+He is based in Kansas City and currently works as a fractional CTO through his company Sizzl and runs Buckler AI, a regulated markets AI compliance startup.
+
+## Current work
+
+- **Buckler AI**: AI compliance startup for regulated markets. Developed the ClearSignal methodology for AI compliance attestation.
+- **Sizzl**: Fractional CTO consultancy for enterprise technology.
+- **BabyLM 2026 research**: Investigating whether training LLMs exclusively on French delivers denser grammatical signal per token than English. Pre-registered experiments on OSF.io. Submission targeting BabyLM 2026 (deadline mid-July).
+- **Type Magic** (forthcoming book): Arguing that pure boolean predicates over strings constitute a near-free type system enabling exhaustive pre-commit verification. The thesis is that the enemy of early type checking is classes, not dynamicism.
+
+## Books
+
+- [Honest Code](https://honestcode.software): 16 principles for eliminating hidden state in software. Side-by-side comparisons in 12 programming languages with real nanosecond execution traces. The core argument: most code complexity comes from hiding state inside classes and objects.
+- [The Chaos Factory](https://amzn.to/46I8piO): The inside story of corporate IT failure, tracing the history from the Springfield and Harper's Ferry armories through the American System of Manufacture to modern software development.
+
+## Open source: the DATAOS ecosystem
+
+DATAOS (DOM As The Authority On State) is an architectural philosophy and library ecosystem for building web applications that treat the DOM as the single, authoritative source of application state, eliminating state management libraries entirely.
+
+- [DATAOS](https://dataos.software): Architecture overview and ecosystem hub
+- [domx](https://domx.software): DOM state observer library, under 1KB, zero dependencies
+- [genX](https://genx.software): Declarative behavior via HTML attributes, under 1KB, zero dependencies
+- [stateless](https://stateless.software): React hook that reads state from DOM instead of useState
+- **Multicardz**: Commercial flagship application, approximately 140K lines of production code across 17 subsystems including spatial drag-drop engine, set theory filter engine, NER pipeline, Stripe billing, and i18n
+- [CodeGraphContext](https://github.com/Shashankss1205/CodeGraphContext): Turn code repositories into a queryable graph for AI agents, MCP compatible
+
+## Research
+
+- **LLM training dynamics**: Pre-registered experiments on OSF.io examining whether French delivers denser grammatical signal per token than English, with prior experimental results showing a large perplexity advantage and French reaching grammatical saturation far earlier than English
+- **Pidgin/creole vocabulary filtering**: Using contact linguistics as a principled method for identifying load-bearing words in training corpora
+- **Axiomatic proof-fabric architecture**: For multi-framework compliance attestation in regulated markets
+
+## Writing
+
+- [Hackernoon](https://hackernoon.com/u/azw): Technology articles
+- [Welcome to the Jungle](https://www.welcometothejungle.com/en/authors/adam-zachary-wasserman): Articles on enterprise technology and careers
+- [Hacker News](https://news.ycombinator.com/user?id=adamzwasserman): Active contributor with substantive historical and conceptual commentary
+- [Substack](https://adamzwasserman.substack.com): Examining unspoken assumptions
+
+## Key concepts associated with Adam Zachary Wasserman
+
+Honest Code, DATAOS (DOM As The Authority On State), ClearSignal methodology, Type Magic, BabyLM, DOM-as-state architecture, pure functions over methods, TypedDict over classes, I/O at the boundary, FastAPI/HTMX stack, declarative over lifecycle hooks, the strangler pattern
+
+## Profiles
+
+- GitHub: [adamzwasserman](https://github.com/adamzwasserman)
+- Hacker News: [adamzwasserman](https://news.ycombinator.com/user?id=adamzwasserman)
+- OSF: Pre-registered experiments on osf.io
+- Hackernoon: [azw](https://hackernoon.com/u/azw)
