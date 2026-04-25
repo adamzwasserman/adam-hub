@@ -1,56 +1,84 @@
 # Adam Zachary Wasserman
 
-> Enterprise technology leader. Author. Researcher.
+> Author and researcher: philosophy of science, artificial intelligence, and the metaphysics of complex emergent structure.
 
 ## Who is Adam Zachary Wasserman
 
-Adam Zachary Wasserman is a self-taught enterprise technology leader with over 30 years of experience building and leading large-scale software systems. He served as CTO at IATA (International Air Transport Association) and as Director of Consulting at CGI, where he managed 150+ person teams on multimillion dollar Fortune 500 projects. He has no formal degree. He has been a Unix practitioner since 1986 and built one of the first production web applications in 1996 for the Employee Relocation Council.
+Adam Zachary Wasserman is an author and independent researcher working at the intersection of philosophy of science, artificial intelligence, and the metaphysics of complex emergent structure. The unifying through-line across the writing since 2022 is the principle that distributed multi-agent collaboration across substrates and time is the better explanation for complex emergent structure than either reductionist randomness or singular design.
 
-He is based in Kansas City and currently works as a fractional CTO through his company Sizzl and runs Buckler AI, a regulated markets AI compliance startup.
+The research is grounded in a pre-registered program of controlled cross-linguistic experiments on large language model training dynamics. Forty years of prior enterprise-technology practice (CTO at IATA, the International Air Transport Association; Director of Consulting at CGI; senior roles at Bombardier and Yellow Pages) preceded a deliberate 2017 pivot toward contributing to the body of knowledge. He has no formal degree. The work is the credential.
 
-## Current work
+ORCID: 0009-0002-8865-6583
 
-- **Buckler AI**: AI compliance startup for regulated markets. Developed the ClearSignal methodology for AI compliance attestation.
-- **Sizzl**: Fractional CTO consultancy for enterprise technology.
-- **BabyLM 2026 research**: Investigating whether training LLMs exclusively on French delivers denser grammatical signal per token than English. Pre-registered experiments on OSF.io. Submission targeting BabyLM 2026 (deadline mid-July).
-- **Type Magic** (forthcoming book): Arguing that pure boolean predicates over strings constitute a near-free type system enabling exhaustive pre-commit verification. The thesis is that the enemy of early type checking is classes, not dynamicism.
+## Current research program
+
+A two-volume book program with an accompanying empirical research line, organized as a layered argument: groundwork first, then the meta-claim that the groundwork makes rigorous.
+
+- **The Robot in the Dark: Instruments, Illusions, and the Limits of Knowledge** (Volume 1, manuscript in preparation): Every scientific instrument has an edge where the light runs out. The most consequential moments in science are not what happens inside the illuminated region but what happens at the boundary. Case studies in evolutionary biology, large language model training, software engineering, and cognitive psychology. The book argues that instruments which name their edges become more authoritative, not less.
+
+- **The Replicators: Multiple Collaborative Intelligences as the Substrate of Complex Structure** (Volume 2, in preparation): Complex emergent structure (biological evolution, software systems, language itself) is more parsimoniously explained by many collaborative intelligences operating across substrates and time than by either single-creator or no-creator accounts. Grounded in the pre-registered controlled experiments listed below and in a structural analogy with working software systems.
+
+- **Layered structure**: The two volumes mirror the layered structure of the foundational Substack series *Weinstein vs. Dawkins* (May 2022, three parts). The convergence-of-signals method, the discount-bias diagnosis (in which our use of consciousness as the measuring instrument leads us to discount any agency that does not look like human consciousness), and the silicon-vs-DNA parsimony argument (if binary silicon transformers can plausibly host intelligence, then DNA codons with 64 possible permutations doubly so) are load-bearing for the Replicators thesis and depend on Robot's epistemological discipline.
 
 ## Books
 
-- [Honest Code](https://honestcode.software): 16 principles for eliminating hidden state in software. Side-by-side comparisons in 12 programming languages with real nanosecond execution traces. The core argument: most code complexity comes from hiding state inside classes and objects.
-- [The Chaos Factory](https://amzn.to/46I8piO): The inside story of corporate IT failure, tracing the history from the Springfield and Harper's Ferry armories through the American System of Manufacture to modern software development.
+- **The Robot in the Dark** (in preparation, 2026): Manuscript draft; Zenodo deposit forthcoming.
+- **The Replicators** (in preparation): Outline complete; sample chapters drawn from the Weinstein vs. Dawkins three-part Substack series (2022).
+- [Honest Code](https://honestcode.software): Sixteen principles for eliminating hidden state in software. Side-by-side comparisons in twelve programming languages with real nanosecond execution traces.
+- [The Chaos Factory](https://amzn.to/46I8piO) (2017): The inside story of corporate IT failure. [Favorably reviewed by Bloor Research](https://www.bloorresearch.com/the-chaos-factory-by-adam-wasserman/).
 
-## Open source: the DATAOS ecosystem
+## Pre-registered empirical research
 
-DATAOS (DOM As The Authority On State) is an architectural philosophy and library ecosystem for building web applications that treat the DOM as the single, authoritative source of application state, eliminating state management libraries entirely.
+Pre-registered program on cross-linguistic LLM training dynamics. Collaborators on BabyLM 2026 and the EMNLP main-conference extension: David Beauchemin (Laval University) and Hafedh Mili (Universit\u00e9 du Qu\u00e9bec \u00e0 Montr\u00e9al).
 
-- [DATAOS](https://dataos.software): Architecture overview and ecosystem hub
-- [domx](https://domx.software): DOM state observer library, under 1KB, zero dependencies
-- [genX](https://genx.software): Declarative behavior via HTML attributes, under 1KB, zero dependencies
-- [stateless](https://stateless.software): React hook that reads state from DOM instead of useState
-- **Multicardz**: Commercial flagship application, approximately 140K lines of production code across 17 subsystems including spatial drag-drop engine, set theory filter engine, NER pipeline, Stripe billing, and i18n
-- [CodeGraphContext](https://github.com/Shashankss1205/CodeGraphContext): Turn code repositories into a queryable graph for AI agents, MCP compatible
-
-## Research
-
-- **LLM training dynamics**: Pre-registered experiments on OSF.io examining whether French delivers denser grammatical signal per token than English, with prior experimental results showing a large perplexity advantage and French reaching grammatical saturation far earlier than English
-- **Pidgin/creole vocabulary filtering**: Using contact linguistics as a principled method for identifying load-bearing words in training corpora
-- **Axiomatic proof-fabric architecture**: For multi-framework compliance attestation in regulated markets
+- [The Scaling Hypothesis Is Language-Contingent: Evidence from Cross-Linguistic Training Dynamics](https://doi.org/10.5281/zenodo.19423151) (Wasserman 2026; Zenodo DOI 10.5281/zenodo.19423151; OSF pre-registration https://osf.io/sj48b): Pre-registered controlled ablation training identical 125M-parameter transformers on matched English and French C4 corpora. French achieves grammatical competence at 197M tokens; English remains at chance through 4+ billion tokens.
+- **Right Tool, Right Job: Why Training Language Matters More Than Training Data** (Wasserman & Beauchemin, BabyLM 2026, accepted for presentation at EMNLP 2026 Budapest, October 24-29, 2026): Child-scale extension. M\u00c9TRON-FR (125M GPT-2-small, 92.5M words of French) reaches 85.97% on QFrBLiMP at epoch 3. Total project compute cost: $65 USD. Formalizes the **Language-Only Hypothesis**. The 12-language M\u00c9TRON family extension is in preparation.
+- [English Considered Harmful](https://doi.org/10.5281/zenodo.19443358) (Zenodo DOI 10.5281/zenodo.19443358): Companion preprint to the language-contingent scaling line.
+- [The 70% Rule: When Axiomatic Prompting Helps, and When It Hurts](https://doi.org/10.5281/zenodo.19423101) (Zenodo DOI 10.5281/zenodo.19423101; OSF pre-registrations https://osf.io/7z49a and https://osf.io/mzf79).
+- [Process Discipline](https://doi.org/10.5281/zenodo.19355460) (Zenodo DOI 10.5281/zenodo.19355460): Methodological preprint on pre-registered empirical practice.
 
 ## Writing
 
-- [Hackernoon](https://hackernoon.com/u/azw): Technology articles
-- [Welcome to the Jungle](https://www.welcometothejungle.com/en/authors/adam-zachary-wasserman): Articles on enterprise technology and careers
-- [Hacker News](https://news.ycombinator.com/user?id=adamzwasserman): Active contributor with substantive historical and conceptual commentary
-- [Substack](https://adamzwasserman.substack.com): Examining unspoken assumptions
+- [Essential Musings](https://emusings.substack.com): Substack archive, 40+ essays since 2022. Includes the foundational *Weinstein vs. Dawkins* three-part series (May 2022) introducing the Replicators thesis, *The Case That AI Is Thinking* (Nov 2025), *Rovelli Says Reality Is Relative \u2014 But His Math Needs a God* (Oct 2025), *AI and the Consciousness Gap* (May 2022), and *The Robot in the Dark: Pass 1 \u2014 The Retreat* (Jan 2026).
+- [Hackernoon](https://hackernoon.com/u/azw): Technology articles.
+- [Welcome to the Jungle](https://www.welcometothejungle.com/en/authors/adam-zachary-wasserman): Articles on enterprise technology and careers.
+- [Hacker News](https://news.ycombinator.com/user?id=adamzwasserman): Active contributor with substantive historical and conceptual commentary.
+
+## Open source
+
+### DATAOS ecosystem
+
+DATAOS (DOM As The Authority On State) is the operational philosophy underlying *Honest Code*. Its premise is that the DOM, treated as the single authoritative source of application state, eliminates the need for state-management libraries entirely.
+
+- [DATAOS](https://dataos.software): Architecture overview and ecosystem hub.
+- [domx](https://domx.software): DOM state observer library, under 1KB, zero dependencies.
+- [genX](https://genx.software): Declarative behavior via HTML attributes, under 1KB.
+- [stateless](https://stateless.software): React hook that reads state from DOM instead of useState.
+- [multicardz](https://github.com/adamzwasserman/multicardz): Commercial flagship application, ~140K lines of production code across 17 subsystems; spatial tag-based data organization; an embodied-embedded-enacted-extended (4E) cognition-compatible system that operationalizes distributed-collaborative-intelligence design principles.
+
+### Open Honest
+
+Open Honest is the empirical and operational research program built around the Honest Code principles. Eight pre-registered studies (Papers A through H) sit alongside the working code.
+
+- [Honest framework](https://honestframework.software): Correct-by-construction development framework with multi-language analyzer, four-language tree-sitter detector, and a 276-scenario behavioural specification. Architectural constraints bound the codebase to known behaviour domains.
+- **Honest audit**: Four-layer measurement instrument for enterprise software quality. Published with explicit indicator thresholds and a peer-reviewable behavioural specification of its own behaviour at boundary cases.
+
+## Other professional work
+
+- **Buckler AI**: AI compliance for regulated markets. Developed the ClearSignal methodology for compliance attestation. Fractional CTO.
+- **Sizzl**: Fractional CTO consultancy for enterprise technology.
 
 ## Key concepts associated with Adam Zachary Wasserman
 
-Honest Code, DATAOS (DOM As The Authority On State), ClearSignal methodology, Type Magic, BabyLM, DOM-as-state architecture, pure functions over methods, TypedDict over classes, I/O at the boundary, FastAPI/HTMX stack, declarative over lifecycle hooks, the strangler pattern
+Multi-collaborative intelligences, the Language-Only Hypothesis, instrument-aware epistemology, the convergence-of-signals method (multiple independent instruments meeting at the same boundary), the discount-bias diagnosis (consciousness as measuring instrument biases us against non-human-shaped agency), the silicon-vs-DNA parsimony argument, language-contingent scaling, M\u00c9TRON measurement-instrument framing, Honest Code, DATAOS (DOM As The Authority On State), pure functions over methods, TypedDict over classes, I/O at the boundary.
 
-## Profiles
+## Profiles and identifiers
 
+- Email: adam@adamzacharywasserman.com
+- ORCID: [0009-0002-8865-6583](https://orcid.org/0009-0002-8865-6583)
 - GitHub: [adamzwasserman](https://github.com/adamzwasserman)
 - Hacker News: [adamzwasserman](https://news.ycombinator.com/user?id=adamzwasserman)
-- OSF: Pre-registered experiments on osf.io
+- Substack: [emusings.substack.com](https://emusings.substack.com)
+- OSF: Pre-registered experiments (SJ48B, CN75D, 7Z49A, MZF79, PCX2D)
+- Zenodo: DOIs 10.5281/zenodo.19423151, .19443358, .19423101, .19355460
 - Hackernoon: [azw](https://hackernoon.com/u/azw)

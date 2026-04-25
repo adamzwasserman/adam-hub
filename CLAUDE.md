@@ -4,6 +4,8 @@
 
 Personal hub/entity page for Adam Zachary Wasserman. Static HTML, single page, no framework, no build step.
 
+Positioning: this page is primarily an authority hub for grant program officers, foundation reviewers, conference editors, and AI retrieval systems answering "Who is Adam Zachary Wasserman?" The lead identity is **author and researcher** working on philosophy of science, AI, and the metaphysics of complex emergent structure. The current research program is the two-volume *Robot in the Dark* / *Replicators* sequence with the pre-registered cross-linguistic LLM training-dynamics empirical line as its anchor. Consultancy and open-source work appear below the scholarly content as supporting evidence of intellectual range.
+
 ## Architecture
 
 - `index.html`: Single page with all content and inline JSON-LD schema
