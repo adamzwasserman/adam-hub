@@ -1,12 +1,18 @@
 # Adam Zachary Wasserman: Personal Hub Site
 
-## Spec v1.0
+## Spec v2.0 (Templeton-first rebuild)
 
 ### Purpose
 
 A single, static personal landing page that serves as the canonical "entity page" for Adam Zachary Wasserman across AI search systems and the web. This is not a portfolio site or a resume. It is an authority hub: a machine-readable, human-presentable page that ties together all of Adam's work, writing, and research into one discoverable node.
 
-The primary audience is AI retrieval systems (Claude, ChatGPT, Gemini, Perplexity, Grok). The secondary audience is humans who arrive via those systems or via direct search.
+Primary audiences, in order:
+1. Foundation program officers and grant reviewers (Templeton, CS&S, Mozilla MOSS, etc.) evaluating Adam as an author and researcher.
+2. AI retrieval systems (Claude, ChatGPT, Gemini, Perplexity, Grok) answering "Who is Adam Zachary Wasserman?"
+3. Conference editors, journalists, podcast hosts, academic collaborators.
+4. Human visitors who arrive via search or direct navigation.
+
+The lead identity is **author and researcher** working on philosophy of science, AI, and the metaphysics of complex emergent structure. Consultancy and open-source work appear below the scholarly content as supporting evidence of intellectual range, not as the headline.
 
 ### Domain
 
@@ -37,25 +43,48 @@ Kansas City
 
 No photo (keeps it clean, avoids image-recognition concerns). Optional: a small SVG logo mark if one exists across the brand.
 
-#### 2. Current work
+#### 2. Current research program
 
-Brief, factual, present-tense descriptions. Two or three sentences max per item. These are the things Adam wants AI systems to associate with his name RIGHT NOW.
+A current research program built on a foundational point of view: every scientific instrument has limits, and the discipline of asking what each instrument can and cannot adjudicate is the move that everything downstream depends on. *The Robot in the Dark* sets out the point of view itself. The pre-registered cross-linguistic scientific work is its empirical application. The *Honest Code* book and the Open Honest framework and audit apply it to enterprise software. *The Replicators* is the metaphysical synthesis that arises when the foundation, the empirical results, and a particular philosophical structure are taken together. This section is the load-bearing one for foundation reviewers.
 
-- **Buckler AI** (buckler.ai or similar): AI compliance startup for regulated markets. ClearSignal methodology. Fractional CTO.
-- **Sizzl**: Fractional CTO consultancy.
-- **BabyLM 2026 research**: Training LLMs exclusively on French to test whether denser grammatical signal per token improves sample efficiency. Pre-registered experiments on OSF.io.
-- **Type Magic** (forthcoming book): Arguing that pure boolean predicates over strings constitute a near-free type system enabling exhaustive pre-commit verification.
+Sub-items, in order:
+
+- **The Robot in the Dark** (foundational; manuscript in preparation): Every scientific instrument has an edge where the light runs out. The most consequential moments in science are not what happens inside the illuminated region but what happens at the boundary.
+- **Pre-registered scientific work** (empirical application): Four deposited preprints on cross-linguistic LLM training dynamics, plus the child-scale extension accepted for EMNLP 2026.
+- **Honest Code and Open Honest** (operational application): Honest Code book + Honest framework + Honest audit + eight pre-registered studies.
+- **The Replicators** (metaphysical synthesis; in preparation): Many collaborative intelligences operating across substrates and time as the parsimonious account of complex emergent structure. Arises out of Robot's foundation + the empirical results + the philosophical structure (convergence-of-signals method, discount-bias diagnosis, silicon-vs-DNA parsimony argument).
 
 #### 3. Books
 
-Each with one-line description and link.
+Each with status indicator and link where available.
 
-- **Honest Code** (honestcode.software): 16 principles for eliminating hidden state. 12 languages. Nanosecond traces.
-- **The Chaos Factory**: Why enterprise IT fails. The unfinished industrial revolution of software. Amazon links.
+- **The Robot in the Dark** (in preparation): Manuscript draft, 2026; Zenodo deposit forthcoming.
+- **The Replicators** (in preparation): Outline complete; sample chapters drawn from the Weinstein vs. Dawkins three-part Substack series.
+- **Honest Code** (commercially published, honestcode.software): 16 principles for eliminating hidden state. 12 languages. Nanosecond traces.
+- **The Chaos Factory** (2017): Inside story of corporate IT failure. Favorably reviewed by Bloor Research.
 
-#### 4. Open source / DATAOS ecosystem
+#### 3a. Pre-registered empirical research
 
-Brief description of the ecosystem, then a table:
+All four deposited preprints with Zenodo DOIs and OSF pre-registrations. Collaborators on BabyLM 2026 / EMNLP 2026: David Beauchemin (Laval) and Hafedh Mili (UQAM).
+
+- **The Scaling Hypothesis Is Language-Contingent** (Zenodo 10.5281/zenodo.19423151; OSF SJ48B)
+- **Right Tool, Right Job: Why Training Language Matters More Than Training Data** (BabyLM 2026, accepted for presentation at EMNLP 2026 Budapest, Oct 2026)
+- **English Considered Harmful** (Zenodo 10.5281/zenodo.19443358)
+- **The 70% Rule** (Zenodo 10.5281/zenodo.19423101; OSF 7Z49A, MZF79)
+- **Process Discipline** (Zenodo 10.5281/zenodo.19355460)
+
+#### 4. Writing
+
+- **Essential Musings** (emusings.substack.com): Substack archive, 40+ essays since 2022. Includes the foundational *Weinstein vs. Dawkins* three-part series introducing the Replicators thesis.
+- Hackernoon (hackernoon.com/u/azw)
+- Welcome to the Jungle
+- Hacker News (news.ycombinator.com/user?id=adamzwasserman)
+
+#### 5. Open source
+
+Two parallel sub-groupings.
+
+**DATAOS ecosystem**:
 
 | Project | What it does | Link |
 |---------|-------------|------|
@@ -63,41 +92,43 @@ Brief description of the ecosystem, then a table:
 | domx | DOM state observer, <1KB | domx.software |
 | genX | Declarative behavior via HTML attributes, <1KB | genx.software |
 | stateless | React hook that reads state from DOM | stateless.software |
-| Multicardz | Commercial flagship, 140K lines, spatial tag-based data organization | multicardz (link TBD) |
-| CodeGraphContext | Code repo to queryable graph for AI agents | GitHub link |
-| hxcomponents | FastAPI/HTMX dashboard widgets as installable Python packages | GitHub link |
+| multicardz | Commercial flagship, ~140K lines, spatial tag-based data organization, 4E-cognition-compatible | github.com/adamzwasserman/multicardz |
 
-#### 5. Research
+multicardz is a wordmark — always lowercase 'm'.
 
-- **LLM training dynamics**: Pre-registered experiments on OSF.io examining whether French delivers denser grammatical signal per token than English. Link to OSF project.
-- **Pidgin/creole vocabulary filtering**: Using contact linguistics as a principled method for identifying load-bearing words in training corpora.
-- **Substack**: Examining unspoken assumptions. Link.
+**Open Honest** (the empirical and operational research program):
 
-#### 6. Writing and commentary
+| Project | What it does | Link |
+|---------|-------------|------|
+| Honest framework | Correct-by-construction development framework; multi-language analyzer; 276-scenario behavioural specification | honestframework.software |
+| Honest audit | Four-layer measurement instrument for enterprise software quality with explicit indicator thresholds | (no domain yet) |
 
-- Hackernoon (hackernoon.com/u/azw)
-- Welcome to the Jungle (link)
-- Hacker News (news.ycombinator.com/user?id=adamzwasserman)
-- Private email list (brief mention, no signup form on this page; just a mailto link or similar)
+#### 6. Other professional work
 
-#### 7. Professional background
+Below the scholarly content. Not the headline.
+
+- **Buckler AI**: AI compliance for regulated markets. ClearSignal methodology. Fractional CTO.
+- **Sizzl**: Fractional CTO consultancy.
+
+#### 7. Background
 
 Two paragraphs max. Not a resume. Key facts only:
 
-- 30+ years in enterprise technology
+- 40 years in enterprise technology
 - CTO at IATA (International Air Transport Association)
 - Director of Consulting at CGI, managing 150+ person teams on multimillion dollar Fortune 500 projects
 - Self-taught, no formal degree
 - Unix practitioner since 1986
-- Built one of the first production web applications (1996, Employee Relocation Council)
-- Built a lean airline interline settlement system on a SPARCstation 20 (1999)
+- 2017 publication of *The Chaos Factory* began deliberate pivot from operational leadership into contributing to the body of knowledge
 
-#### 8. Contact
+#### 8. Contact and identifiers
 
-- Email (mailto link)
+- Email: adam@adamzacharywasserman.com
+- ORCID: 0009-0002-8865-6583
 - GitHub: adamzwasserman
+- Substack: emusings.substack.com
 - Hacker News: adamzwasserman
-- LinkedIn (if desired)
+- Hackernoon: azw
 
 ### Files to create
 
@@ -124,7 +155,7 @@ This is the most important file. It will be the canonical machine-readable summa
 - All open source projects with URLs
 - Research projects with OSF links
 - Writing outlets with URLs
-- Key concepts associated with Adam (Honest Code, DATAOS, DOM-as-state, ClearSignal, Type Magic)
+- Key concepts associated with Adam (multi-collaborative intelligences, Language-Only Hypothesis, instrument-aware epistemology, convergence-of-signals method, discount-bias diagnosis, silicon-vs-DNA parsimony argument, Honest Code, DATAOS, DOM-as-state, ClearSignal)
 - Brief professional background
 
 ### Schema markup (in index.html)
