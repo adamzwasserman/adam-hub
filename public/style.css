@@ -99,6 +99,17 @@ body {
   text-transform: uppercase;
 }
 
+.hub__location a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.2s;
+}
+
+.hub__location a:hover {
+  border-color: var(--red);
+}
+
 /* ===== SECTIONS ===== */
 
 .hub__section {
