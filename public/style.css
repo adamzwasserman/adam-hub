@@ -158,6 +158,17 @@ body {
   line-height: 1.6;
 }
 
+.hub__item-desc a {
+  color: var(--red);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.2s;
+}
+
+.hub__item-desc a:hover {
+  border-color: var(--red);
+}
+
 /* ===== PROJECT TABLE ===== */
 
 .hub__table {
