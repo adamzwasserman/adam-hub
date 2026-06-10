@@ -24,7 +24,7 @@ A current research program built on a foundational point of view: every scientif
 
 ## Books
 
-- **The Robot in the Dark** (in preparation, 2026): Manuscript draft; Zenodo DOI 10.5281/zenodo.20382929 (https://doi.org/10.5281/zenodo.20382929).
+- **The Robot in the Dark** (in preparation, 2026): Manuscript draft; Zenodo DOI 10.5281/zenodo.20382928 (https://doi.org/10.5281/zenodo.20382928).
 - **The Replicators** (in preparation): Outline complete; sample chapters drawn from the Weinstein vs. Dawkins three-part Substack series (2022).
 - [Honest Code](https://honestcode.software): Sixteen principles for eliminating hidden state in software. Side-by-side comparisons in twelve programming languages with real nanosecond execution traces.
 - [The Chaos Factory](https://amzn.to/46I8piO) (2017): The inside story of corporate IT failure. [Favorably reviewed by Bloor Research](https://www.bloorresearch.com/the-chaos-factory-by-adam-wasserman/).
