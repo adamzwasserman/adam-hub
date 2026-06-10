@@ -56,7 +56,6 @@ DATAOS (DOM As The Authority On State) is the operational philosophy underlying 
 - [domx](https://domx.software): DOM state observer library, under 1KB, zero dependencies.
 - [genX](https://genx.software): Declarative behavior via HTML attributes, under 1KB.
 - [stateless](https://stateless.software): React hook that reads state from DOM instead of useState.
-- [multicardz](https://github.com/adamzwasserman/multicardz): Commercial flagship application, ~140K lines of production code across 17 subsystems; spatial tag-based data organization; an embodied-embedded-enacted-extended (4E) cognition-compatible system that operationalizes distributed-collaborative-intelligence design principles.
 
 ### Open Honest
 
@@ -69,6 +68,7 @@ Open Honest is the empirical and operational research program built around the H
 
 - **Buckler AI**: AI compliance for regulated markets. Developed the ClearSignal methodology for compliance attestation. Fractional CTO.
 - **Sizzl**: Fractional CTO consultancy for enterprise technology.
+- [multicardz](https://www.multicardz.com): Next-generation kanban. Add rows, change the criteria used to build rows and columns on demand, and handle sets of over 1 million cards in under 1 second. ~140K lines of production code across 17 subsystems.
 
 ## Key concepts associated with Adam Zachary Wasserman
 
@@ -82,5 +82,5 @@ Multi-collaborative intelligences, the Language-Only Hypothesis, instrument-awar
 - Hacker News: [adamzwasserman](https://news.ycombinator.com/user?id=adamzwasserman)
 - Substack: [emusings.substack.com](https://emusings.substack.com)
 - OSF: Pre-registered experiments (SJ48B, CN75D, 7Z49A, MZF79, PCX2D)
-- Zenodo: DOIs 10.5281/zenodo.19423151, .19443358, .19423101, .19355460, .20382929
+- Zenodo: DOIs 10.5281/zenodo.19423151, .19443358, .19423101, .19355460, .20382928
 - Hackernoon: [azw](https://hackernoon.com/u/azw)
