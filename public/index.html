@@ -136,8 +136,8 @@
       "name": "English Considered Harmful",
       "author": {"@id": "https://adamzacharywasserman.com/#person"},
       "datePublished": "2026",
-      "identifier": "10.5281/zenodo.19443358",
-      "url": "https://doi.org/10.5281/zenodo.19443358",
+      "identifier": "10.5281/zenodo.19443357",
+      "url": "https://doi.org/10.5281/zenodo.19443357",
       "description": "Pre-registered companion to the language-contingent scaling work, examining the consequences for AI research methodology of treating English as the universal training substrate."
     },
     {
@@ -235,8 +235,53 @@
       <p>A single discipline runs under both halves of the work, and it proceeds by negation. In the research, by falsification: ruling out false explanations and naming where each instrument stops seeing. In the software, by construction: eliminating entire classes of error by making them impossible to build. Knowledge by ruling out, correctness by ruling out. It is, in the old word for knowing by negation, apophatic.</p>
     </div>
 
-    <figure style="margin: 1.5rem 0 0;">
-      <img src="three-tiers-discovery.png" alt="How the three tiers build an evolving discovery: the epistemological foundation governs every stage, the empirical layer tests claims, the ontological layer proposes them, and the frontier advances toward the open question." style="width: 100%; height: auto; border: 1px solid var(--border); border-radius: 4px;">
+    <figure class="tiers">
+      <figcaption class="tiers__title">How the three tiers build an evolving discovery</figcaption>
+      <p class="tiers__subtitle">A claim is proposed, tested under the rules, and what the evidence supports becomes the ground for the next, deeper claim.</p>
+
+      <div class="tiers__scroll">
+        <div class="tiers__grid">
+          <div class="tiers__rowlabel" aria-hidden="true"></div>
+          <div class="tiers__stage">supported</div>
+          <div class="tiers__stage tiers__stage--here">being established<br>you are here</div>
+          <div class="tiers__stage">proposed</div>
+          <div class="tiers__stage">the open question</div>
+
+          <div class="tiers__rowlabel">
+            <span class="tiers__tier tiers__tier--onto">Ontological</span>
+            <span class="tiers__tierdesc">proposes truth claims</span>
+          </div>
+          <div class="tiers__cell tiers__cell--onto">Intelligence is not tied to one physical medium.</div>
+          <div class="tiers__cell tiers__cell--onto">Intelligence, cognition and consciousness are three different things.</div>
+          <div class="tiers__cell tiers__cell--onto">The same intelligence shows up across many independent measures.</div>
+          <div class="tiers__cell tiers__cell--onto">Such intelligence can act on its own, as an agent.</div>
+
+          <div class="tiers__rowlabel" aria-hidden="true"></div>
+          <div class="tiers__conn"><span>&#8597;</span><span>&#8597;</span><span>&#8597;</span><span>&#8597;</span></div>
+
+          <div class="tiers__rowlabel">
+            <span class="tiers__tier tiers__tier--emp">Empirical</span>
+            <span class="tiers__tierdesc">tests them</span>
+          </div>
+          <div class="tiers__cell tiers__cell--emp">Train identical models on different languages; compare what they learn.</div>
+          <div class="tiers__cell tiers__cell--emp">Separate the three; show consciousness narrates but does not do the thinking.</div>
+          <div class="tiers__cell tiers__cell--emp">Many unrelated experiments; see whether they point the same way.</div>
+          <div class="tiers__cell tiers__cell--emp">Define agency so it can fail the test; look for it across substrates.</div>
+
+          <div class="tiers__rowlabel" aria-hidden="true"></div>
+          <div class="tiers__conn tiers__conn--dotted"><span>&#8942;</span><span>&#8942;</span><span>&#8942;</span><span>&#8942;</span></div>
+        </div>
+      </div>
+
+      <div class="tiers__foundation">
+        <span class="tiers__tier tiers__tier--epi">Epistemological</span>
+        <p>The rules: what would count as support, and where each instrument's reach ends. It governs every stage, and grows as the experiments map its edges.</p>
+      </div>
+
+      <div class="tiers__legend">
+        <p><span class="tiers__key"></span> Solid two-way arrows, mutual support: a claim is sent down to be tested, and the evidence travels back up to support it or send it back for revision.</p>
+        <p><span class="tiers__key tiers__key--dotted"></span> Dotted arrows: the foundation governs each test, and every closed door (a failed probe, a named limit) maps a new edge back into the foundation.</p>
+      </div>
     </figure>
   </section>
 
@@ -272,8 +317,9 @@
     <h2 class="hub__section-title hub__section-title--green">Books</h2>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://doi.org/10.5281/zenodo.20382928">The Robot in the Dark</a> <span style="font-weight:400; color: var(--text-dim);">(in preparation)</span></h3>
-      <p class="hub__item-desc">Manuscript draft, 2026. Zenodo DOI <a href="https://doi.org/10.5281/zenodo.20382928">10.5281/zenodo.20382928</a>.</p>
+      <h3 class="hub__item-name">The Robot in the Dark <span style="font-weight:400; color: var(--text-dim);">(in preparation)</span></h3>
+      <p class="hub__item-desc">Manuscript draft, 2026.</p>
+      <p class="hub__item-link"><a href="https://doi.org/10.5281/zenodo.20382928">&rarr; Zenodo 10.5281/zenodo.20382928</a></p>
     </div>
 
     <div class="hub__item">
@@ -282,13 +328,15 @@
     </div>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://honestcode.software">Honest Code</a> <span style="font-weight:400; color: var(--text-dim);">(commercially published)</span></h3>
-      <p class="hub__item-desc">Sixteen principles for eliminating hidden state in software. Side-by-side comparisons in twelve programming languages with real nanosecond execution traces. <a href="https://honestcode.software">honestcode.software</a></p>
+      <h3 class="hub__item-name">Honest Code <span style="font-weight:400; color: var(--text-dim);">(commercially published)</span></h3>
+      <p class="hub__item-desc">Sixteen principles for eliminating hidden state in software. Side-by-side comparisons in twelve programming languages with real nanosecond execution traces.</p>
+      <p class="hub__item-link"><a href="https://honestcode.software">&rarr; honestcode.software</a></p>
     </div>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://amzn.to/46I8piO">The Chaos Factory</a> <span style="font-weight:400; color: var(--text-dim);">(2017)</span></h3>
+      <h3 class="hub__item-name">The Chaos Factory <span style="font-weight:400; color: var(--text-dim);">(2017)</span></h3>
       <p class="hub__item-desc">The inside story of corporate IT failure. <a href="https://www.bloorresearch.com/the-chaos-factory-by-adam-wasserman/">Favorably reviewed by Bloor Research</a>.</p>
+      <p class="hub__item-link"><a href="https://amzn.to/46I8piO">&rarr; Buy on Amazon</a></p>
     </div>
   </section>
 
@@ -298,28 +346,33 @@
     <p class="hub__item-desc" style="margin-bottom: 1rem;">A pre-registered program of controlled experiments on cross-linguistic LLM training dynamics, with all four lead deposits in place, the child-scale extension accepted for peer-reviewed presentation, and a geometric-loss-function extension in pre-registration. Collaborators: <strong>David Beauchemin</strong> (Laval) on the BabyLM 2026 paper and the EMNLP main-conference extension; <strong>Hafedh Mili</strong> (UQAM); <strong>Edward Levin</strong> (VM4AI) on the geometric-loss study.</p>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://doi.org/10.5281/zenodo.19423151">The Scaling Hypothesis Is Language-Contingent</a></h3>
+      <h3 class="hub__item-name">The Scaling Hypothesis Is Language-Contingent</h3>
       <p class="hub__item-desc">Pre-registered controlled ablation training identical 125M-parameter transformers on matched English and French C4 corpora. French achieves grammatical competence at 197M tokens; English remains at chance through 4+ billion tokens. Pre-registration: <a href="https://osf.io/sj48b">OSF SJ48B</a>. Training logs: <a href="https://github.com/adamzwasserman/fractal-language">github.com/adamzwasserman/fractal-language</a>.</p>
+      <p class="hub__item-link"><a href="https://doi.org/10.5281/zenodo.19423151">&rarr; Zenodo 10.5281/zenodo.19423151</a></p>
     </div>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://doi.org/10.5281/zenodo.19443358">English Considered Harmful</a></h3>
+      <h3 class="hub__item-name">English Considered Harmful</h3>
       <p class="hub__item-desc">Companion preprint to the language-contingent scaling line.</p>
+      <p class="hub__item-link"><a href="https://doi.org/10.5281/zenodo.19443357">&rarr; Zenodo 10.5281/zenodo.19443357</a></p>
     </div>
 
     <div class="hub__item">
       <h3 class="hub__item-name">Geometric Loss Functions and Cross-Linguistic Training Dynamics <span style="font-weight:400; color: var(--text-dim);">(in preparation)</span></h3>
-      <p class="hub__item-desc">Joint work with <strong>Edward Levin</strong> (<a href="https://vm4ai.com">VM4AI</a>) extending the language-contingent-scaling line into training dynamics. Tests whether geometric topologies (Polytope, Sphere) applied as loss-function constraints during pretraining can replicate the structural advantages morphologically rich languages provide naturally. Pre-registrations in preparation. Repo: <a href="https://github.com/adamzwasserman/wasserman-levin-2026">github.com/adamzwasserman/wasserman-levin-2026</a>.</p>
+      <p class="hub__item-desc">Joint work with <strong>Edward Levin</strong> (<a href="https://vm4ai.com">VM4AI</a>) extending the language-contingent-scaling line into training dynamics. Tests whether geometric topologies (Polytope, Sphere) applied as loss-function constraints during pretraining can replicate the structural advantages morphologically rich languages provide naturally. Pre-registrations in preparation.</p>
+      <p class="hub__item-link"><a href="https://github.com/adamzwasserman/wasserman-levin-2026">&rarr; github.com/adamzwasserman/wasserman-levin-2026</a></p>
     </div>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://doi.org/10.5281/zenodo.19423101">The 70% Rule: When Axiomatic Prompting Helps, and When It Hurts</a></h3>
+      <h3 class="hub__item-name">The 70% Rule: When Axiomatic Prompting Helps, and When It Hurts</h3>
       <p class="hub__item-desc">Pre-registered work on the conditions under which explicit logical axioms in prompts produce qualitatively different outputs on reasoning benchmarks. OSF pre-registrations: <a href="https://osf.io/7z49a">7Z49A</a>, <a href="https://osf.io/mzf79">MZF79</a>.</p>
+      <p class="hub__item-link"><a href="https://doi.org/10.5281/zenodo.19423101">&rarr; Zenodo 10.5281/zenodo.19423101</a></p>
     </div>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://doi.org/10.5281/zenodo.19355460">Process Discipline</a></h3>
+      <h3 class="hub__item-name">Process Discipline</h3>
       <p class="hub__item-desc">Methodological preprint on pre-registered empirical practice for AI-assisted enterprise software development.</p>
+      <p class="hub__item-link"><a href="https://doi.org/10.5281/zenodo.19355460">&rarr; Zenodo 10.5281/zenodo.19355460</a></p>
     </div>
   </section>
 
@@ -337,8 +390,9 @@
     <h2 class="hub__section-title">Talks and interviews</h2>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://www.youtube.com/watch?v=-CK3FHftrd8">Abstraction Layers, in conversation with Jack Couch</a></h3>
+      <h3 class="hub__item-name">Abstraction Layers, in conversation with Jack Couch</h3>
       <p class="hub__item-desc">A long-form interview on the Language-Only Hypothesis: why large language models reveal structure already deposited in language rather than generating intelligence from scale, and what follows for how we read what today's AI can and cannot do.</p>
+      <p class="hub__item-link"><a href="https://www.youtube.com/watch?v=-CK3FHftrd8">&rarr; Watch on YouTube</a></p>
       <div style="position: relative; width: 100%; padding-bottom: 56.25%; margin-top: 1rem; border: 1px solid var(--border); border-radius: 4px; overflow: hidden;">
         <iframe src="https://www.youtube-nocookie.com/embed/-CK3FHftrd8" title="Abstraction Layers, in conversation with Jack Couch" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"></iframe>
       </div>
@@ -415,8 +469,9 @@
     </div>
 
     <div class="hub__item">
-      <h3 class="hub__item-name"><a href="https://www.multicardz.com">multicardz</a></h3>
+      <h3 class="hub__item-name">multicardz</h3>
       <p class="hub__item-desc">Next-generation kanban: add rows, change the criteria used to build rows and columns on demand, and handle sets of over 1 million cards in under 1 second.</p>
+      <p class="hub__item-link"><a href="https://www.multicardz.com">&rarr; multicardz.com</a></p>
     </div>
   </section>
 
