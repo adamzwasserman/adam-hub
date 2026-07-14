@@ -30,6 +30,7 @@ A current research program built on a foundational point of view: every scientif
 - **The Replicators** (in preparation): Outline complete; sample chapters drawn from the Weinstein vs. Dawkins three-part Substack series (2022).
 - [Honest Code](https://honestcode.software): Sixteen principles for eliminating hidden state in software. Side-by-side comparisons in twelve programming languages with real nanosecond execution traces.
 - [The Chaos Factory](https://amzn.to/46I8piO) (2017): The inside story of corporate IT failure. [Favorably reviewed by Bloor Research](https://www.bloorresearch.com/the-chaos-factory-by-adam-wasserman/).
+- [ADHD Meets AI](https://www.amazon.com/dp/B0GX32DJWM) (2026): The honest book about restless brains and artificial intelligence, written by someone who builds AI for a living and has lived the restless brain his whole life. Subtitle: *How Restless Brains Are Using Artificial Intelligence to Unlock Super Productivity*. Also on [Gumroad](https://adamzwasserman.gumroad.com/l/adhd-meets-ai).
 
 ## Pre-registered empirical research
 
