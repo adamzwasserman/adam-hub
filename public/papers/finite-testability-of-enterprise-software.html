@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finite Testability of Enterprise Software: A Quantitative Survey of Mutable State Across 200 Public Open-Source Codebases</title>
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://adamzacharywasserman.com/papers/finite-testability-of-enterprise-software.html">
+
+<!--
+  Highwire Press citation tags. These are what Google Scholar requires to
+  recognise a page as a scholarly article: title, first author, publication
+  year, and a link to a PDF whose text is extractable. Everything else on this
+  page is for humans.
+
+  This page exists because the Zenodo deposit of the same paper is served with
+  <meta name="robots" content="noindex, nofollow"> while the account is
+  unverified, which has kept it out of Google and Google Scholar since April
+  2026. Self-hosting removes the gatekeeper: no verification, no affiliation
+  test, no queue.
+-->
+<meta name="citation_title" content="Finite Testability of Enterprise Software: A Quantitative Survey of Mutable State Across 200 Public Open-Source Codebases">
+<meta name="citation_author" content="Wasserman, Adam Zachary">
+<meta name="citation_author_institution" content="Open Honest Foundation">
+<meta name="citation_publication_date" content="2026/05/25">
+<meta name="citation_online_date" content="2026/05/25">
+<meta name="citation_doi" content="10.5281/zenodo.20385346">
+<meta name="citation_pdf_url" content="https://adamzacharywasserman.com/papers/finite-testability-of-enterprise-software.pdf">
+<meta name="citation_abstract_html_url" content="https://adamzacharywasserman.com/papers/finite-testability-of-enterprise-software.html">
+<meta name="citation_technical_report_institution" content="Open Honest Foundation">
+<meta name="citation_language" content="en">
+<meta name="citation_keywords" content="software testability; mutable state; static analysis; empirical software engineering; verification">
+
+<meta name="description" content="A 200-repository, 2.2-million-function cross-language survey of mutable-state ratio. The median enterprise codebase in Python, Java and C# is structurally incapable of exhaustive behavioural testing.">
+<meta name="author" content="Adam Zachary Wasserman">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Finite Testability of Enterprise Software">
+<meta property="og:url" content="https://adamzacharywasserman.com/papers/finite-testability-of-enterprise-software.html">
+<link rel="alternate" type="application/pdf" href="/papers/finite-testability-of-enterprise-software.pdf">
+<link rel="stylesheet" href="/style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Finite Testability of Enterprise Software: A Quantitative Survey of Mutable State Across 200 Public Open-Source Codebases",
+  "author": {
+    "@type": "Person",
+    "name": "Adam Zachary Wasserman",
+    "@id": "https://adamzacharywasserman.com/#person",
+    "identifier": "https://orcid.org/0009-0002-8865-6583"
+  },
+  "datePublished": "2026-05-25",
+  "identifier": [
+    "https://doi.org/10.5281/zenodo.20385346",
+    "https://doi.org/10.2139/ssrn.7115358"
+  ],
+  "sameAs": [
+    "https://doi.org/10.5281/zenodo.20385346",
+    "https://doi.org/10.2139/ssrn.7115358"
+  ],
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "publisher": {
+    "@type": "NGO",
+    "name": "Open Honest Foundation",
+    "url": "https://openhonest.org/"
+  },
+  "url": "https://adamzacharywasserman.com/papers/finite-testability-of-enterprise-software.html",
+  "encoding": {
+    "@type": "MediaObject",
+    "contentUrl": "https://adamzacharywasserman.com/papers/finite-testability-of-enterprise-software.pdf",
+    "encodingFormat": "application/pdf"
+  }
+}
+</script>
+</head>
+<body>
+<main>
+
+<p><a href="/">Adam Zachary Wasserman</a> &rsaquo; Papers</p>
+
+<h1>Finite Testability of Enterprise Software</h1>
+<p><em>A Quantitative Survey of Mutable State Across 200 Public Open-Source Codebases</em></p>
+
+<p>Adam Zachary Wasserman, Open Honest Foundation. Preprint, 25 May 2026. Paper 1 of the Open Honest empirical research programme.</p>
+
+<p><a href="/papers/finite-testability-of-enterprise-software.pdf"><strong>Download the PDF</strong></a></p>
+
+<h2>Abstract</h2>
+
+<p>Most enterprise codebases cannot be exhaustively verified, and this is a structural property rather than a matter of effort or discipline. This paper measures one indicator of that property, the mutable-state ratio, across 200 public open-source repositories and roughly 2.2 million functions in four languages.</p>
+
+<p>The median codebase sits at 61.1% in Python, 53.0% in Java, and 40.0% in C#. Only 1 of 175 non-frontend codebases analysed falls below the structural-testability threshold. TypeScript is bimodal, with a React frontend subpopulation under 15% and a class-based backend subpopulation far above it, which suggests the driver is paradigm rather than language.</p>
+
+<p>The analyser, a 249-scenario behavioural specification, and the corpus seeds are released alongside the paper, so any third party can reproduce every figure.</p>
+
+<h2>Identifiers</h2>
+
+<ul>
+  <li>DOI (Zenodo, canonical): <a href="https://doi.org/10.5281/zenodo.20385346">10.5281/zenodo.20385346</a></li>
+  <li>DOI (SSRN mirror): <a href="https://doi.org/10.2139/ssrn.7115358">10.2139/ssrn.7115358</a></li>
+  <li>ORCID: <a href="https://orcid.org/0009-0002-8865-6583">0009-0002-8865-6583</a></li>
+  <li>Pre-registration: OSF block <a href="https://doi.org/10.17605/OSF.IO/DBSYG">10.17605/OSF.IO/DBSYG</a>, registered 12 April 2026</li>
+  <li>Licence: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></li>
+</ul>
+
+<h2>Cite as</h2>
+
+<p>Wasserman, A. Z. (2026). <em>Finite Testability of Enterprise Software: A Quantitative Survey of Mutable State Across 200 Public Open-Source Codebases.</em> Open Honest Foundation. https://doi.org/10.5281/zenodo.20385346</p>
+
+</main>
+</body>
+</html>
