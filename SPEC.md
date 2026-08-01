@@ -118,7 +118,6 @@ Two paragraphs max. Not a resume. Key facts only:
 - CTO at IATA (International Air Transport Association)
 - Director of Consulting at CGI, managing 150+ person teams on multimillion dollar Fortune 500 projects
 - Self-taught, no formal degree
-- Unix practitioner since 1986
 - 2017 publication of *The Chaos Factory* began deliberate pivot from operational leadership into contributing to the body of knowledge
 
 #### 8. Contact and identifiers
