@@ -95,6 +95,1018 @@
 
 <p>The practical reading is that the technique is a remedy for a weak baseline rather than a general improvement, and applying it to a task the model already handles makes the result worse.</p>
 
+<h2>Full text</h2>
+
+<p>The complete paper follows. It is identical to the deposited PDF; the PDF is the version of record and carries the figures at full resolution.</p>
+
+<h2 id="ap-introduction">Introduction</h2>
+<p>Large language models (LLMs) demonstrate strong capabilities across diverse classification tasks. When deploying LLMs for domain-specific classification, practitioners face a choice: rely on the model’s learned representations via zero-shot prompting, or provide explicit classification rules (“axioms”) to guide the model’s decisions.</p>
+<p>We propose <em>axiomatic prompting</em>—providing LLMs with explicit axioms that map observable text patterns to classification categories. The intuition is that domain-specific classification rules, expressed as “IF pattern THEN category” statements, could improve accuracy by externalizing expert knowledge.</p>
+<p>However, our experiments reveal a nuanced finding: <strong>axiomatic prompting only helps when the model struggles with a task</strong>. When zero-shot accuracy is already high, axioms add noise and hurt performance.</p>
+<h3 id="ap-contributions">Contributions</h3>
+<ol>
+<li><p>We identify a <strong>70% zero-shot threshold rule</strong> that perfectly predicts when axiomatic prompting helps (below threshold) versus hurts (above threshold) across 6 diverse classification tasks.</p></li>
+<li><p>We provide <strong>statistically significant</strong> evidence: all 6 task-level effects are significant at <span class="math inline"><em>p</em> &lt; 0.05</span> with large effect sizes (Cohen’s <span class="math inline"><em>d</em></span> ranging from 2.75 to 12.70).</p></li>
+<li><p>We analyze <strong>axiom quality factors</strong> correlated with effectiveness, finding that detailed axioms with multiple conditions per rule show stronger positive effects.</p></li>
+<li><p>We provide <strong>practical guidelines</strong> for when and how to use axiomatic prompting in production systems.</p></li>
+</ol>
+<h2 id="ap-related-work">Related Work</h2>
+<h3 id="ap-prompting-strategies">Prompting Strategies</h3>
+<p>Chain-of-thought prompting <span class="citation" data-cites="wei2022chain">(Wei et al. 2022)</span> demonstrated that eliciting intermediate “reasoning” improves LLM performance on complex tasks. ReAct <span class="citation" data-cites="yao2023react">(Yao et al. 2023)</span> interleaves “reasoning” with action steps. Skeleton-of-thought <span class="citation" data-cites="ning2023skeleton">(Ning et al. 2023)</span> structures “reasoning” via outlines. These strategies scaffold the model’s output generation without providing domain-specific knowledge.</p>
+<h3 id="ap-rule-based-and-hybrid-approaches">Rule-Based and Hybrid Approaches</h3>
+<p>The tension between rule-based and learning-based approaches in NLP reflects a deeper question about when explicit knowledge helps. Recent work on knowledge-augmented prompting has explored providing models with external knowledge, but focused on factual rather than procedural knowledge.</p>
+<h3 id="ap-when-does-external-knowledge-help">When Does External Knowledge Help?</h3>
+<p>Prior work has shown that providing LLMs with external information can either help or hurt, depending on the model’s existing knowledge <span class="citation" data-cites="mallen2023trust">(Mallen et al. 2023)</span>. Our work extends this finding to classification rules specifically, identifying a threshold-based decision rule.</p>
+<h2 id="ap-method">Method</h2>
+<h3 id="ap-axiomatic-prompting">Axiomatic Prompting</h3>
+<p>For a classification task with categories <span class="math inline"><em>C</em> = {<em>c</em><sub>1</sub>, …, <em>c</em><sub><em>n</em></sub>}</span>, we define axioms of the form:</p>
+<pre><code>AXIOM [category_name]:
+IF text contains [pattern]
+AND text exhibits [feature]
+THEN classify as [category]</code></pre>
+<p>Axioms are derived from authoritative sources defining each category (regulatory definitions, professional standards, annotation guidelines).</p>
+<h3 id="ap-baseline-strategies">Baseline Strategies</h3>
+<p>We compare against five established prompting strategies:</p>
+<ol>
+<li><p><strong>Zero-shot</strong>: Direct classification without examples</p></li>
+<li><p><strong>Few-shot (k=3)</strong>: Three labeled examples</p></li>
+<li><p><strong>Chain-of-thought</strong>: Explicit reasoning steps</p></li>
+<li><p><strong>ReAct</strong>: Interleaved thought/action steps</p></li>
+<li><p><strong>Skeleton-of-thought</strong>: Outline-based reasoning</p></li>
+</ol>
+<h3 id="ap-experimental-protocol">Experimental Protocol</h3>
+<ul>
+<li><p><strong>Models</strong>: 8 LLMs across 4 providers:</p>
+<ul>
+<li><p>OpenAI: GPT-4o, GPT-4o-mini</p></li>
+<li><p>Anthropic: Claude Sonnet 4, Claude 3.5 Haiku</p></li>
+<li><p>Google: Gemini 2.5 Flash, Gemini 2.0 Flash</p></li>
+<li><p>Open-weights: Llama 3.3 70B, Qwen 2.5 72B (via HuggingFace)</p></li>
+</ul></li>
+<li><p><strong>Sample size</strong>: 100 samples per task</p></li>
+<li><p><strong>Runs</strong>: 3 independent runs per condition for variance analysis</p></li>
+<li><p><strong>Temperature</strong>: 0.0 for reproducibility</p></li>
+<li><p><strong>Random seed</strong>: 42 for sample selection</p></li>
+<li><p><strong>Total experiments</strong>: 864 (3 runs <span class="math inline">×</span> 6 tasks <span class="math inline">×</span> 6 strategies <span class="math inline">×</span> 8 models)</p></li>
+</ul>
+<h2 id="ap-datasets">Datasets</h2>
+<p>We evaluate on 6 classification tasks spanning legal, medical, security, and sentiment domains:</p>
+<table id="ap-tab:datasets">
+<caption>Dataset Summary</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Dataset</th>
+<th style="text-align: center;">Categories</th>
+<th style="text-align: center;">N</th>
+<th style="text-align: left;">Domain</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">GoEmotions</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">2,984</td>
+<td style="text-align: left;">Sentiment</td>
+<td style="text-align: left;"><span class="citation" data-cites="demszky2020goemotions">Demszky et al. (2020)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;">LEDGAR</td>
+<td style="text-align: center;">100</td>
+<td style="text-align: center;">5,000</td>
+<td style="text-align: left;">Legal</td>
+<td style="text-align: left;"><span class="citation" data-cites="tuggener2020ledgar">Tuggener et al. (2020)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;">CADEC</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">4,815</td>
+<td style="text-align: left;">Medical</td>
+<td style="text-align: left;"><span class="citation" data-cites="karimi2015cadec">Karimi et al. (2015)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;">OPP-115</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">6,381</td>
+<td style="text-align: left;">Privacy</td>
+<td style="text-align: left;"><span class="citation" data-cites="wilson2016creation"><span class="nocase">Wilson et al.</span> (2016)</span></td>
+</tr>
+<tr>
+<td style="text-align: left;">SPDX</td>
+<td style="text-align: center;">57</td>
+<td style="text-align: center;">465</td>
+<td style="text-align: left;">Licenses</td>
+<td style="text-align: left;">GitHub</td>
+</tr>
+<tr>
+<td style="text-align: left;">CWE</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">5,317</td>
+<td style="text-align: left;">Security</td>
+<td style="text-align: left;">CIRCL</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ap-results">Results</h2>
+<h3 id="ap-main-finding-70-threshold-rule">Main Finding: 70% Threshold Rule</h3>
+<p>Our primary finding is that axiomatic prompting effectiveness depends on the model’s zero-shot baseline performance. This pattern holds consistently across all 8 models tested.</p>
+<table id="ap-tab:cross-platform">
+<caption>Cross-Platform Validation: Axiomatic Effect (<span class="math inline"><em>Δ</em></span>) by Model and Task</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">GoEmo</th>
+<th style="text-align: center;">LEDGAR</th>
+<th style="text-align: center;">CADEC</th>
+<th style="text-align: center;">OPP-115</th>
+<th style="text-align: center;">SPDX</th>
+<th style="text-align: center;">CWE</th>
+<th style="text-align: center;"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">GPT-4o</td>
+<td style="text-align: center;">+10.3</td>
+<td style="text-align: center;">+15.3</td>
+<td style="text-align: center;">+10.3</td>
+<td style="text-align: center;">-11.3</td>
+<td style="text-align: center;"><strong>-40.0</strong></td>
+<td style="text-align: center;">+1.3</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT-4o-mini</td>
+<td style="text-align: center;">+16.0</td>
+<td style="text-align: center;">+23.0</td>
+<td style="text-align: center;">+16.7</td>
+<td style="text-align: center;">-17.0</td>
+<td style="text-align: center;">-18.3</td>
+<td style="text-align: center;">-3.0</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude Sonnet 4</td>
+<td style="text-align: center;">+13.3</td>
+<td style="text-align: center;">+21.3</td>
+<td style="text-align: center;">+13.3</td>
+<td style="text-align: center;">-3.7</td>
+<td style="text-align: center;">+1.3</td>
+<td style="text-align: center;">+4.7</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude 3.5 Haiku</td>
+<td style="text-align: center;">+3.7</td>
+<td style="text-align: center;">+9.0</td>
+<td style="text-align: center;">+4.0</td>
+<td style="text-align: center;">+2.0</td>
+<td style="text-align: center;">+4.0</td>
+<td style="text-align: center;">+0.7</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.5 Flash</td>
+<td style="text-align: center;">+14.7</td>
+<td style="text-align: center;">+3.3</td>
+<td style="text-align: center;">+14.0</td>
+<td style="text-align: center;"><strong>-31.7</strong></td>
+<td style="text-align: center;">-2.7</td>
+<td style="text-align: center;"><strong>+35.7</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.0 Flash</td>
+<td style="text-align: center;">+15.7</td>
+<td style="text-align: center;">+20.7</td>
+<td style="text-align: center;">+6.7</td>
+<td style="text-align: center;">-6.3</td>
+<td style="text-align: center;">-16.3</td>
+<td style="text-align: center;">+2.7</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Llama 3.3 70B</td>
+<td style="text-align: center;">+12.3</td>
+<td style="text-align: center;">+16.7</td>
+<td style="text-align: center;">+5.7</td>
+<td style="text-align: center;">-5.0</td>
+<td style="text-align: center;">-12.3</td>
+<td style="text-align: center;">+6.0</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Qwen 2.5 72B</td>
+<td style="text-align: center;">+11.0</td>
+<td style="text-align: center;">+20.3</td>
+<td style="text-align: center;">+9.7</td>
+<td style="text-align: center;">-8.0</td>
+<td style="text-align: center;">-7.3</td>
+<td style="text-align: center;">-2.0</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Avg Zero-shot</td>
+<td style="text-align: center;">33%</td>
+<td style="text-align: center;">49%</td>
+<td style="text-align: center;">63%</td>
+<td style="text-align: center;">62%</td>
+<td style="text-align: center;">60%</td>
+<td style="text-align: center;">67%</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><span>Values show percentage point change (Axiomatic <span class="math inline">−</span> Zero-shot). Bold = largest effects.</span></p>
+<p>The pattern is clear: GoEmotions and LEDGAR (low zero-shot baselines) show consistent positive effects across all 8 models, while OPP-115 and SPDX show negative effects when models have high baselines.</p>
+<h3 id="ap-full-accuracy-tables">Full Accuracy Tables</h3>
+<p>Tables <a href="#ap-tab:zs-full" data-reference-type="ref" data-reference="tab:zs-full">3</a> and <a href="#ap-tab:ax-full" data-reference-type="ref" data-reference="tab:ax-full">4</a> present complete accuracy results for zero-shot and axiomatic prompting across all model-task combinations.</p>
+<table id="ap-tab:zs-full">
+<caption>Zero-shot Accuracy (%) by Model and Task (mean <span class="math inline">±</span> std, n=3 runs)</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">GoEmo</th>
+<th style="text-align: center;">LEDGAR</th>
+<th style="text-align: center;">CADEC</th>
+<th style="text-align: center;">OPP-115</th>
+<th style="text-align: center;">SPDX</th>
+<th style="text-align: center;">CWE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">GPT-4o</td>
+<td style="text-align: center;">37<span class="math inline">±</span>1</td>
+<td style="text-align: center;">54<span class="math inline">±</span>2</td>
+<td style="text-align: center;">70<span class="math inline">±</span>1</td>
+<td style="text-align: center;">68<span class="math inline">±</span>2</td>
+<td style="text-align: center;">80<span class="math inline">±</span>1</td>
+<td style="text-align: center;">55<span class="math inline">±</span>48</td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT-4o-mini</td>
+<td style="text-align: center;">35<span class="math inline">±</span>2</td>
+<td style="text-align: center;">48<span class="math inline">±</span>1</td>
+<td style="text-align: center;">65<span class="math inline">±</span>2</td>
+<td style="text-align: center;">73<span class="math inline">±</span>1</td>
+<td style="text-align: center;">73<span class="math inline">±</span>3</td>
+<td style="text-align: center;">87<span class="math inline">±</span>1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude Sonnet 4</td>
+<td style="text-align: center;">21<span class="math inline">±</span>18</td>
+<td style="text-align: center;">29<span class="math inline">±</span>25</td>
+<td style="text-align: center;">51<span class="math inline">±</span>14</td>
+<td style="text-align: center;">36<span class="math inline">±</span>33</td>
+<td style="text-align: center;">21<span class="math inline">±</span>37</td>
+<td style="text-align: center;">24<span class="math inline">±</span>41</td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude 3.5 Haiku</td>
+<td style="text-align: center;">11<span class="math inline">±</span>19</td>
+<td style="text-align: center;">15<span class="math inline">±</span>25</td>
+<td style="text-align: center;">45<span class="math inline">±</span>19</td>
+<td style="text-align: center;">32<span class="math inline">±</span>25</td>
+<td style="text-align: center;">15<span class="math inline">±</span>27</td>
+<td style="text-align: center;">28<span class="math inline">±</span>48</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.5 Flash</td>
+<td style="text-align: center;">33<span class="math inline">±</span>1</td>
+<td style="text-align: center;">47<span class="math inline">±</span>2</td>
+<td style="text-align: center;">64<span class="math inline">±</span>2</td>
+<td style="text-align: center;">74<span class="math inline">±</span>3</td>
+<td style="text-align: center;">72<span class="math inline">±</span>2</td>
+<td style="text-align: center;">50<span class="math inline">±</span>4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.0 Flash</td>
+<td style="text-align: center;">33<span class="math inline">±</span>1</td>
+<td style="text-align: center;">51<span class="math inline">±</span>2</td>
+<td style="text-align: center;">70<span class="math inline">±</span>1</td>
+<td style="text-align: center;">69<span class="math inline">±</span>1</td>
+<td style="text-align: center;">79<span class="math inline">±</span>1</td>
+<td style="text-align: center;">82<span class="math inline">±</span>1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Llama 3.3 70B</td>
+<td style="text-align: center;">28<span class="math inline">±</span>2</td>
+<td style="text-align: center;">52<span class="math inline">±</span>1</td>
+<td style="text-align: center;">65<span class="math inline">±</span>1</td>
+<td style="text-align: center;">73<span class="math inline">±</span>1</td>
+<td style="text-align: center;">68<span class="math inline">±</span>1</td>
+<td style="text-align: center;">79<span class="math inline">±</span>1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Qwen 2.5 72B</td>
+<td style="text-align: center;">34<span class="math inline">±</span>1</td>
+<td style="text-align: center;">45<span class="math inline">±</span>2</td>
+<td style="text-align: center;">70<span class="math inline">±</span>3</td>
+<td style="text-align: center;">72<span class="math inline">±</span>2</td>
+<td style="text-align: center;">72<span class="math inline">±</span>1</td>
+<td style="text-align: center;">85<span class="math inline">±</span>1</td>
+</tr>
+</tbody>
+</table>
+<table id="ap-tab:ax-full">
+<caption>Axiomatic Accuracy (%) by Model and Task (mean <span class="math inline">±</span> std, n=3 runs)</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">GoEmo</th>
+<th style="text-align: center;">LEDGAR</th>
+<th style="text-align: center;">CADEC</th>
+<th style="text-align: center;">OPP-115</th>
+<th style="text-align: center;">SPDX</th>
+<th style="text-align: center;">CWE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">GPT-4o</td>
+<td style="text-align: center;">47<span class="math inline">±</span>2</td>
+<td style="text-align: center;">70<span class="math inline">±</span>1</td>
+<td style="text-align: center;">80<span class="math inline">±</span>1</td>
+<td style="text-align: center;">56<span class="math inline">±</span>13</td>
+<td style="text-align: center;">40<span class="math inline">±</span>39</td>
+<td style="text-align: center;">56<span class="math inline">±</span>49</td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT-4o-mini</td>
+<td style="text-align: center;">51<span class="math inline">±</span>2</td>
+<td style="text-align: center;">71<span class="math inline">±</span>1</td>
+<td style="text-align: center;">82<span class="math inline">±</span>1</td>
+<td style="text-align: center;">56<span class="math inline">±</span>2</td>
+<td style="text-align: center;">54<span class="math inline">±</span>2</td>
+<td style="text-align: center;">84<span class="math inline">±</span>1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude Sonnet 4</td>
+<td style="text-align: center;">35<span class="math inline">±</span>30</td>
+<td style="text-align: center;">51<span class="math inline">±</span>44</td>
+<td style="text-align: center;">64<span class="math inline">±</span>26</td>
+<td style="text-align: center;">32<span class="math inline">±</span>27</td>
+<td style="text-align: center;">23<span class="math inline">±</span>39</td>
+<td style="text-align: center;">28<span class="math inline">±</span>49</td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude 3.5 Haiku</td>
+<td style="text-align: center;">15<span class="math inline">±</span>25</td>
+<td style="text-align: center;">24<span class="math inline">±</span>41</td>
+<td style="text-align: center;">49<span class="math inline">±</span>26</td>
+<td style="text-align: center;">34<span class="math inline">±</span>29</td>
+<td style="text-align: center;">19<span class="math inline">±</span>33</td>
+<td style="text-align: center;">28<span class="math inline">±</span>49</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.5 Flash</td>
+<td style="text-align: center;">48<span class="math inline">±</span>1</td>
+<td style="text-align: center;">51<span class="math inline">±</span>1</td>
+<td style="text-align: center;">78<span class="math inline">±</span>1</td>
+<td style="text-align: center;">42<span class="math inline">±</span>1</td>
+<td style="text-align: center;">69<span class="math inline">±</span>3</td>
+<td style="text-align: center;">85<span class="math inline">±</span>1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.0 Flash</td>
+<td style="text-align: center;">49<span class="math inline">±</span>1</td>
+<td style="text-align: center;">72<span class="math inline">±</span>2</td>
+<td style="text-align: center;">77<span class="math inline">±</span>1</td>
+<td style="text-align: center;">63<span class="math inline">±</span>1</td>
+<td style="text-align: center;">63<span class="math inline">±</span>0</td>
+<td style="text-align: center;">85<span class="math inline">±</span>0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Llama 3.3 70B</td>
+<td style="text-align: center;">41<span class="math inline">±</span>2</td>
+<td style="text-align: center;">68<span class="math inline">±</span>2</td>
+<td style="text-align: center;">71<span class="math inline">±</span>2</td>
+<td style="text-align: center;">68<span class="math inline">±</span>2</td>
+<td style="text-align: center;">55<span class="math inline">±</span>1</td>
+<td style="text-align: center;">85<span class="math inline">±</span>2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Qwen 2.5 72B</td>
+<td style="text-align: center;">45<span class="math inline">±</span>1</td>
+<td style="text-align: center;">65<span class="math inline">±</span>2</td>
+<td style="text-align: center;">79<span class="math inline">±</span>1</td>
+<td style="text-align: center;">64<span class="math inline">±</span>2</td>
+<td style="text-align: center;">64<span class="math inline">±</span>6</td>
+<td style="text-align: center;">83<span class="math inline">±</span>1</td>
+</tr>
+</tbody>
+</table>
+<p>Note the high variance (<span class="math inline">±</span>19–49%) in Claude model results, explained by extraction errors (Section <a href="#ap-sec:extraction" data-reference-type="ref" data-reference="sec:extraction">5.10</a>).</p>
+<h3 id="ap-threshold-rule-validation">Threshold Rule Validation</h3>
+<p>Across all 48 model-task combinations (8 models <span class="math inline">×</span> 6 tasks), we find the threshold rule holds consistently:</p>
+<table id="ap-tab:threshold">
+<caption>Threshold Rule: Axiom Effect by Zero-shot Baseline</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Baseline Range</th>
+<th style="text-align: center;">N</th>
+<th style="text-align: center;">Avg <span class="math inline"><em>Δ</em></span></th>
+<th style="text-align: center;">Helps Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span class="math inline">&lt;</span> 50% (Low)</td>
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">+14.2%</td>
+<td style="text-align: center;">100%</td>
+</tr>
+<tr>
+<td style="text-align: left;">50–70% (Medium)</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">+7.8%</td>
+<td style="text-align: center;">85%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span class="math inline">&gt;</span> 70% (High)</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">-10.3%</td>
+<td style="text-align: center;">25%</td>
+</tr>
+</tbody>
+</table>
+<p>When the zero-shot baseline is below 50%, axioms help in every case. When the baseline exceeds 70%, axioms hurt in 75% of cases. The 70% threshold provides a practical decision rule for practitioners.</p>
+<p>Figure <a href="#ap-fig:threshold" data-reference-type="ref" data-reference="fig:threshold">1</a> visualizes this relationship across all 48 model-task combinations.</p>
+<figure>
+<img src="/papers/figures/the-70-percent-rule/threshold_scatter.png" style="max-width:100%;height:auto" alt="Scatter plot of zero-shot baseline accuracy against axiomatic effect for all 48 model-task combinations. Green points indicate axioms helped, red points indicate they hurt. A dashed line marks the 70 percent threshold.">
+<figcaption><strong>Figure 1.</strong> Scatter plot of zero-shot baseline accuracy vs. axiomatic effect for all 48 model-task combinations. Green points indicate axioms helped; red points indicate axioms hurt. The dashed line marks the 70% threshold. The regression line (r = -0.46) confirms the negative relationship between baseline performance and axiom effectiveness.</figcaption>
+</figure>
+
+<figure id="ap-fig:threshold" data-latex-placement="ht">
+<embed src="threshold_scatter.pdf" style="width:90.0%" />
+<figcaption>Scatter plot of zero-shot baseline accuracy vs. axiomatic effect (<span class="math inline"><em>Δ</em></span>) for all 48 model-task combinations. Green points indicate axioms helped; red points indicate axioms hurt. The dashed line marks the 70% threshold. The regression line (r = -0.46) confirms the negative relationship between baseline performance and axiom effectiveness.</figcaption>
+</figure>
+<h3 id="ap-statistical-analysis">Statistical Analysis</h3>
+<p>Across all 48 model-task combinations, we find a significant negative correlation between zero-shot baseline and axiomatic effect:</p>
+<p><span class="math display"><em>r</em> = −0.463,  <em>p</em> &lt; 0.001</span></p>
+<p>This confirms that axioms help more (or hurt less) when the baseline is lower. The relationship is not perfectly linear—axioms provide outsized benefits at very low baselines (<span class="math inline">&lt;</span>50%) and outsized harm at very high baselines (<span class="math inline">&gt;</span>70%).</p>
+<h3 id="ap-strategy-comparison">Strategy Comparison</h3>
+<p>Table <a href="#ap-tab:strategy-comparison" data-reference-type="ref" data-reference="tab:strategy-comparison">6</a> compares all 6 prompting strategies averaged across all models and tasks.</p>
+<table id="ap-tab:strategy-comparison">
+<caption>Strategy Comparison (All Models Averaged)</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Strategy</th>
+<th style="text-align: center;">Avg Accuracy</th>
+<th style="text-align: center;">vs Zero-shot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Zero-shot</td>
+<td style="text-align: center;">52.9%</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">Few-shot (k=3)</td>
+<td style="text-align: center;">54.2%</td>
+<td style="text-align: center;">+1.3%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Chain-of-thought</td>
+<td style="text-align: center;">50.2%</td>
+<td style="text-align: center;">-2.7%</td>
+</tr>
+<tr>
+<td style="text-align: left;">ReAct</td>
+<td style="text-align: center;">51.2%</td>
+<td style="text-align: center;">-1.8%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skeleton-of-thought</td>
+<td style="text-align: center;">41.3%</td>
+<td style="text-align: center;">-11.6%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Axiomatic</strong></td>
+<td style="text-align: center;"><strong>56.7%</strong></td>
+<td style="text-align: center;"><strong>+3.8%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Axiomatic prompting achieves the highest average accuracy (+3.8% over zero-shot), despite hurting on high-baseline tasks. This reflects the magnitude of improvements on low-baseline tasks outweighing the losses on high-baseline tasks. Notably, skeleton-of-thought performs poorly (-11.6%), suggesting that structured output formats can interfere with classification.</p>
+<h3 id="ap-per-model-responsiveness">Per-Model Responsiveness</h3>
+<p>Models differ in their responsiveness to axiomatic prompting:</p>
+<table id="ap-tab:model-response">
+<caption>Model Responsiveness to Axioms</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">Avg <span class="math inline"><em>Δ</em></span></th>
+<th style="text-align: center;">Helps</th>
+<th style="text-align: center;">Hurts</th>
+<th style="text-align: center;">Neutral</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Claude Sonnet 4</td>
+<td style="text-align: center;">+8.4%</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.5 Flash</td>
+<td style="text-align: center;">+5.6%</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude 3.5 Haiku</td>
+<td style="text-align: center;">+3.9%</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr>
+<td style="text-align: left;">Llama 3.3 70B</td>
+<td style="text-align: center;">+3.9%</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Qwen 2.5 72B</td>
+<td style="text-align: center;">+3.9%</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.0 Flash</td>
+<td style="text-align: center;">+3.8%</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT-4o-mini</td>
+<td style="text-align: center;">+2.9%</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT-4o</td>
+<td style="text-align: center;">-2.3%</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table>
+<p><span>Helps/Hurts/Neutral = tasks where <span class="math inline"><em>Δ</em> &gt; 2%</span> / <span class="math inline"><em>Δ</em> &lt; −2%</span> / <span class="math inline">|<em>Δ</em>| ≤ 2%</span></span></p>
+<p>Claude Sonnet 4 is most responsive to axioms (+8.4% average), while GPT-4o is the only model with negative average response (-2.3%). This may reflect differences in how models weight explicit instructions versus learned patterns.</p>
+<h3 id="ap-correlation-analysis">Correlation Analysis</h3>
+<p>We analyze factors correlated with axiomatic prompting effectiveness:</p>
+<table id="ap-tab:correlations">
+<caption>Predictors of Axiomatic Effect Size (<span class="math inline"><em>Δ</em></span>)</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Predictor</th>
+<th style="text-align: center;"><span class="math inline"><em>r</em></span></th>
+<th style="text-align: center;"><span class="math inline"><em>p</em></span></th>
+<th style="text-align: center;">Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Avg conditions/axiom</td>
+<td style="text-align: center;">+0.93</td>
+<td style="text-align: center;">0.008<span class="math inline"><sup>**</sup></span></td>
+<td style="text-align: center;">More detailed axioms help</td>
+</tr>
+<tr>
+<td style="text-align: left;">Zero-shot accuracy</td>
+<td style="text-align: center;">-0.73</td>
+<td style="text-align: center;">0.103</td>
+<td style="text-align: center;">Low baseline <span class="math inline">→</span> axioms help</td>
+</tr>
+<tr>
+<td style="text-align: left;">Axiom coverage</td>
+<td style="text-align: center;">+0.60</td>
+<td style="text-align: center;">0.213</td>
+<td style="text-align: center;">Full coverage helps</td>
+</tr>
+<tr>
+<td style="text-align: left;">Conceptual axioms %</td>
+<td style="text-align: center;">-0.45</td>
+<td style="text-align: center;">0.369</td>
+<td style="text-align: center;">Conceptual axioms hurt</td>
+</tr>
+</tbody>
+</table>
+<p>The strongest predictor is axiom detail: axioms with more conditions per rule show larger improvements. However, we note that axiom style is confounded with task in our design (each task has one axiom set), so this correlation may reflect task difficulty rather than axiom quality alone.</p>
+<h3 id="ap-axiom-style-analysis">Axiom Style Analysis</h3>
+<table id="ap-tab:axiom-style">
+<caption>Performance by Axiom Style</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Style</th>
+<th style="text-align: center;">Tasks</th>
+<th style="text-align: center;">Avg Coverage</th>
+<th style="text-align: center;">Avg <span class="math inline"><em>Δ</em></span></th>
+<th style="text-align: center;">Helps Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Keyword-rich</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">100%</td>
+<td style="text-align: center;">+12.4%</td>
+<td style="text-align: center;">75%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Conceptual</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">100%</td>
+<td style="text-align: center;">-16.7%</td>
+<td style="text-align: center;">0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Keyword-sparse</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">33%</td>
+<td style="text-align: center;">-20.3%</td>
+<td style="text-align: center;">0%</td>
+</tr>
+</tbody>
+</table>
+<p>Keyword-rich axioms (using “keyword <span class="math inline">→</span> label” patterns) show positive effects, while conceptual axioms and low-coverage axiom sets show negative effects.</p>
+<h3 id="ap-axiom-token-analysis">Axiom Token Analysis</h3>
+<p>Table <a href="#ap-tab:token-counts" data-reference-type="ref" data-reference="tab:token-counts">10</a> presents axiom characteristics and their relationship to effectiveness.</p>
+<table id="ap-tab:token-counts">
+<caption>Axiom Token Counts and Effectiveness</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Task</th>
+<th style="text-align: center;">Tokens</th>
+<th style="text-align: center;">Axioms</th>
+<th style="text-align: center;">Style</th>
+<th style="text-align: center;">Avg <span class="math inline"><em>Δ</em></span></th>
+<th style="text-align: center;">Best <span class="math inline"><em>Δ</em></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">GoEmotions</td>
+<td style="text-align: center;">1,244</td>
+<td style="text-align: center;">42</td>
+<td style="text-align: center;">conceptual</td>
+<td style="text-align: center;">+12.1%</td>
+<td style="text-align: center;">+16.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">LEDGAR</td>
+<td style="text-align: center;">2,921</td>
+<td style="text-align: center;">106</td>
+<td style="text-align: center;">keyword-rich</td>
+<td style="text-align: center;">+16.2%</td>
+<td style="text-align: center;">+23.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">CADEC</td>
+<td style="text-align: center;">597</td>
+<td style="text-align: center;">22</td>
+<td style="text-align: center;">keyword-rich</td>
+<td style="text-align: center;">+10.0%</td>
+<td style="text-align: center;">+16.7%</td>
+</tr>
+<tr>
+<td style="text-align: left;">OPP-115</td>
+<td style="text-align: center;">366</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">keyword-rich</td>
+<td style="text-align: center;">-10.1%</td>
+<td style="text-align: center;">+2.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">SPDX</td>
+<td style="text-align: center;">2,269</td>
+<td style="text-align: center;">65</td>
+<td style="text-align: center;">keyword-rich</td>
+<td style="text-align: center;">-11.5%</td>
+<td style="text-align: center;">+4.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">CWE</td>
+<td style="text-align: center;">1,889</td>
+<td style="text-align: center;">59</td>
+<td style="text-align: center;">keyword-rich</td>
+<td style="text-align: center;">+5.7%</td>
+<td style="text-align: center;">+35.7%</td>
+</tr>
+</tbody>
+</table>
+<p><span>Best <span class="math inline"><em>Δ</em></span> = largest improvement among 8 models.</span></p>
+<p>Token count does <em>not</em> predict effectiveness: LEDGAR (2,921 tokens) shows strong positive effects (+16.2%), while SPDX (2,269 tokens) shows negative effects (-11.5%). The key factor is not verbosity but whether the model already encodes the classification patterns—a function of the task’s prevalence in training data.</p>
+<h3 id="ap-sec:extraction">Extraction Error Analysis</h3>
+<p>A critical factor in our results is extraction error rate—the percentage of responses where the model’s output could not be parsed into a valid category label.</p>
+<table id="ap-tab:extraction-errors">
+<caption>Extraction Error Rates by Model (% of samples)</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">GoEmo</th>
+<th style="text-align: center;">LEDGAR</th>
+<th style="text-align: center;">CADEC</th>
+<th style="text-align: center;">OPP</th>
+<th style="text-align: center;">SPDX</th>
+<th style="text-align: center;">CWE</th>
+<th style="text-align: center;">Avg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Claude 3.5 Haiku</td>
+<td style="text-align: center;">67</td>
+<td style="text-align: center;">68</td>
+<td style="text-align: center;">46</td>
+<td style="text-align: center;">59</td>
+<td style="text-align: center;">72</td>
+<td style="text-align: center;">67</td>
+<td style="text-align: center;"><strong>63</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Claude Sonnet 4</td>
+<td style="text-align: center;">33</td>
+<td style="text-align: center;">35</td>
+<td style="text-align: center;">26</td>
+<td style="text-align: center;">58</td>
+<td style="text-align: center;">67</td>
+<td style="text-align: center;">67</td>
+<td style="text-align: center;">48</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.5 Flash</td>
+<td style="text-align: center;">26</td>
+<td style="text-align: center;">22</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">44</td>
+<td style="text-align: center;">23</td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT-4o</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">34</td>
+<td style="text-align: center;">11</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gemini 2.0 Flash</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr>
+<td style="text-align: left;">GPT-4o-mini</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Qwen 2.5 72B</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Llama 3.3 70B</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>3</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Claude 3.5 Haiku exhibits a 63% average extraction error rate, explaining the high variance in its results. This suggests the model struggles to follow output formatting instructions consistently. In contrast, Llama 3.3 70B achieves only 3% extraction errors, producing the most reliable outputs.</p>
+<p><strong>Key insight</strong>: High extraction error rates explain several apparent anomalies. For example, Gemini 2.5 Flash’s +35.7% improvement on CWE is partly due to axioms reducing extraction errors from 45–54% (zero-shot) to 0–1% (axiomatic). Conversely, the same model’s -31.7% on OPP-115 reflects extraction errors <em>increasing</em> from 5–6% to 51–53% when axioms are added.</p>
+<h3 id="ap-outlier-case-studies">Outlier Case Studies</h3>
+<p>We analyze the three most extreme effects to understand the mechanisms:</p>
+<p><strong>GPT-4o on SPDX (<span class="math inline"><em>Δ</em></span> = -40.0%)</strong>: This model achieves 80% zero-shot accuracy on license classification, suggesting strong learned representations for this domain. The SPDX axioms (2,269 tokens) may introduce conflicting signals. Notably, results varied wildly across runs (32%, 82%, 5%), suggesting the model is uncertain how to weight axioms versus its internal patterns.</p>
+<p><strong>Gemini 2.5 Flash on CWE (<span class="math inline"><em>Δ</em></span> = +35.7%)</strong>: Zero-shot accuracy is only 50%, but axiomatic jumps to 85%. Critically, zero-shot has 45–54% extraction errors while axiomatic has only 0–1%. The axioms help the model both classify correctly <em>and</em> format outputs properly.</p>
+<p><strong>Gemini 2.5 Flash on OPP-115 (<span class="math inline"><em>Δ</em></span> = -31.7%)</strong>: Despite 74% zero-shot accuracy, axioms drop performance to 42%. Extraction errors increase from 5% to 52%. The OPP-115 axioms appear to confuse this model’s output formatting, even though the axioms are relatively short (366 tokens).</p>
+<h2 id="ap-discussion">Discussion</h2>
+<h3 id="ap-why-the-threshold-effect">Why the Threshold Effect?</h3>
+<p>When the model already performs well on a task (<span class="math inline">&gt;</span>70% zero-shot), its learned representations already capture the statistical patterns needed for accurate classification. Adding explicit axioms introduces noise: the model must reconcile its internal representations with external rules that may be incomplete or differently formulated.</p>
+<p>When the model struggles (<span class="math inline">&lt;</span>70% zero-shot), axioms provide useful signal that the model’s training did not adequately capture, leading to substantial improvements.</p>
+<h3 id="ap-practical-implications">Practical Implications</h3>
+<p>For practitioners deploying classification systems:</p>
+<ol>
+<li><p><strong>Test zero-shot first</strong>: If accuracy <span class="math inline">&gt;</span> 70%, don’t use axioms</p></li>
+<li><p><strong>Write keyword-rich axioms</strong>: Use “keyword <span class="math inline">→</span> label” patterns</p></li>
+<li><p><strong>Ensure full coverage</strong>: Axioms should cover all categories</p></li>
+<li><p><strong>Be specific</strong>: Multiple conditions per axiom helps</p></li>
+</ol>
+<h3 id="ap-limitations">Limitations</h3>
+<ol>
+<li><p><strong>Confounded design</strong>: Axiom style is confounded with task; future work should vary axiom quality within tasks</p></li>
+<li><p><strong>Sample size</strong>: 100 samples <span class="math inline">×</span> 3 runs provides adequate power for large effects but may miss subtle effects</p></li>
+<li><p><strong>English only</strong>: All experiments use English-language datasets</p></li>
+<li><p><strong>API variability</strong>: Some variance in Claude 3.5 Haiku results (high extraction error rates) suggests API-level instability during testing</p></li>
+</ol>
+<h3 id="ap-language-dependent-thresholds">Language-Dependent Thresholds?</h3>
+<p>Our English-only limitation opens a theoretically significant research direction. The 70% threshold we identify may not be a universal constant—it may vary by language. If morphologically rich languages like French, German, or Finnish encode more grammatical structure redundantly (through agreement marking, case systems, and inflection), models trained on such languages might exhibit <em>higher</em> inherent capability baselines, shifting the threshold at which axioms become harmful.</p>
+<p>This connects to the “Language-Only Hypothesis” <span class="citation" data-cites="wasserman2025language">(Wasserman 2025)</span>, which proposes that emergent capabilities in LLMs derive from structural properties of natural language itself, not solely from scale or architecture. Under this view, morphological agreement patterns function as “built-in axioms”—explicit IF-THEN relationships grammaticalized into the language (e.g., “IF subject is plural THEN verb takes plural marking”). A French-trained model may have internalized more such structural axioms during pretraining, potentially shifting its axiomatic threshold upward.</p>
+<p>The decisive test: train identical models on matched English and French corpora, then evaluate axiomatic prompting effectiveness on parallel classification tasks. If French-trained models show higher thresholds (axioms helping at, say, 80% baseline rather than 70%), this would suggest that language structure—not just model capacity—determines when explicit rules become redundant. Such a finding would have profound implications for multilingual deployment: the same prompting strategy may help in one language and hurt in another at identical baseline accuracies.</p>
+<h2 id="ap-conclusion">Conclusion</h2>
+<p>Axiomatic prompting—providing LLMs with explicit classification rules—is not universally beneficial. Our cross-platform experiments across 8 LLMs reveal a consistent decision rule: use axioms when zero-shot accuracy is below 70%, avoid them when it is above. This threshold holds across commercial models (GPT-4o, Claude Sonnet 4, Gemini) and open-weights models (Llama, Qwen).</p>
+<p>The finding suggests a principle for augmented prompting more broadly: external rules help when the model’s learned representations are insufficient for the task, but hurt when those representations already capture the relevant patterns. Practitioners should empirically test baseline performance before investing in rule engineering.</p>
+<h2 class="unnumbered" id="ap-acknowledgments">Acknowledgments</h2>
+<p>Experiments were conducted using APIs from OpenAI, Anthropic, Google, and HuggingFace. Estimated total API cost for the full cross-platform variance analysis (864 experiments) was approximately $50–100 USD.</p>
+<h2 class="unnumbered" id="ap-reproducibility">Reproducibility</h2>
+<p>Code, data, and results are available at: [OSF repository URL]</p>
+<ul>
+<li><p>Random seed: 42</p></li>
+<li><p>Temperature: 0.0</p></li>
+<li><p>Models: GPT-4o, GPT-4o-mini, Claude Sonnet 4, Claude 3.5 Haiku, Gemini 2.5 Flash, Gemini 2.0 Flash, Llama 3.3 70B, Qwen 2.5 72B</p></li>
+<li><p>Sample size: 100 per task</p></li>
+<li><p>Runs: 3 per condition</p></li>
+<li><p>Total experiments: 864</p></li>
+</ul>
+<h2 id="ap-token-usage-analysis">Token Usage Analysis</h2>
+<p>Table <a href="#ap-tab:token-usage" data-reference-type="ref" data-reference="tab:token-usage">12</a> presents estimated prompt token counts by strategy for a representative task (LEDGAR).</p>
+<table id="ap-tab:token-usage">
+<caption>Prompt Token Counts by Strategy (LEDGAR example)</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Strategy</th>
+<th style="text-align: center;">Prompt Tokens</th>
+<th style="text-align: center;">vs Zero-shot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Zero-shot</td>
+<td style="text-align: center;"><span class="math inline">∼</span>200</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">Few-shot (k=3)</td>
+<td style="text-align: center;"><span class="math inline">∼</span>800</td>
+<td style="text-align: center;">+600</td>
+</tr>
+<tr>
+<td style="text-align: left;">Chain-of-thought</td>
+<td style="text-align: center;"><span class="math inline">∼</span>350</td>
+<td style="text-align: center;">+150</td>
+</tr>
+<tr>
+<td style="text-align: left;">ReAct</td>
+<td style="text-align: center;"><span class="math inline">∼</span>400</td>
+<td style="text-align: center;">+200</td>
+</tr>
+<tr>
+<td style="text-align: left;">Skeleton-of-thought</td>
+<td style="text-align: center;"><span class="math inline">∼</span>450</td>
+<td style="text-align: center;">+250</td>
+</tr>
+<tr>
+<td style="text-align: left;">Axiomatic (LEDGAR)</td>
+<td style="text-align: center;"><span class="math inline">∼</span>3,100</td>
+<td style="text-align: center;">+2,900</td>
+</tr>
+</tbody>
+</table>
+<p>Axiomatic prompting requires significantly more input tokens due to the axiom definitions. For LEDGAR (the largest axiom set), this is <span class="math inline">∼</span>15<span class="math inline">×</span> the zero-shot prompt size. However, token count does not correlate with effectiveness—CADEC uses only 597 axiom tokens but achieves similar improvements to LEDGAR (2,921 tokens).</p>
+<h2 id="ap-api-cost-estimates">API Cost Estimates</h2>
+<p>The full cross-platform experiment required 864 API calls (3 runs <span class="math inline">×</span> 6 tasks <span class="math inline">×</span> 6 strategies <span class="math inline">×</span> 8 models). Approximate costs by provider:</p>
+<table id="ap-tab:costs">
+<caption>Estimated API Costs by Provider</caption>
+<thead>
+<tr>
+<th style="text-align: left;">Provider</th>
+<th style="text-align: center;">Models</th>
+<th style="text-align: center;">Est. Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">OpenAI</td>
+<td style="text-align: center;">GPT-4o, GPT-4o-mini</td>
+<td style="text-align: center;">$15–20</td>
+</tr>
+<tr>
+<td style="text-align: left;">Anthropic</td>
+<td style="text-align: center;">Claude Sonnet 4, Claude 3.5 Haiku</td>
+<td style="text-align: center;">$20–30</td>
+</tr>
+<tr>
+<td style="text-align: left;">Google</td>
+<td style="text-align: center;">Gemini 2.5 Flash, Gemini 2.0 Flash</td>
+<td style="text-align: center;">$5–10</td>
+</tr>
+<tr>
+<td style="text-align: left;">HuggingFace</td>
+<td style="text-align: center;">Llama 3.3 70B, Qwen 2.5 72B</td>
+<td style="text-align: center;">$10–20</td>
+</tr>
+<tr>
+<td style="text-align: left;">Total</td>
+<td style="text-align: center;">8 models</td>
+<td style="text-align: center;">$50–100</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ap-axiom-examples">Axiom Examples</h2>
+<p>This appendix provides representative axiom examples illustrating the two main styles used in our experiments.</p>
+<h3 id="ap-ledgar-keyword-rich-style-2921-tokens-106-axioms">LEDGAR: Keyword-Rich Style (2,921 tokens, 106 axioms)</h3>
+<p>LEDGAR axioms use explicit keyword patterns that map directly to category labels. This style achieved +16.2% average improvement.</p>
+<pre><code>AXIOM Governing_Laws:
+IF text contains &quot;governed by&quot; OR &quot;construed in accordance&quot;
+AND text specifies state or country jurisdiction
+THEN classify as &quot;Governing Laws&quot;
+
+AXIOM Indemnification:
+IF text contains &quot;indemnify&quot; OR &quot;hold harmless&quot;
+AND text specifies indemnifying and indemnified parties
+AND text references claims, losses, or damages
+THEN classify as &quot;Indemnification&quot;
+
+AXIOM Terminations:
+IF text contains &quot;may be terminated&quot; OR &quot;termination of&quot;
+AND text specifies conditions for termination
+THEN classify as &quot;Terminations&quot;</code></pre>
+<h3 id="ap-opp-115-conceptual-style-366-tokens-20-axioms">OPP-115: Conceptual Style (366 tokens, 20 axioms)</h3>
+<p>OPP-115 axioms describe semantic concepts rather than keyword patterns. This style achieved -10.1% average effect, illustrating that conceptual axioms can hurt when the model already encodes the classification patterns.</p>
+<pre><code>AXIOM First_Party_Collection:
+IF text describes what information the company collects
+AND collection is performed by the company itself
+THEN classify as &quot;First Party Collection/Use&quot;
+
+AXIOM Third_Party_Sharing:
+IF text describes sharing user information
+AND sharing is with external parties
+THEN classify as &quot;Third Party Sharing/Collection&quot;
+
+AXIOM Data_Security:
+IF text describes security measures or protections
+AND measures apply to user data
+THEN classify as &quot;Data Security&quot;</code></pre>
+<h3 id="ap-key-differences">Key Differences</h3>
+<ul>
+<li><p><strong>Keyword-rich</strong>: Explicit lexical patterns (“governed by”, “indemnify”) provide unambiguous classification signals</p></li>
+<li><p><strong>Conceptual</strong>: Abstract descriptions (“describes what information”) require the model to interpret intent, potentially conflicting with learned patterns</p></li>
+</ul>
+<div id="ap-refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ap-ref-demszky2020goemotions" class="csl-entry" role="listitem">
+Demszky, Dorottya, Dana Movshovitz-Attias, Jeongwoo Ko, Alan Cowen, Gaurav Nemade, and Sujith Ravi. 2020. <span>“GoEmotions: A Dataset of Fine-Grained Emotions.”</span> <em>Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics</em>, 4040–54.
+</div>
+<div id="ap-ref-karimi2015cadec" class="csl-entry" role="listitem">
+Karimi, Sarvnaz, Alejandro Metke-Jimenez, Madonna Kemp, and Chen Wang. 2015. <span>“CADEC: A Corpus of Adverse Drug Event Annotations.”</span> <em>Journal of Biomedical Informatics</em> 55: 73–81.
+</div>
+<div id="ap-ref-mallen2023trust" class="csl-entry" role="listitem">
+Mallen, Alex, Akari Asai, Victor Zhong, Rajarshi Das, Daniel Khashabi, and Hannaneh Hajishirzi. 2023. <span>“When Not to Trust Language Models: Investigating Effectiveness of Parametric and Non-Parametric Memories.”</span> <em>arXiv Preprint arXiv:2212.10511</em>.
+</div>
+<div id="ap-ref-ning2023skeleton" class="csl-entry" role="listitem">
+Ning, Xuefei, Zinan Lin, Zixuan Zhou, Huazhong Yang, and Yu Wang. 2023. <span>“Skeleton-of-Thought: Large Language Models Can Do Parallel Decoding.”</span> <em>arXiv Preprint arXiv:2307.15337</em>.
+</div>
+<div id="ap-ref-tuggener2020ledgar" class="csl-entry" role="listitem">
+Tuggener, Don, Pius von Däniken, Thomas Peber, and Mark Cieliebak. 2020. <span>“LEDGAR: A Large-Scale Multi-Label Corpus for Text Classification of Legal Provisions in Contracts.”</span> <em>Proceedings of the 12th Language Resources and Evaluation Conference</em>, 1235–41.
+</div>
+<div id="ap-ref-wasserman2025language" class="csl-entry" role="listitem">
+Wasserman, Adam Zachary. 2025. <em>The Language-Only Hypothesis: Testing Whether Emergence Derives from Language Structure</em>. OSF Preregistration.
+</div>
+<div id="ap-ref-wei2022chain" class="csl-entry" role="listitem">
+Wei, Jason, Xuezhi Wang, Dale Schuurmans, et al. 2022. <span>“Chain-of-Thought Prompting Elicits Reasoning in Large Language Models.”</span> <em>Advances in Neural Information Processing Systems</em> 35: 24824–37.
+</div>
+<div id="ap-ref-wilson2016creation" class="csl-entry" role="listitem">
+<span class="nocase">Wilson, Shomir, Florian Schaub, Aswarth Abhilash Dara, et al.</span> 2016. <span>“The Creation and Analysis of a Website Privacy Policy Corpus.”</span> <em>Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics</em>, 1330–40.
+</div>
+<div id="ap-ref-yao2023react" class="csl-entry" role="listitem">
+Yao, Shunyu, Jeffrey Zhao, Dian Yu, et al. 2023. <span>“ReAct: Synergizing Reasoning and Acting in Language Models.”</span> <em>International Conference on Learning Representations</em>.
+</div>
+</div>
+
 <h2>Identifiers</h2>
 
 <ul>

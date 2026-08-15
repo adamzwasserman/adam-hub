@@ -87,13 +87,302 @@
 
 <p><a href="/papers/process-discipline-as-the-key-variable.pdf"><strong>Download the PDF</strong></a></p>
 
-<h2>Abstract</h2>
+<h2>Full text</h2>
 
-<p>The same two programmers, using the same AI tools, built two applications under two process conditions. The difference was not the team and not the tooling. It was who held authority over the development lifecycle.</p>
+<p>The complete paper follows. It is identical to the deposited PDF; the PDF is the version of record and carries the figures at full resolution.</p>
 
-<p>Under a structured, AI-specific SDLC the platform satisfied 18 of 18 enterprise dimensions derived from SOC 2, NIST and OWASP, at eight to ten times elite productivity benchmarks. When process authority shifted to non-technical stakeholders, the second application satisfied 2 of 18, with no tests, no quality pipelines and no code review.</p>
-
-<p>Measured across 287 FTE-days, 1.48 million lines added and 811,000 lines removed. The exogenous change in process authority is what makes this a natural experiment rather than a comparison of teams.</p>
+<p><strong>Adam Wasserman</strong> CTO, Buckler</p>
+<p>March 2026</p>
+<hr />
+<h2 id="pd-abstract">Abstract</h2>
+<p>The published research on AI-assisted software development produces contradictory findings: controlled studies report both 55.8% speedups (Peng et al. 2023) and 19% slowdowns (METR 2025) on developer tasks. Quality-focused studies consistently report negative downstream effects: 4x more duplicated code, 60% less cleanup activity (GitClear 2025, 211M lines), and 7.2% delivery stability decreases per 25% AI adoption increase (Google DORA 2024). No published study has isolated the variable that reconciles these contradictions. The study that would settle the question requires four comparison groups: AI with structured process, AI without structured process, manual coding with structured process, and manual coding without structured process. That study does not exist.</p>
+<p>This paper presents a natural experiment that covers the two AI-assisted groups: with structured process and without. A two-person development team, using the same AI coding assistants, produced two applications under different process conditions. Under a structured software development lifecycle (SDLC) designed and controlled by the technical architect, the team built a platform in Python/FastAPI following a specified architecture, satisfying 18 enterprise dimensions that cover the criteria bank technology assessments measure, at 8-10x published elite productivity benchmarks. When organizational authority over the development process shifted from the technical architect to non-technical stakeholders prioritizing business deliverables, the same team using the same tools produced a React application satisfying 2 of 18 enterprise dimensions, with no tests, no automated quality pipelines, and no code review. The technology choice itself is part of the finding: without architectural constraints, the AI assistants defaulted to React, the framework they are most trained on, rather than the architecture specified for the project.</p>
+<p>A second natural experiment within the same dataset reinforces the finding: a single developer’s commit history on one codebase captures both the unstructured period and the subsequent introduction of the structured SDLC, with the quality transition visible in the commit record.</p>
+<p>The team composition and AI tools remained constant across both conditions. The technology stack diverged: the structured condition used Python/FastAPI following a specified architecture; the unstructured condition used React, the default framework AI assistants produce when given no architectural constraints. The variable that changed was who controlled the development process and what constraints that process imposed on AI-assisted code generation. The findings are consistent with DORA’s (2025) characterization of AI as an “amplifier” of existing process quality, and provide granular, project-level evidence for a thesis that has until now been supported only by aggregate survey data.</p>
+<p>All metrics are derived from git commit history, source code analysis, and published industry benchmarks. The methodology is described in sufficient detail for replication on any comparable codebase.</p>
+<p><strong>Keywords:</strong> AI-assisted software development, software development lifecycle, process discipline, natural experiment, enterprise software quality, function point analysis</p>
+<hr />
+<figure>
+<embed src="/papers/figures/process-discipline/fp-comparison.png" />
+<figcaption aria-hidden="true">Software Productivity: Industry Benchmarks vs. Structured AI-Assisted Development</figcaption>
+</figure>
+<h2 id="pd-introduction">1. Introduction</h2>
+<p>AI coding assistants have been widely available since late 2022. The question of whether they make developers faster, slower, or simply different is not settled. The published evidence is contradictory, and the contradictions are informative.</p>
+<p>Peng et al. (2023) conducted a randomized controlled trial with 95 developers on a simple HTTP server task and found a 55.8% speedup with GitHub Copilot. The METR study (2025) tested 16 experienced open-source developers on real tasks in real repositories and found they were 19% slower with AI tools while perceiving a 20% speedup. Anthropic’s internal study (2025-2026) reported a 67% increase in merged pull requests per engineer per day among 132 self-selected engineers.</p>
+<p>The quality data is less ambiguous. GitClear’s analysis of 211 million changed lines across Google, Microsoft, and Meta repositories (2024-2025) found that copy-paste code increased from 8.3% to 12.3%, code churn increased from 5.5% to 7.9%, and refactoring activity collapsed from 25% to under 10% after AI adoption. Google’s DORA report (2024, 39,000+ professionals surveyed over 10 years) measured a 7.2% decrease in delivery stability for every 25% increase in AI adoption. The 2025 DORA report found a 90% AI adoption increase associated with a 9% climb in bug rates, with individual throughput up but organizational delivery metrics flat (the “stability paradox”). OX Security (2025) identified 10 critical anti-patterns in 80-100% of AI-generated code across 300+ open-source repositories.</p>
+<p>A separate body of research documents iterative degradation when AI-generated code is fed back into AI systems. Shumailov et al. (2024, <em>Nature</em> 631, 755-759) demonstrated that generative models trained on their own output undergo irreversible “model collapse.” Shukla, Joshi, and Syed (2025, IEEE-ISTAS) conducted the first controlled study of iterative AI code generation and measured a 37.6% increase in critical security vulnerabilities after just 5 iterations of AI “improving” its own code. Alemohammad et al. (2024, ICLR) coined “Model Autophagy Disorder” (MAD). Dohmatob et al. (2025, ICLR) proved that even 1-in-1,000 synthetic data contamination triggers collapse. Mohamed et al. (2025, ACL) documented the same phenomenon in text, comparing it to the children’s game “broken telephone.”</p>
+<p>No peer-reviewed study has isolated the variable that reconciles the speed and quality findings. The study that would settle the question requires four experimental arms: AI with structured process, AI without structured process, manual coding with structured process, manual coding without structured process. That study does not exist. What does exist is converging observational evidence that AI assistance is a multiplier of whatever process discipline surrounds it. DORA’s 2025 report characterizes AI as an “amplifier” of existing organizational maturity, but this finding is based on survey-level correlational data, not controlled observation.</p>
+<p>This paper presents a natural experiment that provides project-level evidence for the amplifier thesis. A two-person team produced two applications under different process conditions. The team and the tools were constant. The process authority changed. The outcomes diverged on 16 of 18 measurable enterprise dimensions.</p>
+<hr />
+<h2 id="pd-related-work">2. Related Work</h2>
+<h3 id="pd-speed-studies">2.1 Speed Studies</h3>
+<p>The controlled speed studies measure different things and reach different conclusions. Peng et al. (2023, arXiv:2302.06590) tested a simple, isolated task (an HTTP server) in a peer-reviewed RCT with 95 developers and found a 55.8% speedup. METR (2025) tested real-world tasks in real repositories with 16 experienced open-source developers (average 22K+ stars) and found a 19% slowdown with a perceived 20% speedup. Anthropic’s internal study (2025-2026) reported a 67% increase in merged PRs/engineer/day among 132 self-selected engineers at an AI company. The reconciliation is straightforward: AI accelerates simple, isolated tasks. On complex, real-world tasks in existing codebases, the acceleration disappears or reverses.</p>
+<h3 id="pd-quality-studies">2.2 Quality Studies</h3>
+<p>Quality-focused studies consistently report negative downstream effects. GitClear (2024-2025, 211M lines across Google, Microsoft, and Meta) found duplicated code increased 4x, cleanup activity collapsed from 25% to under 10%, and code churn increased from 5.5% to 7.9%. Google DORA (2024) measured a 7.2% delivery stability decrease per 25% AI adoption increase. The 2025 DORA report found the “stability paradox”: individual throughput up, organizational delivery metrics flat, bug rates up 9%. Xie et al. (2025, arXiv:2510.10165) found a 19% drop in original code productivity in open-source projects after Copilot introduction. OX Security (2025) identified 10 critical anti-patterns in 80-100% of AI-generated code across 300+ repositories. Stack Overflow’s 2025 survey (65,000+ respondents) found positive AI sentiment dropped from 70%+ to 60%, with 66% citing “almost right but not quite” and 45% reporting that debugging AI code is more time-consuming.</p>
+<p>He et al. (2025, arXiv:2511.04427) used a difference-in-differences design across 807 Cursor-adopting repositories matched against 1,380 controls and found “substantial but transient velocity gains alongside persistent increases in technical debt,” with static analysis warnings up 18% and cognitive complexity up 39%.</p>
+<h3 id="pd-generation-loss-iterative-degradation">2.3 Generation Loss / Iterative Degradation</h3>
+<p>Shumailov et al. (2024, <em>Nature</em> 631, 755-759) demonstrated “model collapse”: irreversible quality degradation when generative models train on their own output. Alemohammad et al. (2024, ICLR) coined “Model Autophagy Disorder” (MAD) and showed appreciable quality loss in a handful of generations. Dohmatob et al. (2025, ICLR) proved that even 1-in-1,000 contamination triggers collapse, with larger models amplifying rather than mitigating the effect. Shukla, Joshi, and Syed (2025, IEEE-ISTAS, arXiv:2506.11022) conducted the first controlled study of iterative AI code generation: 37.6% increase in critical security vulnerabilities after 5 iterations, across 400 code samples and 40 rounds. Mohamed et al. (2025, ACL, arXiv:2502.20258) documented the same phenomenon in text.</p>
+<h3 id="pd-the-process-variable-gap">2.4 The Process Variable Gap</h3>
+<p>No published study uses a controlled comparison controlling for process discipline as an independent variable alongside AI tool usage. DORA’s 2025 “AI Capabilities Model” identifies 7 organizational practices that moderate AI outcomes and characterizes AI as an “amplifier” of existing maturity, but this is correlational survey data. The DeputyDev longitudinal study (2025, arXiv:2509.19708, 300 engineers, 1 year) measured AI-assisted development within a structured platform but had no “unstructured” comparison arm. The CodeScene/Borg et al. RCT (2025, arXiv:2507.00788, 151 developers) controlled for AI usage but not for process discipline. He et al. (2025) compared AI-adopting vs. non-adopting repositories but did not control for whether adopting teams had structured processes.</p>
+<p>The gap is specific: no study holds team and tools constant while varying the development process, and measures enterprise-quality outcomes. This paper addresses that gap with observational data from a natural experiment.</p>
+<hr />
+<h2 id="pd-context-and-methodology">3. Context and Methodology</h2>
+<h3 id="pd-team-and-tools">3.1 Team and Tools</h3>
+<p>The team consisted of two developers working on enterprise financial software (Canadian wealth management, regulatory compliance):</p>
+<ul>
+<li><strong>Developer A</strong> (full-time): CTO. 205 unique active days across all repositories. Designed the structured SDLC, the architectural framework, and served as architectural reviewer for all AI-generated code.</li>
+<li><strong>Developer B</strong> (half-time, 0.5 FTE): 163 unique active days. Sole contributor to one major codebase (324 commits), responsible for 88% of a critical two-month infrastructure sprint (212 of 240 commits) on another.</li>
+</ul>
+<p><strong>FTE calculation:</strong> Developer A = 205 developer-days. Developer B at half-time = 163 active days x 0.5 = ~82 FTE-days. Total: ~287 FTE-days, or ~13.7 FTE-months (at 21 working days/month).</p>
+<p>Both developers used AI coding assistants throughout both conditions. The AI tools and team composition are the controlled variables. The programming language is not: the structured condition used Python/FastAPI following a specified architecture (Honest Code framework, HTMX for frontend); the unstructured condition used React (TypeScript/JavaScript). This divergence is itself a data point: without architectural specification, the AI assistants defaulted to React, the framework most represented in their training data.</p>
+<h3 id="pd-the-independent-variable-process-authority">3.2 The Independent Variable: Process Authority</h3>
+<p>The independent variable is not “structured process vs. no process” in the abstract. It is who controlled the development process.</p>
+<p><strong>Condition 1 (structured SDLC):</strong> The development process was designed and controlled by the technical architect (Developer A). The process comprised: - Written functional specifications before implementation - Behavioral test definitions (BDD) before code - Test-first implementation - Architectural review of AI-generated output in real time - Selective sampling and targeted questioning of generated code - Pre-commit hooks enforcing formatting, linting, template validation, and automated test execution - 13 automated quality pipelines</p>
+<p><strong>Condition 2 (business-directed process):</strong> Organizational authority over the development process shifted from the technical architect to non-technical stakeholders. Business priorities (demo readiness, feature delivery timelines, stakeholder presentations) determined what was built and how. The structured SDLC constraints were not applied. The same developers used the same AI tools without the specification, testing, review, and quality-gate requirements.</p>
+<p>This shift was not a decision by the developers to skip process. It was an organizational decision imposed by stakeholders prioritizing business deliverables over technical process. This distinction matters for experimental design: it eliminates self-selection bias. The developers did not choose the unstructured condition. It was imposed on them.</p>
+<h3 id="pd-the-dependent-variables">3.3 The Dependent Variables</h3>
+<p>Enterprise software quality was measured across 18 dimensions that cover the criteria bank technology assessors use, derived from: SOC 2 Trust Services Criteria, NIST SP 800-53, OWASP ASVS, DORA metrics, CIS Benchmarks, and CNCF best practices. Each dimension was assessed against the minimum threshold a bank auditor or technology risk committee would apply.</p>
+<p>The 18 dimensions span security architecture (entitlements, authentication, inter-service security), data architecture (multi-tenancy), compliance engineering (audit infrastructure), operational security (rate limiting, configuration and secrets management), performance engineering (caching), operations (notifications), DevOps (CI/CD), infrastructure (containerization), software architecture (dependency injection, pattern sophistication, architectural philosophy), governance (live documentation), process engineering (SDLC with AI safeguards), lifecycle management (tech debt management), and software development (UX/accessibility).</p>
+<p>These dimensions were validated by reverse-mapping against three frameworks banks use during vendor assessments: the Shared Assessments SIG Questionnaire (21 risk domains, 1,936 questions), the FFIEC IT Examination Handbook (11 booklets), and OSFI B-13 Technology and Cyber Risk Management (3 domains, 17 principles). Every application-level examination area in all three frameworks maps to at least one of the 18 dimensions.</p>
+<p>Productivity was measured in function points per FTE-month using three independent estimation methods plus a verified lower bound: 1. Lines of code backfiring using Capers Jones language-specific ratios (+/- 30% variance) 2. Feature/screen counting using IFPUG heuristics 3. Commit cadence as a consistency proxy 4. BDD scenario inventory as a verified floor (no estimation required)</p>
+<h3 id="pd-the-two-natural-experiments">3.4 The Two Natural Experiments</h3>
+<p><strong>Experiment 1: Application A vs. Application B.</strong> Both applications target the same domain (Canadian financial services). Application A was built under Condition 1 (structured SDLC) in Python/FastAPI. Application B was built under Condition 2 (business-directed process) in React. The team and tools were constant; the technology stack diverged as a consequence of the process change.</p>
+<p><strong>Experiment 2: Codebase C before and after SDLC introduction.</strong> Developer B was the sole contributor to a third codebase (an identity and access management service). The early commit history shows code produced without the structured SDLC. The later commit history shows the same developer, on the same codebase, after the structured SDLC was introduced by Developer A. The quality transition is visible in the commit record: 175,881 lines of AI-generated bloat were eliminated in a single month during the transition, replaced by properly structured code with organized test suites, cryptographic authentication, and containerized deployment.</p>
+<hr />
+<h2 id="pd-results">4. Results</h2>
+<h3 id="pd-enterprise-dimension-comparison">4.1 Enterprise Dimension Comparison</h3>
+<p>Application A (structured SDLC) satisfies all 18 dimensions. Application B (business-directed process) satisfies 2 of 18.</p>
+<p>Application B has no automated tests, no CI/CD pipelines, no code review process (all code pushed directly to default branch), no structured audit logging, no rate limiting, no container orchestration, no pre-commit quality gates, and no behavioral specifications. It has a working authentication layer (satisfying dimension 2 partially) and basic data models (satisfying dimension 4 partially).</p>
+<p>The 16 dimensions that Application B fails are not marginal shortfalls. They are absences. There is no partial credit on a bank’s technology assessment for these controls: they either exist or the assessment fails.</p>
+<h3 id="pd-productivity-measurement">4.2 Productivity Measurement</h3>
+<p>Four methods were applied to Application A’s codebase. All figures exclude JSON data files, virtual environments, and generated assets.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Est. FP</th>
+<th>FTE-months</th>
+<th>FP/FTE-month</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LOC backfiring (full)</td>
+<td>5,682</td>
+<td>13.7</td>
+<td>415</td>
+</tr>
+<tr>
+<td>LOC backfiring (50% haircut)</td>
+<td>2,841</td>
+<td>13.7</td>
+<td>207</td>
+</tr>
+<tr>
+<td>Feature/screen counting</td>
+<td>3,340</td>
+<td>13.7</td>
+<td>244</td>
+</tr>
+<tr>
+<td>BDD verified floor (partial)</td>
+<td>124-186</td>
+<td>13.7</td>
+<td>9-14 (floor)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Industry benchmarks for comparison:</strong> Industry median 7-10 FP/dev/month (Capers Jones/SPR, 26,000+ projects; QSM/SLIM, 13,000+ projects; ISBSG, 10,000+ projects). Published elite agile benchmark: 20-26 FP/dev/month.</p>
+<p>The conservative estimate (207 FP/FTE-month) places the team at 8-10x the published elite benchmark for manual development. The feature/screen counting method (244 FP/FTE-month), which is independent of LOC and therefore not subject to AI verbosity inflation, produces a consistent result.</p>
+<h3 id="pd-bdd-as-verified-floor">4.3 BDD as Verified Floor</h3>
+<p>The BDD (Behavioral Driven Development) feature files provide a countable, machine-readable inventory of delivered functionality. Each of the 31 BDD scenarios declares a specific system behavior in plain English, verified by an automated test. At IFPUG heuristics (4-6 FP per scenario), the verified floor is 124-186 FP.</p>
+<p>This floor covers only user-facing behavior. It excludes all infrastructure work: authentication, caching, rate limiting, CI/CD, containerization, inter-service security. These 17 below-the-waterline dimensions are real engineering effort that produces no user-facing behavior and therefore no BDD scenarios.</p>
+<p>The verified floor of 9-14 FP/FTE-month (covering a fraction of the system) already meets or exceeds the industry median of 7-10 FP/dev/month. The gap between the floor and the total estimate is the documented infrastructure and architecture work. This provides a controlled sample against which to validate the total FP estimate: the BDD-covered portion is not estimated, and the remaining work is traceable to specific architectural components.</p>
+<h3 id="pd-cost-analysis">4.4 Cost Analysis</h3>
+<p>Developer A compensation: US$12,500/month. Developer B compensation: US$5,000/month. Combined: US$17,500/month. Over 13.7 FTE-months: approximately US$240K in direct salary costs (excluding tools, infrastructure, and overhead).</p>
+<p>An industry-median team producing the same output (2,841 FP at the conservative estimate) would require 24 developers at US$16.8K/month fully-loaded cost (Glassdoor 2025 US senior full-stack Python developer average at 1.4x multiplier per MIT Sloan/Hadzima), totaling approximately US$5.5M over the same period.</p>
+<p>The structured AI-assisted team produced at approximately 4% of the cost of an industry-median team while satisfying all 18 dimensions.</p>
+<h3 id="pd-code-quality-signals">4.5 Code Quality Signals</h3>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 48%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Application A (structured)</th>
+<th>Industry comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cleanup ratio</td>
+<td>55% (811K lines removed of 1.48M added)</td>
+<td>GitClear 2025: industry cleanup collapsed to under 10% with AI</td>
+</tr>
+<tr>
+<td>Test coverage trajectory</td>
+<td>74% to 100% in one month</td>
+<td>DORA: automated testing prerequisite for elite performance</td>
+</tr>
+<tr>
+<td>Commits sustained</td>
+<td>10.7/FTE-day over 287 FTE-days</td>
+<td>No published benchmark for comparison</td>
+</tr>
+<tr>
+<td>CI/CD pipelines</td>
+<td>13 with pre-commit quality gates</td>
+<td>Puppet 2024: only 66% of high performers achieve this</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pd-the-iam-transition-experiment-2">4.6 The IAM Transition (Experiment 2)</h3>
+<p>Developer B’s commit history on the identity and access management codebase captures both conditions:</p>
+<p><strong>Before structured SDLC:</strong> Test files of 1,000-3,000 lines each generated for single database models. This matches GitClear’s industry-scale finding: AI generates volume without design.</p>
+<p><strong>After structured SDLC introduction:</strong> In June 2025, Developer B eliminated 175,881 lines in 9 commits:</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 27%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr>
+<th>Commit</th>
+<th>Deletions</th>
+<th>What was eliminated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>b825f35</td>
+<td>-38,042</td>
+<td>40 bloated AI-generated test files</td>
+</tr>
+<tr>
+<td>20a4dfe</td>
+<td>-33,539</td>
+<td>Old controller/route/DTO code replaced by working endpoints</td>
+</tr>
+<tr>
+<td>90ca5b8</td>
+<td>-19,165</td>
+<td>9 massive test files during framework conversion</td>
+</tr>
+<tr>
+<td>7272d9e</td>
+<td>-19,160</td>
+<td>Formatting/linting cleanup pass</td>
+</tr>
+<tr>
+<td>8f60e64</td>
+<td>-15,468</td>
+<td>26 unnecessary CSV seed files</td>
+</tr>
+<tr>
+<td>bd6dd21</td>
+<td>-14,113</td>
+<td>6 bloated test files replaced by organized suites</td>
+</tr>
+<tr>
+<td>718c122</td>
+<td>-12,797</td>
+<td>Old test files replaced after model changes</td>
+</tr>
+<tr>
+<td>575ab9c</td>
+<td>-12,008</td>
+<td>10 old test files replaced (64% coverage milestone)</td>
+</tr>
+<tr>
+<td>e939152</td>
+<td>-11,588</td>
+<td>Old models replaced by typed models</td>
+</tr>
+</tbody>
+</table>
+<p>The replacement code: properly structured database models, organized test suites, cryptographic inter-service authentication, audit trails, containerized deployment. The quality shift was caused by the introduction of the structured SDLC, not by changing the developer, the tools, or the language.</p>
+<hr />
+<h2 id="pd-analysis">5. Analysis</h2>
+<h3 id="pd-process-as-the-isolating-variable">5.1 Process as the Isolating Variable</h3>
+<p>The two natural experiments converge on the same finding. In Experiment 1, the same team using the same tools produced radically different enterprise-quality outcomes under different process conditions. In Experiment 2, the same developer on the same codebase produced radically different code quality before and after structured process introduction. The variable that changed in both cases was the development process.</p>
+<p>This is consistent with DORA’s (2025) characterization of AI as an “amplifier,” but provides a mechanism that survey data cannot: the structured SDLC constrains the AI’s output through specifications, tests, architectural review, and automated quality gates. Without these constraints, the AI generates volume (lines, files, apparent features) without the enterprise characteristics (security controls, audit trails, test coverage, deployment automation) that regulated buyers require.</p>
+<h3 id="pd-the-three-requirements">5.2 The Three Requirements</h3>
+<p>The data suggests three necessary conditions for productive AI-assisted enterprise development, any one of which, if absent, produces failure:</p>
+<ol type="1">
+<li><p><strong>Structured process discipline:</strong> Specifications before code, tests before implementation, architectural review during generation, automated quality gates before commit.</p></li>
+<li><p><strong>Elite-level seniority to enforce it:</strong> The architect must recognize when AI output drifts from the specification, interrupt before drift compounds, and review through targeted questioning. These are not mechanical steps. They require the ability to recognize good architecture on sight. The METR study’s finding that experienced open-source developers were 19% slower with AI is consistent: experience with code is necessary but not sufficient. Experience with architecture, with systems thinking, with knowing what an auditor will evaluate, is the additional requirement.</p></li>
+<li><p><strong>A clean starting codebase:</strong> AI will not produce code better than the code it learns from. Shumailov et al.’s model collapse research provides the theoretical basis. Shukla et al.’s 37.6% vulnerability increase provides the empirical rate. An AI operating in a well-designed codebase absorbs its conventions and produces code that follows them. An AI operating in a poorly structured codebase absorbs those patterns and reproduces them. The starting point is the ceiling.</p></li>
+</ol>
+<p>These three requirements are multiplicative, not additive. The Buckler data demonstrates what happens when process is removed while team and tools remain constant: the enterprise quality outcomes collapse from 18/18 to 2/18 dimensions satisfied.</p>
+<h3 id="pd-the-exogenous-process-change">5.3 The Exogenous Process Change</h3>
+<p>The process shift from Condition 1 to Condition 2 was not a developer decision. It was an organizational decision: non-technical stakeholders assumed authority over development priorities, directing the team toward business deliverables (demos, feature presentations, stakeholder requests) without the structured SDLC constraints. The developers did not choose to abandon specifications, testing, and code review. Those activities were displaced by business-directed urgency.</p>
+<p>This distinction is methodologically significant. In most observational comparisons of development practices, self-selection bias confounds the results: teams that adopt structured processes may be more disciplined to begin with. In this case, the same team operated under both conditions, and the transition was imposed externally. The process variable was exogenous to the developers’ preferences.</p>
+<hr />
+<h2 id="pd-threats-to-validity">6. Threats to Validity</h2>
+<h3 id="pd-internal-validity">6.1 Internal Validity</h3>
+<p><strong>Author as subject.</strong> The author designed the structured SDLC, served as architectural reviewer, and wrote this analysis. This is a conflict of interest. The mitigation is that all metrics reported in this paper are derived from git commit history and source code analysis, not from subjective assessment. Commit counts, line additions, line deletions, file counts, and commit timestamps are objective and independently verifiable. The 18-dimension assessment uses published frameworks (SOC 2, NIST 800-53, OWASP ASVS) with stated minimum thresholds.</p>
+<p><strong>No randomization.</strong> This is a natural experiment, not a randomized controlled trial. The team was not randomly assigned to conditions. The mitigation is that the process change was exogenous (imposed by organizational authority, not self-selected by the developers), which reduces but does not eliminate selection bias.</p>
+<p><strong>Confounding variables.</strong> The two applications differ in scope and purpose, not only in process. Application A is a larger, more complex platform. It is possible that the complexity itself forced more structured development. The IAM transition (Experiment 2) partially addresses this concern: the same codebase, same scope, different process, different outcomes.</p>
+<h3 id="pd-external-validity">6.2 External Validity</h3>
+<p><strong>Team size.</strong> A two-person team may not generalize to larger organizations. The structured SDLC described here relies on a single architectural reviewer with direct oversight of all generated code. This may not scale without modification.</p>
+<p><strong>Domain.</strong> The findings are from financial services software built for regulatory compliance. The 18-dimension framework is specific to this domain. The underlying thesis (process discipline determines AI-assisted development quality) may generalize, but the specific measurement framework does not.</p>
+<p><strong>Technology stack divergence.</strong> The structured condition used Python/FastAPI; the unstructured condition used React. This is a confounding variable: the quality differences could be partially attributed to the technology choice rather than the process. The mitigation is twofold. First, the technology divergence is itself a consequence of the absent process: without an architectural specification, the AI assistants defaulted to React, which is a finding about unstructured AI-assisted development, not an independent variable. Second, Experiment 2 (the IAM transition) controls for language – the same developer, same codebase, same language (Python), with only the process changing – and produces the same quality transition.</p>
+<h3 id="pd-construct-validity">6.3 Construct Validity</h3>
+<p><strong>Enterprise dimensions defined by the author.</strong> The 18 dimensions were derived by the author from published frameworks. The mitigation is the reverse-mapping validation: every application-level examination area in the SIG Questionnaire, FFIEC IT Examination Handbook, and OSFI B-13 maps to at least one dimension. The dimensions were not selected to favor the structured application.</p>
+<p><strong>Function point estimation.</strong> The LOC-to-FP backfiring method has +/- 30% variance (Capers Jones). AI-assisted code may be systematically more verbose than manual code, inflating the LOC-based estimate. The feature/screen counting method (244 FP/FTE-month) is independent of LOC and produces a consistent result. The BDD verified floor (9-14 FP/FTE-month, covering only a fraction of the system) already meets the industry median, providing a lower bound that requires no estimation.</p>
+<h3 id="pd-proprietary-codebase">6.4 Proprietary Codebase</h3>
+<p>The source code is proprietary and cannot be published. This limits independent verification to the methodology and the git-derived metrics. The methodology is described in sufficient detail for replication on any comparable codebase. The author invites independent audit of the git history and source code under appropriate confidentiality arrangements.</p>
+<hr />
+<h2 id="pd-discussion">7. Discussion</h2>
+<h3 id="pd-implications-for-the-ai-assisted-development-debate">7.1 Implications for the AI-Assisted Development Debate</h3>
+<p>The findings suggest that the contradictions in the AI-assisted development literature are not contradictions at all. They are measurements of different conditions. AI accelerates simple tasks (Peng et al.) and degrades complex system quality (GitClear, DORA, METR) because the studies measured different process conditions. When AI operates within a structured process with expert oversight and a clean codebase, it produces extraordinary output. When it operates without those constraints, it produces volume without quality. The tool is the same. The process is different.</p>
+<p>This reframes the policy question from “should organizations adopt AI coding assistants?” to “under what process conditions do AI coding assistants produce enterprise-quality output?” The answer suggested by this data: structured specifications, test-first development, real-time architectural review of AI output, automated quality gates, and a codebase designed with enterprise constraints from the beginning.</p>
+<h3 id="pd-implications-for-organizational-governance">7.2 Implications for Organizational Governance</h3>
+<p>The exogenous nature of the process change in this study has a specific implication: the quality collapse was caused by an organizational decision, not a technical one. When non-technical stakeholders assumed authority over development process, the enterprise quality outcomes collapsed even though the team and tools remained constant. This suggests that organizational governance of AI-assisted development is as important as the technical practices themselves. A structured SDLC that can be overridden by business urgency is not a structured SDLC.</p>
+<h3 id="pd-limitations-and-future-work">7.3 Limitations and Future Work</h3>
+<p>This study provides evidence from a single natural experiment with a two-person team. A complete four-group comparison (AI with and without structured process, manual coding with and without structured process) remains the gold standard for establishing causation. The present data covers the two AI-assisted groups. A complete design would require a manual-coding control, which was not available in this dataset.</p>
+<p>The function point estimates, while consistent across three independent methods and validated against a BDD-verified floor, would benefit from independent certification by a certified function point analyst.</p>
+<p>Replication across different team sizes, domains, languages, and AI tools would strengthen the generalizability of the findings.</p>
+<hr />
+<h2 id="pd-conclusion">8. Conclusion</h2>
+<p>No published study has isolated process discipline as a controlled variable in AI-assisted software development outcomes. This paper presents a natural experiment that holds team and tools constant while varying the development process through an exogenous organizational change. The structured condition produced an application satisfying 18 enterprise dimensions covering the criteria bank technology assessments measure, at 8-10x the published elite productivity benchmark. The unstructured condition produced an application satisfying 2 of 18 dimensions, with no tests, no quality pipelines, and no code review.</p>
+<p>The findings are consistent with DORA’s characterization of AI as an amplifier but provide granular, project-level evidence that aggregate survey data cannot. The data suggests three multiplicative requirements for productive AI-assisted enterprise development: structured process discipline, elite-level architectural oversight, and a clean starting codebase. When organizational decisions removed the first requirement while the other two remained partially available, the enterprise quality outcomes collapsed.</p>
+<p>The contradictions in the AI-assisted development literature are resolved when process discipline is treated as the mediating variable. AI does not make developers faster or slower. It amplifies whatever process discipline – or lack thereof – surrounds the work.</p>
+<hr />
+<h2 id="pd-references">References</h2>
+<p>Akeyless. (2024). State of Secrets Sprawl Report.</p>
+<p>Alemohammad, S., et al. (2024). Self-consuming generative models go MAD. <em>Proceedings of ICLR 2024</em>. arXiv:2307.01850.</p>
+<p>Anthropic. (2025-2026). How AI is transforming work at Anthropic. Internal study, 132 engineers.</p>
+<p>Boehm, B. W. (1981). <em>Software Engineering Economics</em>. Prentice-Hall.</p>
+<p>Brooks, F. P. (1975). <em>The Mythical Man-Month</em>. Addison-Wesley.</p>
+<p>Capers Jones, T. (2007). <em>Estimating Software Costs</em>. McGraw-Hill.</p>
+<p>CISQ. (2022). The Cost of Poor Software Quality in the US: A 2022 Report.</p>
+<p>Dohmatob, E., et al. (2025). Strong model collapse. <em>Proceedings of ICLR 2025</em>. arXiv:2410.04840.</p>
+<p>DORA/Google. (2024). 2024 State of DevOps Report.</p>
+<p>DORA/Google. (2025). State of AI-Assisted Software Development.</p>
+<p>GitClear. (2025). AI assistant code quality research: 211 million lines analyzed.</p>
+<p>Glass, R. L. (2003). <em>Facts and Fallacies of Software Engineering</em>. Addison-Wesley.</p>
+<p>He, J., et al. (2025). Speed at the cost of quality: Quantifying the impact of AI-assisted coding on code quality. arXiv:2511.04427.</p>
+<p>ISBSG. International Software Benchmarking Standards Group. Repository of 10,000+ projects.</p>
+<p>Lientz, B. P., &amp; Swanson, E. B. (1980). <em>Software Maintenance Management</em>. Addison-Wesley.</p>
+<p>McKinsey. (2012). Delivering large-scale IT projects on time, on budget, and on value.</p>
+<p>McKinsey. (2020). Tech debt: Reclaiming tech equity.</p>
+<p>METR. (2025). Measuring the impact of early 2025 AI models on experienced open-source developer productivity.</p>
+<p>Mohamed, A., et al. (2025). LLM as a broken telephone: Information distortion accumulates over iterative passes. <em>Proceedings of ACL 2025</em>. arXiv:2502.20258.</p>
+<p>OX Security. (2025). AI-generated code violates engineering best practices, undermining software security at scale.</p>
+<p>Peng, S., et al. (2023). The impact of AI on developer productivity: Evidence from GitHub Copilot. arXiv:2302.06590.</p>
+<p>Ponemon Institute/ServiceNow. (2019). Costs and consequences of gaps in vulnerability response.</p>
+<p>QSM/SLIM. Quantitative Software Management. Database of 13,000+ projects.</p>
+<p>Shukla, A., Joshi, H., &amp; Syed, A. (2025). Iterative AI code generation and security vulnerability amplification. <em>Proceedings of IEEE-ISTAS 2025</em>. arXiv:2506.11022.</p>
+<p>Shumailov, I., et al. (2024). AI models collapse when trained on recursively generated data. <em>Nature</em>, 631, 755-759.</p>
+<p>SonarSource. (2025). State of code quality report.</p>
+<p>Stack Overflow. (2025). Developer Survey 2025.</p>
+<p>Stripe. (2018). The Developer Coefficient.</p>
+<p>Xie, Y., et al. (2025). Experienced developers and AI coding assistants: A longitudinal study of open-source projects. arXiv:2510.10165.</p>
 
 <h2>Identifiers</h2>
 

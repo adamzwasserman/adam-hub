@@ -87,13 +87,489 @@
 
 <p><a href="/papers/english-considered-harmful.pdf"><strong>Download the PDF</strong></a></p>
 
-<h2>Abstract</h2>
+<h2>Full text</h2>
 
-<p>English is the dominant language in language model training. This paper presents experimental evidence that it actively interferes with learning structurally explicit patterns.</p>
+<p>The complete paper follows. It is identical to the deposited PDF; the PDF is the version of record and carries the figures at full resolution.</p>
 
-<p>Three controlled comparisons: French against English, interleaved French and English against French alone, and Rust against Rust mixed with English. In each case, mixing English with a structurally richer language degrades both perplexity and structural pattern acquisition.</p>
-
-<p>At 125M parameters the effect is large enough to matter for anyone assembling a multilingual corpus, and it points the opposite way from the usual assumption that more data helps.</p>
+<p><strong>Adam Zachary Wasserman</strong></p>
+<hr />
+<h2 id="ech-abstract">Abstract</h2>
+<p>We present experimental evidence that English—the dominant language in large language model training—actively interferes with learning structurally explicit patterns. Through controlled experiments comparing (1) French vs. English, (2) interleaved French+English vs. French-only, and (3) Rust vs. Rust+English, we demonstrate that mixing English with structurally rich languages degrades both perplexity and structural pattern acquisition. At 125M parameters, French achieves 100% grammar probe accuracy in ~197M tokens while English remains at chance after 3B tokens—a &gt;15x efficiency gap. The pollution effect is demonstrated directly by interleaved training: when French and English alternate in the same model, French grammar accuracy degrades from 100% to 50-70%—English doesn’t merely fail to help, it actively corrupts the French grammatical signal. The same pattern appears in code: when Rust is interleaved with English text, the model shows 10x worse perplexity and 20% lower probe accuracy compared to Rust-only training. These findings suggest that English’s morphological poverty creates noise that pollutes learning of any structurally explicit system, whether natural language (French) or synthetic (Rust). Critically, we show that perplexity and probe accuracy are orthogonal dimensions: models can achieve identical accuracy with 11x different perplexity, revealing that standard metrics miss the depth of structural understanding. We propose that the field’s reliance on English-dominated training corpora may be a hidden bottleneck in language model capability development.</p>
+<hr />
+<h2 id="ech-introduction">1. Introduction</h2>
+<p>The title of this paper deliberately echoes Dijkstra’s famous “Go To Statement Considered Harmful” (1968). Where Dijkstra argued that a ubiquitous programming practice was actively detrimental to software quality, we argue that a ubiquitous training practice—English-dominated corpora—may be actively detrimental to language model learning efficiency.</p>
+<p>Modern English is morphologically impoverished. Through centuries of grammatical simplification, it has lost: - Grammatical gender and associated agreement - Most case marking (from Old English’s four cases to vestigial forms) - Rich verb conjugation (minimal person/number agreement) - Adjective-noun agreement</p>
+<p>This poverty has a consequence that the field has overlooked: <strong>English text provides sparse structural signal</strong>. Where French marks gender and number redundantly across articles, adjectives, verbs, and participles—providing multiple views of the same grammatical relationship—English leaves these relationships implicit, recoverable only through word order and context.</p>
+<p>We hypothesized that this difference would affect learning efficiency. We found something stronger: English doesn’t merely fail to help; it actively <em>hurts</em> when mixed with structurally explicit languages.</p>
+<h3 id="ech-contributions">1.1 Contributions</h3>
+<ol type="1">
+<li><p><strong>Controlled cross-linguistic comparison</strong>: First controlled experiment comparing training dynamics between fusional languages with different agreement richness (French vs. English), finding ~50x efficiency advantage for French on grammatical acquisition.</p></li>
+<li><p><strong>Direct pollution evidence</strong>: Interleaved French+English training degrades French grammar from 100% to 50-70%, demonstrating that English doesn’t merely provide less signal—it actively corrupts structurally rich patterns when mixed in training.</p></li>
+<li><p><strong>Cross-domain replication</strong>: The same interference pattern occurs when English is mixed with Rust code, establishing that the effect generalizes beyond natural language to any structurally explicit system.</p></li>
+<li><p><strong>Pollution hypothesis</strong>: A theoretical framework explaining why English’s implicit structure creates anti-signal that interferes with learning explicit structural patterns.</p></li>
+<li><p><strong>Orthogonality of metrics</strong>: Discovery that perplexity and structural accuracy are orthogonal dimensions governed by different determinants (distributional coherence vs. morphological explicitness). This explains why standard evaluation metrics miss structural learning deficits: models can improve perplexity indefinitely while never acquiring grammar.</p></li>
+</ol>
+<hr />
+<h2 id="ech-related-work">2. Related Work</h2>
+<h3 id="ech-morphological-complexity-in-language-modeling">2.1 Morphological Complexity in Language Modeling</h3>
+<p>Prior work has examined how morphological properties affect language model performance, but has consistently conflated two orthogonal dimensions:</p>
+<p><strong>Morphological complexity</strong> (agglutinative languages like Turkish, Finnish): Many affixes, complex word formation, high type/token ratio. Park et al. (2021) found these languages harder to model with BPE tokenization.</p>
+<p><strong>Agreement redundancy</strong> (fusional languages with rich agreement like French, Russian): The same grammatical features are marked on multiple agreeing words. This dimension has been largely unexplored.</p>
+<p>Arnett &amp; Bergen (2024) compared agglutinative vs. fusional languages but did not compare fusional languages with different agreement richness. No prior work has compared French vs. English training dynamics under controlled conditions.</p>
+<h3 id="ech-multilingual-training">2.2 Multilingual Training</h3>
+<p>Multilingual models (mBERT, XLM-R, BLOOM) train on many languages simultaneously, but do not isolate the contribution of individual languages or examine interference effects. Our work suggests that English’s presence in these corpora may be actively harming performance on other languages.</p>
+<h3 id="ech-code-language-models">2.3 Code Language Models</h3>
+<p>Models like Codex, StarCoder, and CodeLlama are typically trained on code mixed with natural language (comments, documentation, StackOverflow). Our Rust experiment suggests this mixing may impair learning of structural patterns in the code itself.</p>
+<hr />
+<h2 id="ech-figures">Figures</h2>
+<p><img src="/papers/figures/english-considered-harmful/ppx_trajectories.png" alt="Figure 1: Perplexity Trajectories" /> <em>Figure 1: Perplexity trajectories showing the English penalty. Rust+English shows 13x worse PPX than Rust-only; the ratio accelerates over training.</em></p>
+<p><img src="/papers/figures/english-considered-harmful/accuracy_trajectories.png" alt="Figure 2: Accuracy Trajectories" /> <em>Figure 2: Grammar/probe accuracy over training. The accuracy gap shows when structural discrimination emerges for each condition.</em></p>
+<p><img src="/papers/figures/english-considered-harmful/orthogonality.png" alt="Figure 3: Orthogonality of PPX and Accuracy" /> <em>Figure 3: PPX vs Accuracy scatter demonstrating that these metrics are orthogonal. Models can achieve identical probe accuracy while having 13x different perplexity—showing PPX captures “depth” of understanding that binary probes miss.</em></p>
+<p><img src="/papers/figures/english-considered-harmful/interleaved_experiment.png" alt="Figure 4: Interleaved EN/FR Experiment" /> <em>Figure 4: The interleaved EN/FR experiment showing English “pollution” of French grammar. Mixing English with French degrades French grammar from 100% to 50-70%.</em></p>
+<p><img src="/papers/figures/english-considered-harmful/dual_axis.png" alt="Figure 5: Dual-Axis Trajectories" /> <em>Figure 5: PPX (left axis) and Accuracy (right axis) overlaid for each experiment, showing how these dimensions evolve independently.</em></p>
+<p><img src="/papers/figures/english-considered-harmful/english_penalty_summary.png" alt="Figure 6: English Penalty Summary" /> <em>Figure 6: Summary of the English penalty on both orthogonal dimensions.</em></p>
+<p><img src="/papers/figures/english-considered-harmful/multifactor_analysis.png" alt="Figure 7: Multi-Factor Analysis" /> <em>Figure 7: Multi-factor analysis (Language × Scale). Scale is a conditional factor: for structurally rich languages (French, Rust), 350M requires 14.9x MORE tokens than 125M to emerge. For structurally poor languages (English), scale may be the only path to capability.</em></p>
+<hr />
+<h2 id="ech-experiment-1-french-vs.-english">3. Experiment 1: French vs. English</h2>
+<h3 id="ech-design">3.1 Design</h3>
+<p>We trained identical 125M parameter transformers on: - <strong>English</strong>: C4 corpus, English subset - <strong>French</strong>: C4 corpus, French subset</p>
+<p>All variables held constant: - Architecture: GPT-2 style (12 layers, 768 hidden, 12 heads) - Hyperparameters: lr=6e-4, batch=2, seq=512 - Random seed: 42 - Tokenizer: Joint 50K BPE trained on combined corpus</p>
+<p>Pre-registered on OSF (10.17605/OSF.IO/SJ48B) prior to data collection.</p>
+<h3 id="ech-results">3.2 Results</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>English</th>
+<th>French</th>
+<th>Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perplexity (step 181k)</td>
+<td>~1340</td>
+<td>~27</td>
+<td><strong>~50x</strong></td>
+</tr>
+<tr>
+<td>Grammar probe accuracy</td>
+<td>40% (chance)</td>
+<td>100%</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Tokens to grammar saturation</td>
+<td>&gt;3B (not achieved)</td>
+<td>~197M</td>
+<td><strong>&gt;15x</strong></td>
+</tr>
+</tbody>
+</table>
+<p>French achieved 100% grammar probe accuracy by step 12,000 (~197M tokens) and maintained perfect accuracy with zero fluctuation thereafter. English fluctuated between 30-50% (chance) throughout 3B tokens of training.</p>
+<h3 id="ech-interpretation">3.3 Interpretation</h3>
+<p>The 50x perplexity ratio and categorical difference in grammar acquisition cannot be explained by dataset artifacts—both corpora come from C4 with identical preprocessing. The difference is the language itself.</p>
+<p>French’s agreement redundancy provides dense structural signal:</p>
+<p><strong>French</strong>: “Les grandes portes sont ouvertes” - Les (plural), grandes (fem, plural), portes (fem, plural), sont (plural), ouvertes (fem, plural) - Five words independently confirm gender and number</p>
+<p><strong>English</strong>: “The big doors are open” - No explicit gender or number marking on most words - Structure must be inferred from word order</p>
+<hr />
+<h2 id="ech-experiment-2-interleaved-frenchenglish">4. Experiment 2: Interleaved French+English</h2>
+<h3 id="ech-motivation">4.1 Motivation</h3>
+<p>Experiment 1 established that French learns grammar 15x faster than English. But this alone doesn’t prove pollution—perhaps English simply provides less signal. To demonstrate active interference, we need to show that adding English to French <em>degrades</em> French performance.</p>
+<h3 id="ech-design-1">4.2 Design</h3>
+<p>We trained a single 125M transformer on interleaved French and English chunks (FR₀, EN₀, FR₁, EN₁, …) for 200K steps, using the same architecture, hyperparameters, and data sources as Experiment 1.</p>
+<p><strong>Key comparison</strong>: French-only (Experiment 1) vs. French in interleaved training (this experiment).</p>
+<h3 id="ech-results-1">4.3 Results</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>EN Grammar</th>
+<th>FR Grammar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12K</td>
+<td>40-50%</td>
+<td>60-70%</td>
+</tr>
+<tr>
+<td>50K</td>
+<td>40%</td>
+<td>60-70%</td>
+</tr>
+<tr>
+<td>74K</td>
+<td>40%</td>
+<td>50-60%</td>
+</tr>
+<tr>
+<td>200K</td>
+<td>40%</td>
+<td>50-60%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Critical finding</strong>: French grammar accuracy degraded from 100% (French-only) to 50-70% (interleaved)—a catastrophic loss of grammatical competence caused solely by the presence of English in training.</p>
+<h3 id="ech-interpretation-1">4.4 Interpretation</h3>
+<p>This is the smoking gun for the pollution hypothesis:</p>
+<ol type="1">
+<li><p><strong>English doesn’t transfer</strong>: English grammar never exceeded chance (40%), despite exposure to French morphological patterns.</p></li>
+<li><p><strong>English actively corrupts</strong>: French grammar dropped from 100% → 50-60%, far below standalone French performance at comparable token exposure.</p></li>
+<li><p><strong>The damage is asymmetric</strong>: English remained unchanged while French was destroyed. This rules out simple “dilution”—if English merely provided less signal, French would still learn (just slower). Instead, English creates interference that specifically targets explicit structural patterns.</p></li>
+</ol>
+<p>The telescope metaphor holds: you cannot photograph two galaxies simultaneously without blurring both. But here, only the structured signal (French) is corrupted—the unstructured noise (English) remains unchanged because it had no structure to lose.</p>
+<hr />
+<h2 id="ech-experiment-3-rust-vs.-rustenglish">5. Experiment 3: Rust vs. Rust+English</h2>
+<h3 id="ech-motivation-1">5.1 Motivation</h3>
+<p>If English’s morphological poverty merely provides <em>less</em> signal, mixing it with a rich language should dilute but not dramatically harm learning. But if English creates <em>noise</em> that interferes with structural pattern recognition, we would expect active degradation.</p>
+<p>Rust provides an ideal test case: its type system includes explicit structural markers analogous to natural language morphology: - <strong>Lifetime annotations</strong> (<code>'a</code>): Must match across function signatures (like gender agreement) - <strong>Ownership markers</strong> (<code>&amp;</code>, <code>&amp;mut</code>, <code>Box&lt;T&gt;</code>): Redundant structural marking - <strong>Borrow checker</strong>: Grammar enforcer that rejects “ungrammatical” code</p>
+<h3 id="ech-design-2">5.2 Design</h3>
+<p>We trained identical 125M transformers on: - <strong>Rust-only</strong>: Pure Rust code from The Stack - <strong>Rust+English</strong>: Rust code interleaved with English text (C4)</p>
+<p>Same architecture and hyperparameters as Experiment 1.</p>
+<p>Pre-registered on OSF prior to data collection.</p>
+<h3 id="ech-results-step-7000">5.3 Results (Step 7,000)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Rust-only</th>
+<th>Rust+English</th>
+<th>Gap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perplexity</td>
+<td>49.7</td>
+<td>510.5</td>
+<td><strong>10.27x</strong></td>
+</tr>
+<tr>
+<td>Probe accuracy</td>
+<td>86.7%</td>
+<td>66.7%</td>
+<td><strong>+20%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Per-category breakdown:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Rust-only</th>
+<th>Rust+English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lifetime agreement</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Ownership patterns</td>
+<td>67%</td>
+<td>67%</td>
+</tr>
+<tr>
+<td>Type consistency</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Borrow checker</td>
+<td><strong>100%</strong></td>
+<td>50%</td>
+</tr>
+<tr>
+<td>Mutability</td>
+<td><strong>50%</strong></td>
+<td>0%</td>
+</tr>
+<tr>
+<td>Expression syntax</td>
+<td><strong>100%</strong></td>
+<td>50%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ech-trajectory">5.4 Trajectory</h3>
+<p>The gap widened consistently over training:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Rust PPX</th>
+<th>Rust+EN PPX</th>
+<th>Ratio</th>
+<th>Rust Acc</th>
+<th>Rust+EN Acc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1,000</td>
+<td>483</td>
+<td>2,335</td>
+<td>4.84x</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2,000</td>
+<td>161</td>
+<td>1,248</td>
+<td>7.73x</td>
+<td>66.7%</td>
+<td>66.7%</td>
+</tr>
+<tr>
+<td>3,000</td>
+<td>108</td>
+<td>975</td>
+<td>9.00x</td>
+<td>80.0%</td>
+<td>73.3%</td>
+</tr>
+<tr>
+<td>7,000</td>
+<td>49.7</td>
+<td>510.5</td>
+<td>10.27x</td>
+<td>86.7%</td>
+<td>66.7%</td>
+</tr>
+<tr>
+<td>9,500</td>
+<td>37.4</td>
+<td>424.7</td>
+<td>11.36x</td>
+<td>80.0%</td>
+<td>86.7%</td>
+</tr>
+</tbody>
+</table>
+<p>The PPX ratio <em>accelerated</em> over training, widening from 4.84x to 11.36x. English isn’t merely diluting signal—it’s creating interference that compounds over time.</p>
+<h3 id="ech-perplexity-vs.-probe-accuracy-a-critical-distinction">5.5 Perplexity vs. Probe Accuracy: A Critical Distinction</h3>
+<p>At step 9,500, an apparent paradox emerged: probe accuracy converged (and briefly reversed), while the perplexity gap continued widening. This divergence reveals something important about evaluation methodology.</p>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 22%" />
+<col style="width: 28%" />
+<col style="width: 32%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Rust-only</th>
+<th>Rust+English</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perplexity</td>
+<td>37.4</td>
+<td>424.7</td>
+<td>11.36x worse at next-token prediction</td>
+</tr>
+<tr>
+<td>Probe Accuracy</td>
+<td>80.0%</td>
+<td>86.7%</td>
+<td>Slightly better at binary structural choices</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Per-category breakdown at step 9,500:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Rust-only</th>
+<th>Rust+English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lifetime</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Ownership</td>
+<td><strong>100%</strong></td>
+<td>67%</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Borrow</td>
+<td>100%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Mutability</td>
+<td>0%</td>
+<td><strong>50%</strong></td>
+</tr>
+<tr>
+<td>Expr/Stmt</td>
+<td>50%</td>
+<td><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The categories where Rust+English leads (Mutability, Expression syntax) have more overlap with English-like patterns. Categories where Rust-only leads (Ownership) are uniquely Rust.</p>
+<p><strong>Why the metrics diverge:</strong></p>
+<ol type="1">
+<li><p><strong>Binary probes are coarse-grained</strong>: They test only whether the model ranks correct &gt; incorrect, not the confidence margin. A model that assigns 51% to correct and 49% to incorrect scores identically to one assigning 99% and 1%.</p></li>
+<li><p><strong>Perplexity captures distributional understanding</strong>: The 11.36x perplexity gap means the polluted model’s probability mass is scattered across 11x more uncertainty. It may rank correctly while understanding shallowly.</p></li>
+<li><p><strong>The pollution is in the distribution, not the ranking</strong>: Rust+English can still discriminate minimal pairs, but its internal representation of Rust structure is diffuse rather than concentrated.</p></li>
+</ol>
+<p>This suggests that <strong>probe accuracy alone underestimates the pollution effect</strong>. While both models learn to rank structurally correct code above incorrect alternatives, the polluted model’s probability distributions are dramatically more diffuse, indicating shallower structural internalization. Perplexity may be the more reliable indicator of true structural understanding.</p>
+<h3 id="ech-the-orthogonality-of-ppx-and-accuracy-different-determinants">5.6 The Orthogonality of PPX and Accuracy: Different Determinants</h3>
+<p>The divergence between perplexity and accuracy is not an artifact; it reflects fundamentally different aspects of learning, each governed by different primary determinants:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>PPX</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>French 350M (step 200K)</td>
+<td>69.0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>English 350M (step 200K)</td>
+<td>84.1</td>
+<td>60%</td>
+</tr>
+<tr>
+<td>Rust-only 125M</td>
+<td>3.7</td>
+<td>86.7%</td>
+</tr>
+<tr>
+<td>Rust+English 125M</td>
+<td>41.8</td>
+<td>86.7%</td>
+</tr>
+</tbody>
+</table>
+<p>The 350M results are particularly striking: at step 200,000, the PPX gap has <strong>nearly converged</strong> (~1.2x ratio), yet the grammar gap <strong>persists</strong> (English fluctuates 40-80% while French maintains stable 100%). This confirms that perplexity and accuracy are orthogonal dimensions—you can minimize one indefinitely without affecting the other.</p>
+<p><strong>Primary determinant of perplexity: Distributional coherence</strong></p>
+<p>Perplexity measures how concentrated the model’s predictions are. French’s redundant agreement constrains the prediction space: seeing “les grandes” implies the next word is likely feminine plural, dramatically narrowing uncertainty. English’s implicit structure creates wider distributional spread. Mixing languages scatters probability mass across incompatible patterns.</p>
+<p><strong>Primary determinant of accuracy: Morphological explicitness</strong></p>
+<p>Accuracy measures whether structural rules have been internalized. This depends on explicit marking in the training data. French marks gender/number redundantly across multiple words. Rust marks lifetimes and ownership in explicit syntax. English encodes structure implicitly through word order, providing sparse extraction signal.</p>
+<p><strong>The key insight:</strong></p>
+<ul>
+<li><strong>Perplexity</strong> = “How narrow is my prediction distribution?” (entropy)</li>
+<li><strong>Accuracy</strong> = “Have I learned the structural rules?” (grammar)</li>
+</ul>
+<p>These are independent dimensions. A model can have low perplexity without grammar (memorizing frequent patterns), or learn grammar while retaining high vocabulary entropy. The Rust experiment shows this: identical accuracy (86.7%) with 11x perplexity difference.</p>
+<p><strong>Methodological implication:</strong> Standard metrics (loss, perplexity) miss structural deficits. English models can improve perplexity indefinitely while never acquiring grammar.</p>
+<hr />
+<h2 id="ech-the-pollution-hypothesis">6. The Pollution Hypothesis</h2>
+<p>We propose that English text creates <strong>structural noise</strong> that interferes with pattern recognition:</p>
+<ol type="1">
+<li><p><strong>Implicit structure is anti-signal</strong>: English marks structure implicitly through word order. A model trained on English learns that structural information is <em>not</em> explicitly marked. This creates a prior against looking for explicit markers.</p></li>
+<li><p><strong>Interference grows over time</strong>: The widening PPX ratio suggests compound interference. As the model learns English’s implicit-structure patterns, these increasingly conflict with explicit-structure patterns in French/Rust.</p></li>
+<li><p><strong>Category-specific effects</strong>: In the Rust experiment, categories with explicit markers unique to Rust (borrow checker, mutability, expression syntax) showed the largest degradation. Categories shared with English-like syntax (basic type matching) showed no degradation.</p></li>
+</ol>
+<h3 id="ech-implications-for-multilingual-training">6.1 Implications for Multilingual Training</h3>
+<p>If English pollutes learning of structured languages, the field’s English-dominated corpora may be: - Harming performance on morphologically rich languages - Slowing acquisition of grammatical competence - Requiring more parameters to overcome interference</p>
+<h3 id="ech-implications-for-code-models">6.2 Implications for Code Models</h3>
+<p>Training code models on code+English (comments, documentation, natural language) may impair learning of programming language structure. Pure-code training might achieve better structural competence with less compute.</p>
+<h3 id="ech-scale-effects-a-conditional-factor">6.3 Scale Effects: A Conditional Factor</h3>
+<p>We extended training to 350M parameters to test whether scale ameliorates or exacerbates the language effect. The results confirm that <strong>scale is a conditional factor</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Emergence Step</th>
+<th>Emergence Tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>French 125M</td>
+<td>~4,000</td>
+<td>~4.1M</td>
+</tr>
+<tr>
+<td>French 350M</td>
+<td>~119,000</td>
+<td>~60.9M</td>
+</tr>
+<tr>
+<td>English 125M</td>
+<td>Not achieved</td>
+<td>&gt;14.3M</td>
+</tr>
+<tr>
+<td>English 350M</td>
+<td>Not achieved</td>
+<td>&gt;102.4M</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For morphologically rich languages (French):</strong> Larger models require <strong>14.9x MORE tokens</strong> to achieve grammatical emergence. The additional parameters create capacity that must be filled before structure emerges.</p>
+<p><strong>For morphologically poor languages (English):</strong> Neither scale achieved grammar. Scale may be necessary (brute force through sparse signal), but even 350M after 102M tokens showed only ~60% grammar accuracy.</p>
+<p><strong>Critical insight:</strong> The field’s focus on scale as the path to capability may be an artifact of English-dominated training. When the training language is structurally explicit, smaller models are more token-efficient.</p>
+<hr />
+<h2 id="ech-discussion">7. Discussion</h2>
+<h3 id="ech-why-english-dominates">7.1 Why English Dominates</h3>
+<p>English dominates LLM training for practical reasons: abundant digital text, economic importance, researcher demographics. Our results suggest this dominance has hidden costs.</p>
+<h3 id="ech-remediation-strategies">7.2 Remediation Strategies</h3>
+<p>Possible approaches to reduce English pollution:</p>
+<ol type="1">
+<li><strong>Staged training</strong>: Train on structured languages first (French, Rust), then add English</li>
+<li><strong>Weighted sampling</strong>: Reduce English proportion in multilingual corpora</li>
+<li><strong>Architecture modifications</strong>: Separate pathways for implicit vs. explicit structure</li>
+</ol>
+<h3 id="ech-limitations">7.3 Limitations</h3>
+<ul>
+<li>Experiments conducted at 125M and 350M scale; larger models may show different dynamics (though 350M confirms the pattern holds)</li>
+<li>Limited probe sets; broader evaluation needed</li>
+<li>Rust is one programming language; other languages may differ</li>
+<li>Only two natural languages tested (French, English); other morphologically rich languages (Russian, Arabic, Finnish) may show different patterns</li>
+</ul>
+<hr />
+<h2 id="ech-conclusion">8. Conclusion</h2>
+<p>English is not a neutral training language. Its morphological poverty creates noise that actively interferes with learning structurally explicit patterns, whether in natural language (French) or code (Rust). The field’s reliance on English-dominated corpora may be a hidden bottleneck.</p>
+<p>We do not suggest abandoning English—it remains practically essential. But we suggest the field reconsider the assumption that more English is always better. In the context of structural pattern acquisition, English may be considered harmful.</p>
+<hr />
+<h2 id="ech-references">References</h2>
+<p>Arnett, C., &amp; Bergen, B. (2024). Why do language models perform worse for morphologically complex languages? <em>arXiv preprint</em>.</p>
+<p>Dijkstra, E. W. (1968). Go to statement considered harmful. <em>Communications of the ACM</em>, 11(3), 147-148.</p>
+<p>Park, J., et al. (2021). Morphology matters: A multilingual language modeling analysis. <em>TACL</em>, 9, 261-276.</p>
+<p>Sennrich, R., &amp; Haddow, B. (2016). Linguistic input features improve neural machine translation. <em>WMT</em>.</p>
+<hr />
+<h2 id="ech-appendix-a-grammar-probes">Appendix A: Grammar Probes</h2>
+<h3 id="ech-a.1-french-grammar-probes">A.1 French Grammar Probes</h3>
+<p>[List of minimal pairs testing gender/number agreement]</p>
+<h3 id="ech-a.2-english-grammar-probes">A.2 English Grammar Probes</h3>
+<p>[List of minimal pairs testing subject-verb agreement]</p>
+<h3 id="ech-a.3-rust-structural-probes">A.3 Rust Structural Probes</h3>
+<p>[List of minimal pairs testing lifetimes, ownership, borrow checking, mutability, expression syntax]</p>
+<hr />
+<h2 id="ech-appendix-b-training-details">Appendix B: Training Details</h2>
+<p>[Full hyperparameters, hardware, training curves]</p>
+<hr />
+<p><em>Pre-registration: OSF 10.17605/OSF.IO/SJ48B</em></p>
+<p><em>Code and data: [repository URL]</em></p>
 
 <h2>Identifiers</h2>
 
