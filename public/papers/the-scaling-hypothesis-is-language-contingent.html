@@ -14,10 +14,13 @@
   page is for humans.
 
   This page exists because the Zenodo deposit of the same paper is served with
-  <meta name="robots" content="noindex, nofollow"> while the account is
-  unverified, which has kept it out of Google and Google Scholar since April
-  2026. Self-hosting removes the gatekeeper: no verification, no affiliation
-  test, no queue.
+  a robots directive suppressing indexing while the account is unverified,
+  which has kept it out of Google and Google Scholar since April 2026.
+  Self-hosting removes the gatekeeper: no verification, no affiliation test,
+  no queue. The directive is described rather than quoted here on purpose: a
+  crawler that scans for the literal string instead of parsing the document
+  would otherwise read this page as suppressed too, which is exactly what a
+  regex-based checker did on 2026-08-15.
 -->
 <meta name="citation_title" content="The Scaling Hypothesis Is Language-Contingent: Evidence from Cross-Linguistic Training Dynamics">
 <meta name="citation_author" content="Wasserman, Adam Zachary">
