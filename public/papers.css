@@ -1,0 +1,193 @@
+/* Adam Zachary Wasserman — paper reading surface.
+   Deliberately not the hub theme. The hub is a dark identity page you scan;
+   a paper is 7,000 words you read, so it gets a light ground, a measure that
+   holds a line to roughly 65 characters, and room around every heading. */
+
+:root {
+  --paper: #ffffff;
+  --ink: #16161a;
+  --ink-soft: #4a4a55;
+  --ink-faint: #74747f;
+  --rule: #e2e2e8;
+  --rule-strong: #b8b8c2;
+  --red: #c1121f;
+  --wash: #f7f7f9;
+  --mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, monospace;
+  --serif: 'Literata', 'Literata Fallback', Georgia, serif;
+  --measure: 40rem;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Courier New'), local('Courier');
+  size-adjust: 95%;
+}
+
+@font-face {
+  font-family: 'Literata Fallback';
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 103%;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+}
+
+@media (min-width: 40rem) {
+  body { font-size: 1.125rem; }
+  main { padding: 5rem 2.5rem 8rem; }
+}
+
+/* Headings. Mono, tight to their own text, generous above.
+   The asymmetry is the point: a heading belongs to what follows it. */
+h1, h2, h3, h4 {
+  font-family: var(--mono);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.1875rem;
+  margin: 3.5rem 0 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 2.5rem 0 0.75rem;
+}
+
+h4 {
+  font-size: 0.9375rem;
+  margin: 2rem 0 0.5rem;
+  color: var(--ink-soft);
+}
+
+p { margin: 0 0 1.25rem; }
+
+/* The standfirst: subtitle, byline, download link. */
+main > p:first-of-type {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-faint);
+  margin-bottom: 2.5rem;
+}
+
+h1 + p em {
+  font-style: normal;
+  font-size: 1.25rem;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+a { color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+ul, ol { margin: 0 0 1.25rem; padding-left: 1.5rem; }
+li { margin-bottom: 0.4rem; }
+
+blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--rule-strong);
+  color: var(--ink-soft);
+}
+
+code, pre { font-family: var(--mono); font-size: 0.875em; }
+code { background: var(--wash); padding: 0.1em 0.3em; border-radius: 2px; }
+pre { overflow-x: auto; background: var(--wash); padding: 1rem; border-radius: 3px; }
+pre code { background: none; padding: 0; }
+
+/* Tables carry the results, so they get the full width and their own scroll
+   rather than being squeezed into the reading measure. */
+table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+th, td {
+  padding: 0.5rem 0.9rem 0.5rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+thead th {
+  border-bottom: 2px solid var(--rule-strong);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+tbody tr:last-child td { border-bottom: 2px solid var(--rule-strong); }
+
+figure { margin: 2.5rem 0; }
+
+figure img, main img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+figcaption {
+  margin-top: 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+figcaption strong { color: var(--ink); font-weight: 600; }
+
+hr { border: 0; border-top: 1px solid var(--rule); margin: 3rem 0; }
+
+/* Pandoc footnotes and reference lists. */
+.footnotes {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+sup a { text-decoration: none; }
+
+@media print {
+  main { max-width: none; padding: 0; }
+  a { color: var(--ink); }
+  h2 { border-top: none; }
+}
