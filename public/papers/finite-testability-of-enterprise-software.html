@@ -97,6 +97,342 @@
 
 <p>The analyser, a 249-scenario behavioural specification, and the corpus seeds are released alongside the paper, so any third party can reproduce every figure.</p>
 
+<h2>Full text</h2>
+
+<p>The complete paper follows. It is identical to the deposited PDF; the PDF is the version of record and carries the figures at full resolution.</p>
+
+<h2 id="ft-introduction">1. Introduction</h2>
+<p>Enterprise software teams report test-coverage figures — typically in the 70–90 % range for well-run engineering organizations — as evidence that their code is meaningfully tested. These figures are produced by tools (JaCoCo, Coverage.py, Istanbul, dotnet coverlet) that measure which lines or branches of source code are executed when the test suite runs. High line coverage is treated as a proxy for test thoroughness and, transitively, for software quality. A substantial literature argues that line-coverage figures in this range are not strongly correlated with test effectiveness at detecting faults (Inozemtseva &amp; Holmes 2014), but the critique has not meaningfully changed industry practice. Most coverage tools still measure execution. Most dashboards still report percentages. Most engineering leaders still take 80 % coverage to mean “mostly tested.”</p>
+<p>This paper measures a property of source code that line coverage does not capture: <strong>the fraction of functions whose behaviour depends on state the function does not receive as a parameter</strong>. Where this fraction is high, exhaustive behavioural testing is not possible regardless of the size of the test suite, because each mutable reference multiplies the effective state space. A function that reads <code>self.cache</code> does not just have a behaviour per input; it has a behaviour per (input × prior state of self.cache). Enumerating the resulting test cases to “cover” the behaviour space in a strong sense is generally infeasible.</p>
+<p>We call this fraction the <strong>mutable-state ratio</strong> and denote it L1.18 (its position in a broader twenty-indicator Slop Audit framework). The ratio is intentionally simple: it counts functions, not statements or branches. For a function to avoid being flagged, it needs to express its dependencies through parameters and its effects through return values. No attribute accesses on <code>self</code> / <code>this</code>, no reads of module-level mutable names, no bare identifier references to class fields without <code>this.</code>. A function that meets this criterion has a finitely enumerable behaviour space (modulo its input domains), and its correctness can in principle be reasoned about from its signature and body alone.</p>
+<p>We measure L1.18 across 200 public GitHub repositories in four widely-used languages: Python, Java, TypeScript, and C#. Per language we select the 50 highest-starred qualifying repositories that appear to be applications rather than libraries. We analyze 2.2 million functions in total.</p>
+<p>The headline finding is that <strong>most repositories in three of the four languages — Python, Java, and C# — exhibit mutable-state ratios above 40 %</strong>. In Python the median is 61 %; in Java 53 %; in C# 40 %. TypeScript is the outlier: its median is 15 %, and its distribution is bimodal, with a large cluster in the Healthy band (&lt; 15 %) concentrated in React-ecosystem frontend applications, and a smaller cluster in the Not-Healthy / Slop region containing backend TypeScript (NestJS), Angular services, and class-heavy desktop/game codebases like VSCode and PixiJS.</p>
+<p>Across all 200 repositories only 26 fell below the 15 % threshold. 25 were TypeScript frontend applications. One was a Java authentication library (<code>justauth/JustAuth</code>, 12.3 %). No Python, no C#, no TypeScript backend, and only one Java project in the sample of 200 was structurally testable in the sense L1.18 defines.</p>
+<p>We interpret this as evidence that <strong>ecosystem-level paradigm choices, rather than individual engineering discipline, determine whether a codebase is structurally testable</strong>. The TypeScript frontend cluster exists because React’s hooks-era paradigm (pure components, immutable state, props-in / JSX-out) structurally prevents the ratio from climbing. The Python, Java, and C# equivalents do not exist in our corpus not because no individual team could achieve them, but because the dominant paradigms in those ecosystems (Django/Flask with class-based views; Spring with <code>@Component</code>-annotated bean graphs; .NET with <code>IOptions&lt;T&gt;</code> and DI containers) actively push code in the opposite direction.</p>
+<h3 id="ft-contributions">1.1 Contributions</h3>
+<ol type="1">
+<li><strong>A cross-language operationalization of mutable-state ratio (L1.18)</strong> that measures the same underlying property — function-local versus function-external state access — in four languages with different syntax and paradigm conventions.</li>
+<li><strong>A 200-repository corpus</strong> of L1.18 measurements, released in full alongside this paper along with the analyzer source code and all intermediate and final result artifacts.</li>
+<li><strong>A tree-sitter-based analyzer validated by a 249-scenario Gherkin behavioural specification</strong>, reproducible end-to-end in approximately 20 minutes on a standard developer machine.</li>
+<li><strong>A documented analyzer bug history</strong>: three iterations of the analyzer, each producing different aggregate numbers, with the full validation trail included as Appendices A–D. This directly addresses a common concern about the reliability of static analysis tooling at scale.</li>
+<li><strong>An exploratory observation of the TypeScript bimodal distribution</strong> correlated with frontend/backend framework choice, forming the pre-registered hypothesis for a confirmatory follow-up study (Paper F in the Open Honest research program).</li>
+</ol>
+<h3 id="ft-paper-organization">1.2 Paper organization</h3>
+<p>Section 2 surveys related work. Section 3 defines the mutable-state ratio, describes the corpus, documents the analyzer, and enumerates the validation layers applied to it. Section 4 presents the results. Section 5 interprets them. Section 6 acknowledges limitations. Section 7 situates this paper within a broader preregistered research program. Section 8 concludes. Appendices A–D extend the methodology disclosure.</p>
+<h2 id="ft-related-work">2. Related work</h2>
+<p><em>This section is intentionally partial; expert review is expected to add, remove, and reorder citations. The organization reflects the categories of work the paper engages with.</em></p>
+<h3 id="ft-line-coverage-and-its-limits">2.1 Line coverage and its limits</h3>
+<p>The empirical literature on test-coverage effectiveness has consistently found that coverage percentages are weak predictors of test-suite fault-detection ability. Inozemtseva and Holmes (2014) measured the correlation between coverage and effectiveness directly on a corpus of Java projects and found that once coverage is reasonably high (in the 60-80 % range that most industrial teams target), marginal additions to coverage yield little improvement in test-suite quality. Our paper approaches the same problem from a different angle: rather than asking whether high coverage implies good tests, we ask whether the <em>codebase structure</em> of typical enterprise software permits behavioural testing at all. If a codebase is 60 % mutable-state-dependent, then no coverage figure — high or low — can claim behavioural exhaustiveness.</p>
+<h3 id="ft-mutable-state-pure-functions-and-testability">2.2 Mutable state, pure functions, and testability</h3>
+<p>The argument that pure functions are more testable than methods on mutable objects has a long pedigree in software engineering, tracing at least to Backus (1977) and formalized in the functional-programming tradition (Hughes 1989). Our contribution is to measure the prevalence of the property, not to re-argue its desirability. Where prior literature has argued functional code <em>should</em> be preferred, this paper asks: <em>how much of real-world enterprise code actually satisfies the pre-condition</em>? The answer at corpus scale: very little outside the React/TypeScript frontend cluster.</p>
+<h3 id="ft-compiler-enforced-vs.-framework-enforced-purity">2.3 Compiler-enforced vs. framework-enforced purity</h3>
+<p>Three tiers of enforcement exist in practice for the property L1.18 measures.</p>
+<p><strong>Tier 1: compiler-enforced purity.</strong> Haskell’s IO monad (Peyton Jones 2001) makes side effects visible at the type level; a function without <code>IO</code> in its return type is provably pure by construction. Elm (Czaplicki 2012) applies the same principle to frontend code. Dependent-type systems (Idris, Agda, Coq) go further, but remain academic. These languages achieve L1.18 ≈ 0 % by definition: the compiler rejects impure code that is not explicitly marked. The tradeoff is adoption cost. Haskell, Elm, and the dependently-typed languages collectively account for fewer than 3 % of developer usage; humans systematically prefer languages that permit informal reasoning about state (the Wason Selection Task literature — Wason 1966, Evans 2016 — predicts exactly this), and Tier 1 languages close those “escape hatches” entirely.</p>
+<p><strong>Tier 2: language-level immutability, convention-enforced purity.</strong> Elixir/Erlang (Armstrong 2007) makes data structures immutable, but GenServer processes carry mutable state across calls, and the BEAM actor model permits side effects (message passing, I/O) without type-level marking. Clojure (Hickey 2008) provides persistent immutable data structures as defaults, but atoms, refs, and agents are explicit mutation points. F# and OCaml are functional-first but allow mutable references. In all four, purity is a cultural norm, not a compiler guarantee. A GenServer-heavy Elixir codebase can exhibit high L1.18; a discipline-driven one can approach zero. These languages sit between Tier 1 and the enterprise mainstream: they make impurity inconvenient without making it impossible.</p>
+<p><strong>Tier 3: framework-enforced purity in imperative languages.</strong> The Honest Framework (Wasserman 2026) provides enforcement through bounded-vocabulary enumeration rather than compiler type-checking. Three mechanisms operate at different lifecycle stages: a pre-commit linter (<code>honest-check</code>) that flags functions accessing global state; an exhaustive test harness (<code>honest-test</code>) that calls every function twice with identical inputs, instruments for mutation and global reads, and fails on any impurity signal; and a type system (<code>honest-type</code>) whose Set-based recognizers make the input space finite and enumerable at definition time, enabling exhaustive behavioural verification via a <code>for</code> loop rather than a type proof. For bounded vocabularies — which constitute the majority of enterprise type spaces — the mathematical guarantee is identical to Tier 1: every input is tested, every output is verified, every side effect is detected. The enforcement mechanism differs (enumeration vs. type proof); the coverage does not. Honest Code achieves this in languages where the compiler offers no purity enforcement: Python, TypeScript, Java, C#, Ruby, and PHP.</p>
+<p>This paper measures L1.18 without regard to which tier produced the observed ratio. The measurement is structural: it reports <em>how much</em> of a codebase is pure, not <em>how</em> the purity was achieved. The three-tier framework is relevant context because it explains why the enterprise languages in our corpus (Python, Java, TypeScript, C#) show high L1.18: they offer no Tier 1 or Tier 2 enforcement and, without a Tier 3 framework, purity is entirely optional. The React-frontend TypeScript cluster (§5.2) is the one subpopulation in our corpus where a Tier-2-like convention (React’s functional-component pattern) drives L1.18 below 15 % without compiler enforcement.</p>
+<h3 id="ft-cross-language-empirical-studies">2.4 Cross-language empirical studies</h3>
+<p>Ray et al. (2014) studied the relationship between programming language and software defect density on a 729-project GitHub corpus. Their methodology — filtering for actively-maintained repositories, controlling for project size and domain — is a direct influence on our corpus selection. Where Ray et al. found relatively modest language effects on defect density, we find substantial language/ecosystem effects on mutable-state ratio, suggesting that the two constructs are distinct and that mutable-state ratio may be the more informative variable for the subset of quality concerns related to testability.</p>
+<h3 id="ft-tree-sitter-as-an-analysis-platform">2.5 Tree-sitter as an analysis platform</h3>
+<p>Tree-sitter (Brunsfeld et al.) has become the de-facto incremental parser for developer tooling; its grammars are maintained for most widely-used languages. Its use in empirical static analysis at the corpus scale described here is, to our knowledge, less common than its use in editors. Our analyzer’s polymorphic design (<code>LANG_CFG</code> driving a single analysis pipeline across four grammars) is one contribution toward making tree-sitter more reusable for cross-language corpus work.</p>
+<h3 id="ft-behavioural-specification-for-analysis-tool-validation">2.6 Behavioural specification for analysis-tool validation</h3>
+<p><em>Literature search in progress.</em> Tests for static analysis tools are usually written as example-based unit tests (the input → expected-output style shown in the SpotBugs / PMD / SonarQube test suites). Pre-committed behavioural specifications in a Gherkin or property-based style are less common, though the practice is well-established for application-level testing (Cucumber, SpecFlow, pytest-bdd). We use Gherkin here primarily because the temporal discipline (specification before implementation) caught bugs that example-based unit tests had missed. Whether the Gherkin syntax itself confers additional benefits, particularly in AI-assisted code generation contexts where a natural-language-like specification may be better aligned with the assistant’s training distribution, is an open empirical question we leave to future work. Appendix C and the companion methods note discuss the temporal-discipline finding at length.</p>
+<h3 id="ft-ai-assisted-empirical-software-engineering">2.7 AI-assisted empirical software engineering</h3>
+<p><em>Open area.</em> The literature on using AI coding assistants (Copilot, Claude, Cursor) as research infrastructure is still forming. Our companion methods note is one case study in this emerging area. We are aware of active discussion in the SIGSOFT community (2024–2026) about disclosure norms and reliability of AI-produced analysis code but have not yet identified peer-reviewed work that directly addresses this topic for empirical software engineering research.</p>
+<h2 id="ft-methods">3. Methods</h2>
+<h3 id="ft-definition-of-the-l1.18-mutable-state-ratio">3.1 Definition of the L1.18 mutable-state ratio</h3>
+<p>For a given codebase, L1.18 is computed as:</p>
+<blockquote>
+<p>(number of functions that reference state outside their parameter list) divided by (total number of functions analyzed)</p>
+</blockquote>
+<p>expressed as a percentage. The <strong>total</strong> count excludes dunder methods other than <code>__init__</code> (for Python), <code>constructor</code> (for TypeScript class constructors), and functions whose names match an I/O-boundary heuristic (substrings including <code>handler</code>, <code>endpoint</code>, <code>main</code>, <code>route</code>, <code>bootstrap</code>, etc., varying by language; full list in Appendix D). These exclusions reflect the paper’s concern with interior business-logic code, not glue.</p>
+<p>A function is considered to “reference state outside its parameter list” if it contains at least one of:</p>
+<ul>
+<li>An attribute access of the form <code>self.X</code> or <code>cls.X</code> (Python), <code>this.X</code> (Java/TypeScript/C#), where the receiver is the enclosing class or record.</li>
+<li>A bare identifier reference that resolves to a class field or property declared in the enclosing class and that is not shadowed by a local declaration or parameter (Java and C# only; the “implicit-member” case).</li>
+<li>A bare identifier reference to a name declared mutable at module scope, where “mutable at module scope” means:
+<ul>
+<li>Python: any top-level <code>X = ...</code> assignment, any augmented assignment (<code>X += ...</code>) anywhere, or any subscript assignment (<code>X[k] = ...</code>) anywhere.</li>
+<li>TypeScript: any top-level <code>let X</code> or <code>var X</code> declaration.</li>
+<li>Java and C#: the language-level module mutability semantics do not permit module-level variables in the same sense; these languages contribute no module-mutable cases.</li>
+</ul></li>
+</ul>
+<p>Tests of this operationalization are documented in the behavioural specification (Appendix C).</p>
+<h3 id="ft-corpus-selection">3.2 Corpus selection</h3>
+<p>The corpus was constructed by <code>corpus_query.py</code> (included in the replication package, Section 6). For each target language (Python, Java, TypeScript, C#):</p>
+<ol type="1">
+<li>GitHub search was used to retrieve the top 500 repositories by star count matching the query <code>language:&lt;X&gt; stars:&gt;=100 archived:false fork:false</code>.</li>
+<li>Each candidate was qualified against two filters:
+<ul>
+<li><strong>Application indicator.</strong> The repository must contain at least one file matching a language-specific application pattern (Dockerfile, <code>manage.py</code>, <code>Program.cs</code>, <code>application.properties</code>, <code>.github/workflows/*</code>, etc.). This excludes pure libraries.</li>
+<li><strong>Test presence.</strong> The repository must contain at least one test file matching a language-specific test pattern (<code>test_*.py</code>, <code>*Test.java</code>, <code>*.test.ts</code>, <code>*Test.cs</code>, etc.).</li>
+</ul></li>
+<li>The first 50 qualifying repositories per language were accepted.</li>
+</ol>
+<p>Total: 200 repositories, 50 per language. The full corpus list is in the replication package (<code>{python,java,typescript,csharp}_repos.txt</code> and the combined <code>corpus.json</code>).</p>
+<h3 id="ft-analysis-implementation">3.3 Analysis implementation</h3>
+<p>A single unified analyzer (<code>l1_18.py</code>, ~900 lines of Python) handles all four languages. The analyzer uses <code>tree-sitter</code> (Brunsfeld) to produce an abstract syntax tree, then applies language-specific queries driven by a central configuration dictionary (<code>LANG_CFG</code>) that captures node-type names, field-access conventions, and exclusion rules per language. All language-specific differences are expressed as data in <code>LANG_CFG</code> or in three small dispatch tables (<code>MODULE_MUTABLE_DETECTORS</code>, <code>FUNCTION_NAME_EXTRACTORS</code>, <code>NAME_SKIPS</code>). No analysis code is duplicated across languages.</p>
+<p>The analyzer was developed in three iterations, each with documented bugs corrected by the next (see Appendix A for the bug catalogue). The version whose results are reported here (v3) was validated against a 249-scenario Gherkin behavioural specification (Appendix C). On the full 200-repo corpus, v3 completes in approximately 20 minutes of wall-clock time on a single-node developer machine; a reviewer running the replication package can reproduce the analysis within one working hour.</p>
+<h3 id="ft-classification-bands">3.4 Classification bands</h3>
+<p>For purposes of reporting, repositories are classified into three bands:</p>
+<ul>
+<li><strong>Healthy:</strong> ratio &lt; 15 %</li>
+<li><strong>Not Healthy:</strong> 15 % ≤ ratio &lt; 40 %</li>
+<li><strong>Slop:</strong> ratio ≥ 40 %</li>
+</ul>
+<p>We note that these band thresholds are <strong>provisional</strong>. They were chosen by author judgment before corpus analysis began and are used here for descriptive convenience, not as claims of empirical significance. A follow-up preregistered study (Paper E in this program) empirically calibrates the thresholds against clustering structure and rework-ratio outcomes; readers who require empirically justified thresholds should reference that study when it becomes available. Where this paper makes cross-language comparisons, it reports raw ratios alongside the band classifications so that readers can form their own judgments independent of the band choices.</p>
+<h3 id="ft-validation">3.5 Validation</h3>
+<p>Four validation layers were applied before v3 results were accepted:</p>
+<ol type="1">
+<li><p><strong>Differential comparison</strong> against two prior analyzer implementations (v1 regex-based, v2 first-pass tree-sitter). Aggregate disagreements exceeding 5 percentage points per repo were individually audited; four bugs in v1 and two in v2 were identified and corrected.</p></li>
+<li><p><strong>Behavioural specification</strong> via Gherkin (249 scenarios; Appendix C). Every function in the analyzer is exercised by at least one scenario. Scenarios were written with adversarial intent, enumerating edge cases (varargs, expression-bodied methods, deeply nested expressions, directories with file-suffix names) before the underlying code was examined.</p></li>
+<li><p><strong>Full-corpus re-run</strong> with the validated analyzer to surface environment-level issues (stack overflow on deeply-nested expressions, <code>IsADirectoryError</code> on directories with file-suffix names in C# repos) that the Gherkin scenarios had not covered.</p></li>
+<li><p><strong>Preserved prior artifacts.</strong> All three result sets (<code>results_v1_regex_buggy/</code>, <code>results_v2_tree_sitter_buggy/</code>, <code>results/</code>) are included in the replication package. Readers can independently verify the corrections reported here.</p></li>
+</ol>
+<h2 id="ft-results">4. Results</h2>
+<h3 id="ft-per-language-descriptive-statistics">4.1 Per-language descriptive statistics</h3>
+<p>Table 1 summarises the per-language distributions across the 200-repo corpus.</p>
+<p><strong>Table 1. Per-language summary statistics (v3 validated analyzer).</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr>
+<th>Language</th>
+<th>n</th>
+<th>Mean ratio</th>
+<th>Median ratio</th>
+<th>Range</th>
+<th>Total functions analyzed</th>
+<th>Healthy</th>
+<th>Not Healthy</th>
+<th>Slop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>50</td>
+<td>60.0 %</td>
+<td>61.1 %</td>
+<td>20.8 – 90.9 %</td>
+<td>239,452</td>
+<td>0</td>
+<td>3</td>
+<td>47</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>50</td>
+<td>53.1 %</td>
+<td>53.0 %</td>
+<td>12.3 – 80.3 %</td>
+<td>1,028,640</td>
+<td>1</td>
+<td>6</td>
+<td>43</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>50</td>
+<td>21.6 %</td>
+<td>14.8 %</td>
+<td>0.0 – 62.8 %</td>
+<td>323,127</td>
+<td>25</td>
+<td>18</td>
+<td>7</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>50</td>
+<td>40.0 %</td>
+<td>40.0 %</td>
+<td>20.1 – 67.9 %</td>
+<td>610,424</td>
+<td>0</td>
+<td>25</td>
+<td>25</td>
+</tr>
+</tbody>
+</table>
+<p>Aggregate function count across the corpus: 2.20 million functions.</p>
+<p>Figure 1 (violin plot of per-language distributions) shows the overall shape. Python, Java, and C# all have median ratios in the Slop band (≥ 40 %) and no or near-zero repositories in the Healthy band. TypeScript’s distribution is qualitatively different: half of the TypeScript corpus falls in the Healthy band, and the distribution is bimodal.</p>
+<figure>
+<img src="/papers/figures/finite-testability/fig1_violin.png" style="max-width:100%;height:auto" alt="Figure 1. Distribution of L1.18 mutable-state ratios across 200 repositories. Violin plots show per-language density; each dot is one repository. Dotted lines at 15 % and 40 % mark the Healthy / Not-Healthy / Slop band thresholds." />
+<figcaption aria-hidden="true"><strong>Figure 1.</strong> Distribution of L1.18 mutable-state ratios across 200 repositories. Violin plots show per-language density; each dot is one repository. Dotted lines at 15 % and 40 % mark the Healthy / Not-Healthy / Slop band thresholds.</figcaption>
+</figure>
+<h3 id="ft-typescripts-bimodal-distribution">4.2 TypeScript’s bimodal distribution</h3>
+<p>Figure 2 plots the TypeScript distribution as a histogram. Two modes are visible: a large Healthy-band peak concentrated in the 0 – 15 % range (15 repositories with ratio &lt; 5 %, 25 repositories total below 15 %), and a second mode in the 25 – 40 % band with a Slop-band tail extending to 65 %.</p>
+<figure>
+<img src="/papers/figures/finite-testability/fig2_ts_histogram.png" style="max-width:100%;height:auto" alt="Figure 2. TypeScript ratio distribution (n=50). Bimodal: a large Healthy-band peak below 15 % (React-ecosystem frontends) and a second mode in the 25-40 % band with a Slop-band tail extending to 65 % (NestJS/backend and class-heavy codebases)." />
+<figcaption aria-hidden="true"><strong>Figure 2.</strong> TypeScript ratio distribution (n=50). Bimodal: a large Healthy-band peak below 15 % (React-ecosystem frontends) and a second mode in the 25-40 % band with a Slop-band tail extending to 65 % (NestJS/backend and class-heavy codebases).</figcaption>
+</figure>
+<p>Inspection of the Healthy-band TypeScript repositories shows they are overwhelmingly React-ecosystem frontend applications (Next.js, shadcn-ui, Chakra UI, Ant Design, Supabase dashboard, Vue, Nuxt, Astro, etc.). The second mode contains backend TypeScript applications (NestJS-based servers, Socket.IO, Angular non-frontend services), electron-style desktop applications (VSCode), and class-heavy infrastructure (Microsoft Playwright, the PixiJS game engine).</p>
+<p>We flag this bimodal pattern as an <strong>exploratory observation</strong>. Paper F in the Open Honest research program preregisters a confirmatory test of the frontend/backend split as a predictor of TypeScript mutable-state ratio.</p>
+<h3 id="ft-cross-language-comparison">4.3 Cross-language comparison</h3>
+<p>Figure 3 (cumulative distribution by language) makes the cross-language comparison explicit. TypeScript dominates the left portion of the graph (low ratios); Python, Java, and C# dominate the right. The ordering by median is TypeScript ≪ C# &lt; Java &lt; Python. Python’s higher median than Java is a finding that emerged only in v3 (see Appendix A, bug V2-02, and Appendix B): prior analyzer versions systematically underestimated Python’s mutable-state ratio by omitting subscript-assignment patterns (<code>CACHE[key] = value</code>) from module-mutable detection.</p>
+<figure>
+<img src="/papers/figures/finite-testability/fig3_cdf.png" style="max-width:100%;height:auto" alt="Figure 3. Cumulative distribution function by language. TypeScript dominates the left (low-ratio) portion of the graph; Python, Java, and C# dominate the right." />
+<figcaption aria-hidden="true"><strong>Figure 3.</strong> Cumulative distribution function by language. TypeScript dominates the left (low-ratio) portion of the graph; Python, Java, and C# dominate the right.</figcaption>
+</figure>
+<h3 id="ft-size-independence">4.4 Size independence</h3>
+<p>A common concern in corpus-scale studies is that findings may be confounded by codebase size (e.g., larger codebases might accumulate more mutable state). Figure 4 plots L1.18 ratio against total function count per repository (log x-axis). No strong size dependence is visible. The languages remain clearly separated across three orders of magnitude of codebase size, from ~100-function tutorial repositories to 270,000-function monorepos (openjdk/jdk, oracle/graal, dotnet/runtime, mono/mono).</p>
+<figure>
+<img src="/papers/figures/finite-testability/fig4_size_vs_ratio.png" style="max-width:100%;height:auto" alt="Figure 4. L1.18 mutable-state ratio vs repository size (total functions analyzed, log x-axis). The languages remain clearly separated across three orders of magnitude of codebase size." />
+<figcaption aria-hidden="true"><strong>Figure 4.</strong> L1.18 mutable-state ratio vs repository size (total functions analyzed, log x-axis). The languages remain clearly separated across three orders of magnitude of codebase size.</figcaption>
+</figure>
+<p>Spearman rank correlation between log(total_functions) and ratio:</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>rho</th>
+<th>p-value</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>+0.358</td>
+<td>0.011</td>
+<td>Larger → higher ratio</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>−0.283</td>
+<td>0.046</td>
+<td>Larger → lower ratio</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>+0.190</td>
+<td>0.186</td>
+<td>Not significant</td>
+</tr>
+<tr>
+<td>C#</td>
+<td>+0.140</td>
+<td>0.332</td>
+<td>Not significant</td>
+</tr>
+</tbody>
+</table>
+<p>Two languages show statistically detectable size effects at α = 0.05 but in opposite directions. Python’s positive effect suggests larger Python codebases accumulate more mutable state, consistent with a “framework- driven” interpretation: big Python repositories in this corpus are overwhelmingly ML/infrastructure projects (tensorflow/models, ray, huggingface/transformers, sentry, airflow) whose scale comes in part from extensive class-based configuration machinery. Java’s <em>negative</em> effect is more surprising: the largest Java repositories in the corpus (openjdk/jdk, oracle/graal) are compilers and runtimes whose internal structure includes substantial compile-time utility code that is less mutation-heavy than typical enterprise Java. We do not treat these correlations as strong evidence of size-ratio causality; they are reported for completeness. The figure confirms that the four language distributions remain clearly separated across three orders of magnitude of codebase size, which is the headline result.</p>
+<h3 id="ft-the-full-corpus-verdict">4.5 The full-corpus verdict</h3>
+<p>Across 200 repositories:</p>
+<ul>
+<li>26 repositories (13 %) classify as Healthy. 25 of these are TypeScript (specifically, TypeScript repositories that appear to be React-ecosystem frontends). The 26th is <code>justauth/JustAuth</code>, a small Java authentication library.</li>
+<li>40 repositories (20 %) classify as Not Healthy.</li>
+<li>134 repositories (67 %) classify as Slop.</li>
+</ul>
+<p>Put differently: for any public codebase in the 100+ star range in Python, Java, or C#, the odds of finding one with mutable-state ratio below 15 % are approximately zero. Within TypeScript, the odds depend sharply on whether the project is frontend or backend.</p>
+<h2 id="ft-discussion">5. Discussion</h2>
+<h3 id="ft-what-a-60-mutable-state-ratio-means-for-testability">5.1 What a 60 % mutable-state ratio means for testability</h3>
+<p>A function that takes <code>(a, b)</code> as parameters and returns <code>a + b</code> has a behaviour space that is exactly the Cartesian product of its input domains. It can, in principle, be exhaustively tested by covering that product; and for most input types the product is at least enumerable in a useful sense. A function that takes <code>(a, b)</code> but also reads <code>self.cache</code> has a behaviour space that is the product of its input domains <em>and</em> the current state of <code>self.cache</code> at the moment of invocation. If <code>self.cache</code> is a dictionary that accumulates during program execution, the behaviour space is effectively unbounded; any test case must specify not just <code>(a, b)</code> but the entire prior execution trace that produced the relevant <code>self.cache</code> state. For complex programs with many such functions, the number of distinct behavioural situations becomes combinatorially intractable. Line coverage captures none of this: executing such a function once, under a particular <code>self.cache</code> state, registers as 100 % coverage of its lines without exercising any meaningful fraction of its behaviour.</p>
+<p>When we report that the median Python repository in our corpus has a mutable-state ratio of 61 %, we are reporting that in the median case, roughly three out of every five functions in the codebase have this property. Line coverage on such a codebase measures which lines execute. It does not measure whether the behaviour space around the execution is tested. A test suite that achieves 80 % line coverage on a 61 %-mutable- state codebase is testing ~80 % of executions of ~39 % of the behaviour- enumerable functions, plus ~80 % of executions of ~61 % of the behaviour- non-enumerable functions where “executed” has a weaker epistemic meaning. Reporting the first figure without the context of the second is, we argue, systematically misleading about what has been verified.</p>
+<h3 id="ft-paradigm-not-language-drives-the-ratio">5.2 Paradigm, not language, drives the ratio</h3>
+<p>The cleanest interpretation of our cross-language results is that <strong>the paradigm predominantly used by a language’s community</strong>, not the language itself, drives the observed ratio. Three lines of evidence support this:</p>
+<p>First, <strong>TypeScript bimodality</strong>. TypeScript supports both class-based OOP and pure-function patterns. Its corpus is split almost cleanly into a functional-React cluster below 15 % and a class-based backend cluster at 40 %+. Language affordance is held constant; paradigm choice varies; the ratio follows the paradigm. (Appendix C documents the operationalization well enough that readers skeptical of this interpretation can replicate.)</p>
+<p>Second, <strong>Python’s high ratio is a framework story</strong>. Python supports pure functions excellently; no language feature forces <code>self.cache</code> patterns. But the dominant Python frameworks in our corpus — Django’s class-based views, Flask’s <code>g</code> globals, the class-heavy transformers library, Ray actors — make mutable class state the path of least resistance. The language permits functional code; the ecosystem does not reward it.</p>
+<p>Third, <strong>the single non-TypeScript Healthy repository in our corpus, <code>justauth/JustAuth</code>, is also an ecosystem outlier</strong>: a small, single-purpose Java utility library that adopts a builder-and-static- method style rather than the typical Spring-dependency-injection graph. A single outlier within an otherwise uniform 150-repo distribution is consistent with the ecosystem-paradigm reading rather than a language-capability reading.</p>
+<p>If this interpretation is correct, the prescription for enterprise software is not “switch languages” but “adopt a paradigm.” We return to this theme in §5.4.</p>
+<h3 id="ft-what-industry-coverage-reports-actually-measure">5.3 What industry coverage reports actually measure</h3>
+<p>A Python codebase with 61 % mutable-state ratio and 80 % line coverage is executing most of its lines during the test suite. It is not exhaustively testing the behaviour that depends on <code>self.cache</code>-style state. For the 39 % of functions that are purely parametric, 80 % line coverage is a reasonable proxy for 80 % behaviour coverage, within known limits. For the 61 % that are not, 80 % line coverage is a statement about execution under the particular pre-states the test suite happened to construct; which may or may not resemble production states.</p>
+<p>We do not claim coverage figures are useless. We do claim that reporting coverage without qualifying it by mutable-state ratio (or an equivalent measure of behavioural enumerability) produces systematically misleading impressions of what has been verified. The industry practice of reporting coverage alone as evidence of testing thoroughness should, on the evidence here, be qualified.</p>
+<h3 id="ft-honest-code-principles-as-structural-enabler">5.4 Honest Code principles as structural enabler</h3>
+<p>A separate literature (the Honest Code principles; the Honest Framework specification published by Open Honest) advocates a set of architectural rules — pure functions, dispatch tables, I/O-at-the-boundary, no classes except for TypedDicts — that structurally prevent the ratio from climbing. The React-frontend TypeScript cluster in our corpus shows that codebases built on roughly these principles, even without Honest Code language <em>per se</em>, achieve ratios structurally bounded in the Healthy band. This is not evidence that Honest Code principles <em>cause</em> low ratios; it is evidence that the principles and the observed outcome are consistent.</p>
+<p>A sharper test would be a before/after measurement of a single codebase adopting the principles. That test is preregistered as Paper D in this program (Wasserman &amp; Staff, in preparation), which measures rework metrics on two production codebases before and after their authors adopted the principles.</p>
+<h3 id="ft-the-inverse-argument-what-low-l1.18-structurally-eliminates">5.5 The inverse argument: what low L1.18 structurally eliminates</h3>
+<p>The preceding sections argue that high L1.18 creates specific problems: unbounded behaviour spaces, misleading coverage figures, cognitive escape hatches that enable informal reasoning about state. The inverse is equally important and often overlooked: <strong>when L1.18 approaches zero, entire categories of defect become structurally impossible, not merely unlikely</strong>.</p>
+<p>This is not a statistical claim about defect rates. It is a mathematical consequence of the constraint “no external mutable state”:</p>
+<ul>
+<li><strong>Race conditions</strong> require shared mutable state. Pure functions share nothing; concurrent invocations cannot interfere.</li>
+<li><strong>Order-dependent test failures</strong> require evaluation-order-sensitive state. Pure functions produce the same output regardless of the order in which they or other functions are called; L1.20 (test determinism) approaches 5/5 by construction.</li>
+<li><strong>Stale-cache and stale-reference bugs</strong> require a mutable cache or reference that drifts from its source of truth. No mutable state means nothing to go stale.</li>
+<li><strong>Side-effect interference</strong> — one function’s invisible write corrupting another function’s read — requires implicit shared state. All dependencies are parameters; nothing is implicit.</li>
+<li><strong>Null-from-uninitialized-state</strong> bugs require a variable whose value depends on whether prior code has executed. Pure functions do not depend on initialization order.</li>
+<li><strong>State-space explosion in testing</strong> — the combinatorial intractability described in §5.1 — requires the <code>State(S)</code> term in the behaviour domain. When <code>State(S)</code> is empty, the behaviour domain is the finite Cartesian product of parameter domains, and exhaustive testing becomes tractable.</li>
+</ul>
+<p>Each elimination is a logical entailment of the definition of “pure function” (output determined solely by parameters; no reads or writes to external state). L1.18 measures how large the population of functions carrying these exposures is. A codebase at L1.18 = 0 % is not merely “well-structured” or “easy to test.” It is structurally immune to the above defect categories. No amount of testing, review, or debugging discipline can achieve the same guarantee for a codebase at L1.18 = 60 %; the guarantee is architectural, not procedural.</p>
+<p>The cognitive dimension reinforces the structural one. Humans systematically fail at the conditional logic that mutable-state code demands (the Wason Selection Task; Wason 1966, Evans 2016; fewer than 10 % correct on first attempt). Mutable state provides what Wasserman (2025) calls “escape hatches from formal reasoning”: mutation replaces provable transformation with informal assertion, and side effects replace explicit dependency tracking with implicit coupling. When L1.18 approaches zero, these escape hatches close: every dependency is a parameter, every transformation is a return value, and the formal-logic structure of the code is visible on inspection. The programmer cannot avoid reasoning formally about the code because the code leaves no room for informal shortcuts. This is harder for humans (Haskell’s learning curve is the canonical example), but it eliminates the cognitive failure modes that produce the defects listed above.</p>
+<p>The practical implication for enterprise auditing is that L1.18 is not merely a structural metric; it is a <strong>defect-category predictor</strong>. An auditor who observes L1.18 = 5 % can report, with mathematical certainty, that the six defect categories above are confined to at most 5 % of the codebase’s functions. An auditor who observes L1.18 = 60 % cannot make any such claim. The auditor’s report is therefore not “this codebase has a high/low number” but “this codebase is structurally exposed to / structurally immune from the following defect categories, to the following degree.”</p>
+<h3 id="ft-the-slop-terminology">5.6 The “Slop” terminology</h3>
+<p>We use the terms <strong>Healthy</strong>, <strong>Not Healthy</strong>, and <strong>Slop</strong> as technical labels for ratio bands, not as aesthetic judgments. They derive from a broader Slop Audit framework in which 19 other structural indicators are defined alongside L1.18. The terms are deliberately provocative; we think the provocation is warranted given the gap between industry testing claims and the structural facts reported here. A repository labelled Slop is not “bad code” in any global sense; many of the Slop repositories in our corpus are widely used, heavily tested, and solve real problems well. The label reports a score on one of twenty Layer 1 indicators, not a comprehensive judgment: although a codebase that scores Slop on even a quarter of the twenty indicators is, by any practitioner reading, in structurally rough shape.</p>
+<h3 id="ft-a-note-on-the-measurement-process">5.7 A note on the measurement process</h3>
+<p>Developing the analyzer that produced these numbers required three iterations (Appendix A). The first was regex-based and contained bugs that silently under-counted Python’s ratio by approximately 11 percentage points. The second was tree-sitter-based but inherited related errors in field-name conventions; those added another 3-point correction in Python. The third was validated against a 249-scenario behavioural specification (Appendix C) before being accepted. At each stage, the authors’ manual sanity checks passed. At each stage, the bugs were invisible without systematic adversarial testing.</p>
+<p>This matters for two reasons. First, the preserved v1/v2/v3 result artifacts let reviewers verify the corrections rather than take them on faith (Appendix B). Second, the experience itself reinforces the paper’s thesis. If three iterations of a purpose-built measurement instrument, developed with care by authors who knew the property they were trying to measure, each produced systematically wrong numbers that passed their authors’ casual checks, then the coverage-report numbers produced continuously by uninstrumented tools across tens of thousands of enterprise codebases are presumably at least as unreliable. The methodology demonstrated here (preregistration, exhaustive behavioural testing, public diff against prior implementations, all intermediate artifacts preserved) should be treated as a minimum bar, not a gold standard, for any numerical claim about software quality at scale.</p>
+<h2 id="ft-limitations">6. Limitations</h2>
+<h3 id="ft-threshold-provisionality">6.1 Threshold provisionality</h3>
+<p>The Healthy / Not Healthy / Slop bands at 15 % and 40 % are author-chosen and not empirically calibrated. Readers who disagree with these thresholds should focus on the raw ratios reported in Table 1 and the figures. Paper E in this program empirically calibrates the thresholds using cluster analysis and rework correlation.</p>
+<h3 id="ft-corpus-selection-1">6.2 Corpus selection</h3>
+<p>The corpus is limited to public GitHub repositories with ≥ 100 stars that pass a coarse “is an application” heuristic. The sample is biased toward popular, publicly visible, well-maintained code; closed-source enterprise codebases may exhibit different distributions. Within each language, the sample is a convenience sample of the 50 highest-starred qualifying repositories rather than a stratified random sample across domains.</p>
+<h3 id="ft-ecosystem-vs-language-confound">6.3 Ecosystem vs language confound</h3>
+<p>The cross-language comparison cannot disentangle the effect of the language itself (supported syntax, idioms) from the effect of the ecosystem (dominant frameworks, community norms). The TypeScript finding in particular is driven by React’s dominance in the frontend corpus and NestJS’s presence in the backend corpus. A carefully matched cross-language comparison (e.g., Java Spring Boot vs Python Flask vs NestJS) would better isolate the language effect.</p>
+<h3 id="ft-l1.18-operationalization">6.4 L1.18 operationalization</h3>
+<p>Our operationalization of “references mutable state” depends on several judgment calls: the I/O-boundary exclusion list, the dunder-method exclusions, and the treatment of <code>self.X</code> / <code>this.X</code> as external state access. Each of these decisions is documented in Appendix D and externalized in <code>LANG_CFG</code>; readers who prefer different choices can modify the analyzer and re-run.</p>
+<h3 id="ft-prior-implementation-bugs">6.5 Prior-implementation bugs</h3>
+<p>Earlier versions of the analyzer produced numerically different aggregate numbers. Bugs are enumerated in Appendix A; deltas are documented in Appendix B. Readers should use v3 results (reported here); prior artifacts are preserved in the replication package for verifying corrections.</p>
+<h3 id="ft-generalization-to-proprietary-code">6.6 Generalization to proprietary code</h3>
+<p>We make no claim that the 60 % / 53 % / 41 % / 22 % medians measured here generalize to the private repositories of any particular enterprise. We claim only that the 200 public repositories measured here — selected by criteria intended to exclude libraries and small tutorials — predominantly exhibit mutable-state ratios above what would permit exhaustive behavioural testing.</p>
+<h2 id="ft-future-work">7. Future work</h2>
+<p>The following preregistered studies in the Open Honest research program extend the work reported here:</p>
+<ul>
+<li><strong>Paper B.</strong> Paradigm-AI compatibility: whether AI code generation is affected by the paradigm (pure functions, dispatch tables, class hierarchies).</li>
+<li><strong>Paper C.</strong> Instrument validation: whether independent assessors using the same methodology produce the same classifications.</li>
+<li><strong>Paper D.</strong> Rework comparison on specific codebases before and after adoption of Honest Code practices.</li>
+<li><strong>Paper E.</strong> Empirical threshold calibration via cluster analysis and rework correlation on the present corpus.</li>
+<li><strong>Paper F.</strong> Confirmatory test of the TypeScript frontend/backend bimodal split observed here as an exploratory finding.</li>
+<li><strong>Paper G.</strong> Multidimensional calibration across all 19 Slop Audit indicators (of which L1.18 is one).</li>
+<li><strong>Paper H.</strong> Architectural coherence under multi-turn AI development on a bounded enterprise application, testing whether the paradigm effect on correctness compounds over development turns.</li>
+</ul>
+<h2 id="ft-conclusion">8. Conclusion</h2>
+<p>We measured the mutable-state ratio across 200 public repositories in four languages. The median ratio was above 40 % in Python, Java, and C# and bimodally distributed in TypeScript. Across all four languages, only one non-TypeScript repository in the corpus fell below 15 %. These ratios are inconsistent with the assumption of exhaustive behavioural testability at scale, regardless of reported line-coverage figures. The TypeScript frontend subpopulation shows that structurally-testable code at scale is achievable when the dominant paradigm supports it; the sparsity of comparable examples in Python, Java, and C# shows that such achievements are rare in practice. We interpret this as evidence that ecosystem-level paradigm choices, rather than individual engineering discipline, determine whether a codebase is structurally testable.</p>
+<h2 id="ft-references">References</h2>
+<p><em>This list is preliminary. Several sections (particularly Related Work, §2) will require additions after expert review. Citations marked [VERIFY] should be checked by the author against the cited source; citations marked [TBD] are placeholders for categories of work we intend to cite but have not yet identified the specific reference.</em></p>
+<p><strong>Static analysis and coverage critique.</strong></p>
+<p>[VERIFY] Inozemtseva, L. &amp; Holmes, R. (2014). Coverage Is Not Strongly Correlated with Test Suite Effectiveness. <em>Proceedings of the 36th International Conference on Software Engineering (ICSE)</em>, 435–445.</p>
+<p>[TBD] Mutation-testing effectiveness literature (Andrews et al., Just et al.).</p>
+<p>[TBD] Software testability metrics (Binder; Freedman).</p>
+<p><strong>Cross-language empirical software engineering.</strong></p>
+<p>[VERIFY] Ray, B., Posnett, D., Filkov, V., &amp; Devanbu, P. (2014). A Large-Scale Study of Programming Languages and Code Quality in GitHub. <em>Proceedings of the 22nd ACM SIGSOFT International Symposium on the Foundations of Software Engineering (FSE)</em>, 155–165.</p>
+<p>[TBD] Casalnuovo et al. on cross-language naturalness.</p>
+<p>[TBD] GitHub-corpus methodology papers (Kalliamvakou et al. “The promises and perils of mining GitHub”).</p>
+<p><strong>Static analysis tooling.</strong></p>
+<p>Brunsfeld, M. et al. tree-sitter: An incremental parsing system for programming tools. https://tree-sitter.github.io/tree-sitter/ (retrieved 2026-04).</p>
+<p><strong>Mutable state and pure functions.</strong></p>
+<p>[TBD] Backus (1977) “Can Programming Be Liberated from the von Neumann Style?” (Turing Award lecture; the classical argument for separating data from mutation).</p>
+<p>[TBD] Hughes (1989) “Why Functional Programming Matters”, for the composition-via-pure-functions argument.</p>
+<p>[TBD] References from the Honest Framework specification, to be cross-referenced when that document is published.</p>
+<p><strong>Behavioural specification and testing.</strong></p>
+<p>[TBD] pytest-bdd or behave documentation, for Gherkin methodology.</p>
+<p>[TBD] Hypothesis / QuickCheck property-based testing literature.</p>
+<p><strong>Industry data on AI-assisted development.</strong></p>
+<p>[VERIFY] GitClear (2025). AI Copilot Code Quality Report. https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality</p>
+<p><strong>This paper’s replication package.</strong></p>
+<p>Wasserman, A. Z. (2026). Replication package for “Finite Testability of Enterprise Software.” Zenodo. [DOI TO BE MINTED]</p>
+<p><strong>Open Honest research program.</strong></p>
+<p>[TBD] Preregistration: OSF Registry. [OSF ID + DOI once approval is finalised]</p>
+<p>[TBD] Honest Framework specification (Wasserman, forthcoming).</p>
+<hr />
+<h2 id="ft-appendices">Appendices</h2>
+<ul>
+<li><strong>Appendix A.</strong> Bug History of the L1.18 Analyzer (<code>appendices/appendix-a-bug-history.md</code>).</li>
+<li><strong>Appendix B.</strong> Version Deltas (<code>appendices/appendix-b-version-deltas.md</code>).</li>
+<li><strong>Appendix C.</strong> Behavioural Specification for the L1.18 Analyzer (<code>appendices/appendix-c-gherkin-specification.md</code>).</li>
+<li><strong>Appendix D.</strong> Development Methodology (<code>appendices/appendix-d-development-methodology.md</code>).</li>
+</ul>
+
 <h2>Identifiers</h2>
 
 <ul>
