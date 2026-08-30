@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="Gha3lzxGv1ZKmtLuO9eOexTvPUUYBk0QERaucY58g7Y">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Findings — Adam Zachary Wasserman</title>
+<meta name="description" content="Short empirical notes: a measurement, what it does and does not support, and the caveats attached to the finding rather than left in a reply.">
+<meta name="author" content="Adam Zachary Wasserman">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://adamzacharywasserman.com/findings.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Findings — Adam Zachary Wasserman">
+<meta property="og:description" content="Short empirical notes: a measurement, what it does and does not support, and the caveats attached to the finding rather than left in a reply.">
+<meta property="og:url" content="https://adamzacharywasserman.com/findings.html">
+<meta property="og:site_name" content="Adam Zachary Wasserman">
+<meta property="profile:first_name" content="Adam">
+<meta property="profile:last_name" content="Wasserman">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Findings — Adam Zachary Wasserman">
+<meta name="twitter:description" content="Short empirical notes: a measurement, what it does and does not support, and the caveats attached to the finding rather than left in a reply.">
+<meta property="og:image" content="https://adamzacharywasserman.com/og-image.png">
+<meta name="twitter:image" content="https://adamzacharywasserman.com/og-image.png">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Literata:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://adamzacharywasserman.com/#person",
+      "name": "Adam Zachary Wasserman",
+      "givenName": "Adam",
+      "additionalName": "Zachary",
+      "familyName": "Wasserman",
+      "url": "https://adamzacharywasserman.com",
+      "identifier": [
+        {
+          "@type": "PropertyValue",
+          "propertyID": "ORCID",
+          "value": "0009-0002-8865-6583",
+          "url": "https://orcid.org/0009-0002-8865-6583"
+        }
+      ],
+      "email": "mailto:adam@adamzacharywasserman.com",
+      "jobTitle": ["Author", "Researcher", "Founder"],
+      "description": "Author and independent researcher working at the intersection of philosophy of science, artificial intelligence, and the metaphysics of complex emergent structure. Forty years in enterprise software preceded a deliberate 2017 pivot toward contributing to the body of knowledge.",
+      "knowsAbout": [
+        "Philosophy of science",
+        "Philosophy of mind",
+        "Metaphysics of emergence",
+        "Instrument-aware epistemology",
+        "Distributed cognition",
+        "Multi-collaborative intelligences",
+        "Language-Only Hypothesis",
+        "Scaling Hypothesis (machine learning)",
+        "Cross-linguistic LLM training dynamics",
+        "BabyLM challenge",
+        "Pre-registered empirical research",
+        "DOM-based application state (DATAOS)",
+        "Software architecture",
+        "AI compliance for regulated markets"
+      ],
+      "sameAs": [
+        "https://orcid.org/0009-0002-8865-6583",
+        "https://github.com/adamzwasserman",
+        "https://news.ycombinator.com/user?id=adamzwasserman",
+        "https://hackernoon.com/u/azw",
+        "https://www.welcometothejungle.com/en/authors/adam-zachary-wasserman",
+        "https://emusings.substack.com",
+        "https://honestcode.software",
+        "https://dataos.software",
+        "https://www.wikidata.org/wiki/Q140256458",
+        "https://openalex.org/A5120961559",
+        "https://hcommons.org/members/adam-z-wasserman/",
+        "https://philpeople.org/profiles/adam-zachary-wasserman",
+        "https://openlibrary.org/authors/OL16469310A",
+        "https://www.goodreads.com/author/show/23932860.Adam_Zachary_Wasserman",
+        "https://osf.io/8t64r/",
+        "https://www.linkedin.com/in/adam-zachary-wasserman/",
+        "https://www.amazon.com/stores/author/B07Y154YCS",
+        "https://ssrn.com/author=12354888",
+        "https://zenodo.org/communities/open-honest"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Kansas City",
+        "addressRegion": "MO",
+        "addressCountry": "US"
+      }
+    },
+    {
+      "@type": "Book",
+      "name": "The Robot in the Dark: Instruments, Illusions, and the Limits of Knowledge",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "bookFormat": "https://schema.org/EBook",
+      "bookEdition": "Manuscript in preparation",
+      "identifier": "10.5281/zenodo.20382928",
+      "url": "https://doi.org/10.5281/zenodo.20382928",
+      "description": "A book about the epistemology of scientific instruments. Its central claim is that every instrument has an edge where the light runs out, and that the most consequential moments in science are not what happens inside the illuminated region but what happens at the boundary. Case studies in evolutionary biology, large language model training, software engineering, and cognitive psychology.",
+      "about": ["Philosophy of science", "Epistemology", "Scientific instruments", "Limits of measurement", "LLMs as instruments"]
+    },
+    {
+      "@type": "Book",
+      "name": "The Replicators: Multiple Collaborative Intelligences as the Substrate of Complex Structure",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "bookFormat": "https://schema.org/EBook",
+      "bookEdition": "In preparation",
+      "description": "A book and accompanying empirical research program arguing that complex emergent structure (biological evolution, software systems, language itself) is more parsimoniously explained by multiple collaborative intelligences operating across substrates and time than by either single-creator or no-creator accounts. Grounded in pre-registered controlled experiments on cross-linguistic LLM training dynamics.",
+      "about": ["Metaphysics of emergence", "Distributed cognition", "Philosophy of mind", "Evolutionary biology", "Language and thought"]
+    },
+    {
+      "@type": "Book",
+      "name": "Honest Code",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "url": "https://honestcode.software",
+      "description": "Sixteen principles for eliminating hidden state in software. Side-by-side comparisons in twelve programming languages with real nanosecond execution traces. The core argument: most code complexity comes from hiding state inside classes and objects.",
+      "about": ["Software architecture", "State management", "Pure functions", "Type systems"]
+    },
+    {
+      "@type": "Book",
+      "name": "The Chaos Factory",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "url": "https://amzn.to/46I8piO",
+      "datePublished": "2017",
+      "description": "The inside story of corporate IT failure, tracing the history from the Springfield and Harper's Ferry armories through the American System of Manufacture to modern software development. Favorably reviewed by Bloor Research."
+    },
+    {
+      "@type": "Book",
+      "name": "ADHD Meets AI: How Restless Brains Are Using Artificial Intelligence to Unlock Super Productivity",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "bookFormat": "https://schema.org/EBook",
+      "datePublished": "2026",
+      "url": "https://www.amazon.com/dp/B0GX32DJWM",
+      "sameAs": "https://adamzwasserman.gumroad.com/l/adhd-meets-ai",
+      "description": "The honest book about restless brains and artificial intelligence: what AI actually is, what it genuinely does for a mind wired for synthesis at untrackable speeds, and exactly where it will quietly hurt you. Written by someone who builds AI for a living and has lived the restless brain his whole life.",
+      "about": ["ADHD", "Neurodiversity", "Artificial intelligence", "Human-AI collaboration", "Productivity"]
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "The Scaling Hypothesis Is Language-Contingent: Evidence from Cross-Linguistic Training Dynamics",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "datePublished": "2026",
+      "identifier": "10.5281/zenodo.19423150",
+      "url": "https://doi.org/10.5281/zenodo.19423150",
+      "description": "Pre-registered controlled ablation training identical 125M-parameter transformers on matched English and French C4 corpora. French achieves grammatical competence at 197M tokens; English remains at chance through 4 billion tokens. Pre-registration: OSF SJ48B.",
+      "about": ["Language-contingent scaling", "LLM training dynamics", "Cross-linguistic experiments"]
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "English Considered Harmful",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "datePublished": "2026-04-06",
+      "identifier": "10.5281/zenodo.19443358",
+      "url": "https://doi.org/10.5281/zenodo.19443358",
+      "description": "Pre-registered companion to the language-contingent scaling work, examining the consequences for AI research methodology of treating English as the universal training substrate."
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "The 70% Rule: When Axiomatic Prompting Helps, and When It Hurts",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "datePublished": "2026",
+      "identifier": "10.5281/zenodo.19423100",
+      "url": "https://doi.org/10.5281/zenodo.19423100",
+      "description": "Pre-registered work on the conditions under which explicit logical axioms in prompts produce qualitatively better outputs on reasoning benchmarks. OSF pre-registrations: 7Z49A, MZF79."
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "name": "Process Discipline",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "datePublished": "2026",
+      "identifier": "10.5281/zenodo.19355460",
+      "url": "https://doi.org/10.5281/zenodo.19355460",
+      "description": "Methodological preprint on pre-registered empirical practice for AI-assisted enterprise software development."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "DATAOS",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "url": "https://dataos.software",
+      "description": "DOM As The Authority On State. An architectural philosophy and library ecosystem for web applications that treat the DOM as the single, authoritative source of application state.",
+      "programmingLanguage": "JavaScript"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "Honest framework",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "url": "https://honestframework.software",
+      "description": "Correct-by-construction development framework underlying the Honest Code book and the Open Honest research program. Multi-language analyzer, four-language tree-sitter detector, 276-scenario behavioural specification. Architectural constraints bound the codebase to known behaviour domains."
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Honest audit",
+      "url": "https://slopaudit.org",
+      "author": {"@id": "https://adamzacharywasserman.com/#person"},
+      "description": "Four-layer measurement instrument for enterprise software quality, published with explicit indicator thresholds and a peer-reviewable behavioural specification of its own behaviour at boundary cases. Part of the Open Honest empirical research program."
+    },
+    {
+      "@type": "VideoObject",
+      "name": "Adam Zachary Wasserman in conversation on Abstraction Layers",
+      "description": "A long-form interview on the Language-Only Hypothesis: why large language models reveal structure already deposited in language rather than generating intelligence from scale, and what follows for how we read what today's AI can and cannot do.",
+      "thumbnailUrl": "https://i.ytimg.com/vi/-CK3FHftrd8/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=-CK3FHftrd8",
+      "embedUrl": "https://www.youtube.com/embed/-CK3FHftrd8",
+      "about": {"@id": "https://adamzacharywasserman.com/#person"},
+      "actor": {"@id": "https://adamzacharywasserman.com/#person"},
+      "publisher": {"@type": "Organization", "name": "Abstraction Layers with Jack Couch"}
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<main class="hub">
+
+  <header class="hub__identity">
+    <h1>Findings</h1>
+    <p class="hub__item-desc">Measurements too small for a paper and too specific for an essay. Each one states what it found, on what data, and what it does not support. The caveats live here with the finding rather than in a reply somewhere, because a chart travels and its footnotes do not.</p>
+  </header>
+
+  <nav class="hub__nav" aria-label="Sections">
+    <a href="/">Home</a>
+    <a href="/research.html">Research</a>
+    <a href="/findings.html">Findings</a>
+  </nav>
+
+
+  <h2 class="hub__section-title hub__section-title--gold">Register drift in AI-signed code review</h2>
+
+  <p class="hub__item-desc">Where AI-signed prose sits on the grammatical axis between US-located and India-located professional English, and which way each model is moving. Drawn from 153,448 GitHub comments, 2022 to 2026, parsed for construction rather than vocabulary and matched on repository and year.</p>
+
+<style>
+/* Scoped to .rd-wrap so the artifact's page-level rules cannot
+   reach the rest of the hub. */
+.rd-wrap{color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e;
+  --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7;
+  --border:rgba(11,11,11,.10);
+  --claude:#2a78d6; --copilot:#eb6834; --unattr:#1baf7a;
+  --band-in:rgba(11,11,11,.085); --band-us:rgba(11,11,11,.035);
+  --tip-bg:#0b0b0b; --tip-ink:#fcfcfb;}
+.rd-wrap{color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7;
+    --muted:#898781; --grid:#2c2c2a; --axis:#383835;
+    --border:rgba(255,255,255,.10);
+    --claude:#3987e5; --copilot:#d95926; --unattr:#199e70;
+    --band-in:rgba(255,255,255,.10); --band-us:rgba(255,255,255,.045);
+    --tip-bg:#fcfcfb; --tip-ink:#0b0b0b;}
+.rd-wrap{color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7;
+  --muted:#898781; --grid:#2c2c2a; --axis:#383835;
+  --border:rgba(255,255,255,.10);
+  --claude:#3987e5; --copilot:#d95926; --unattr:#199e70;
+  --band-in:rgba(255,255,255,.10); --band-us:rgba(255,255,255,.045);
+  --tip-bg:#fcfcfb; --tip-ink:#0b0b0b;}
+.rd-wrap *{box-sizing:border-box}
+.rd-wrap{margin:0; background:var(--page); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15.5px; line-height:1.55;}
+.rd-wrap .wrap{max-width:920px; margin:0 auto; padding:48px 24px 72px; display:flex; flex-direction:column; gap:36px}
+.rd-wrap header{max-width:70ch}
+.rd-wrap .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+.rd-wrap h1{font-family:"Fraunces",Georgia,serif; font-weight:600; font-size:44px; line-height:1.05; margin:0 0 14px; text-wrap:balance}
+.rd-wrap .standfirst{color:var(--ink2); font-size:16.5px; margin:0; max-width:62ch}
+.rd-wrap figure{margin:0; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:22px 22px 16px}
+.rd-wrap figcaption{display:flex; flex-direction:column; gap:2px; margin-bottom:14px}
+.rd-wrap .fig-label{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+.rd-wrap .fig-title{font-family:"Fraunces",Georgia,serif; font-weight:500; font-size:21px}
+.rd-wrap .fig-sub{color:var(--ink2); font-size:13.5px; max-width:70ch}
+.rd-wrap .legend{display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin:6px 0 12px; font-size:13px; color:var(--ink2)}
+.rd-wrap .legend .key{display:inline-flex; align-items:center; gap:7px}
+.rd-wrap .swatch{width:14px; height:3px; border-radius:2px; display:inline-block}
+.rd-wrap .dotkey{width:9px; height:9px; border-radius:50%; display:inline-block; border:2px solid var(--muted); background:transparent}
+.rd-wrap svg text{font-family:"IBM Plex Mono",monospace; fill:var(--muted); font-size:11px}
+.rd-wrap svg .metric-name{font-family:"IBM Plex Sans",system-ui,sans-serif; fill:var(--ink); font-size:12.5px; font-weight:600}
+.rd-wrap svg .metric-unit{fill:var(--muted); font-size:10.5px}
+.rd-wrap svg .band-label{fill:var(--ink2); font-size:10.5px; font-family:"IBM Plex Sans",system-ui,sans-serif;
+  paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round}
+.rd-wrap svg .cohort-label{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11px; fill:var(--ink2)}
+.rd-wrap .grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px}
+.rd-wrap .panel{background:var(--surface)}
+.rd-wrap .scrollx{overflow-x:auto}
+.rd-wrap .tip{position:fixed; pointer-events:none; z-index:10; background:var(--tip-bg); color:var(--tip-ink);
+  font-family:"IBM Plex Mono",monospace; font-size:12px; line-height:1.45; padding:7px 10px;
+  border-radius:6px; opacity:0; transition:opacity .12s; max-width:260px}
+.rd-wrap .tip{transition:none}
+.rd-wrap .notes{max-width:72ch; color:var(--ink2); font-size:14px}
+.rd-wrap .notes h2{font-family:"Fraunces",Georgia,serif; color:var(--ink); font-weight:600; font-size:22px; margin:0 0 10px}
+.rd-wrap .notes p{margin:0 0 10px}
+.rd-wrap details{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 20px}
+.rd-wrap summary{cursor:pointer; font-weight:600; color:var(--ink)}
+.rd-wrap summary:focus-visible{outline:2px solid var(--claude); outline-offset:3px}
+.rd-wrap table{border-collapse:collapse; margin-top:14px; font-size:13px; font-variant-numeric:tabular-nums; width:100%}
+.rd-wrap th, .rd-wrap td{text-align:right; padding:5px 10px; border-bottom:1px solid var(--grid); white-space:nowrap}
+.rd-wrap th:first-child, .rd-wrap td:first-child{text-align:left}
+.rd-wrap thead th{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em}
+</style>
+
+
+
+
+
+
+
+<div class="rd-wrap">
+
+
+<figure id="fig1">
+  <figcaption>
+    <span class="fig-label">Figure 1</span>
+    <span class="fig-title">Position on the US → India axis, 2025 → 2026 Q3</span>
+    <span class="fig-sub">Each metric rescaled so the US human baseline sits at 0, at the
+    bottom, and the India human baseline at 100 above it, the same orientation as Figure 2.
+    An arrow runs from a cohort's 2025 position to its 2026 Q3 position; the small mid-dot
+    is 2026 H1. Above 100 means more of the construction than the Indian baseline itself.</span>
+  </figcaption>
+  <div class="legend" id="legend1"></div>
+  <div class="scrollx"><svg id="svg1" role="img" aria-label="Arrow chart of India-axis positions by metric and cohort"></svg></div>
+</figure>
+
+<figure id="fig2">
+  <figcaption>
+    <span class="fig-label">Figure 2</span>
+    <span class="fig-title">Raw trajectories against the human baseline bands</span>
+    <span class="fig-sub">Native units per panel. Shaded bands are the pre-2025 human
+    baselines ±2 standard errors; dashed lines where no interval was computed.
+    Open markers flag cells under 100 texts. Where the US baseline is the higher
+    number (subordination, sentence length) the y-axis is reversed, so the India
+    side reads upward in every panel.</span>
+  </figcaption>
+  <div class="legend" id="legend2"></div>
+  <div class="grid2" id="panels"></div>
+</figure>
+
+<section class="notes">
+  <h2>Reading and caveats</h2>
+  <p>The four Figure 1 metrics are the constructions that most separate India-located from
+  US-located professional GitHub prose in 2022–24 (all p&nbsp;&lt;&nbsp;10<sup>−30</sup>,
+  repo- and year-matched samples of ~4,800 comments per side): verbless status sentences,
+  low clause subordination, triple-noun compounds and please/kindly politeness marking.</p>
+  <p>Claude-signed text enters 2025 past the India baseline on all four at once and drifts
+  back toward the human range through 2026. Copilot shares the noun compression but keeps
+  US-style subordination and has converged to US politeness. A third cohort of 370
+  AI-signed comments whose signature names no model (chiefly Claude&nbsp;Code PR footers
+  with the link text stripped at harvest) is excluded from the charts: its register does
+  not track the Claude cohort, and whether that reflects different authorship or human
+  editing of generated text cannot be determined from the corpus.</p>
+  <p>Limits: the 2025 cells rest on 47–57 texts each and the Copilot 2026 cells on ~30, so
+  read levels loosely and trends cautiously. AI-signed text is largely PR-body prose while
+  the baselines are conversation comments; that genre gap inflates verblessness and noun
+  stacking for every AI cohort, though it cannot manufacture the politeness or
+  subordination signatures. Parsing is spaCy <code>en_core_web_sm</code>; the parser is
+  trained on US-style English, which may flatten Indian-text parses slightly.</p>
+</section>
+
+<details>
+  <summary>Data table — every value plotted</summary>
+  <div class="scrollx"><table id="datatable"></table></div>
+</details>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const METRICS = {
+  verbless:{label:"Verbless sentences", unit:"per 1k sentences", india:198.5, us:137.2, seIn:5.2, seUs:4.5},
+  subord:{label:"Subordinate clauses", unit:"per 1k sentences", india:1193.7, us:1521.7, seIn:12.8, seUs:15.0, flip:true},
+  stacks:{label:"Triple-noun stacks", unit:"per 1k words", india:5.35, us:3.64, seIn:0.22, seUs:0.18},
+  polite:{label:"please / kindly", unit:"per 10k words", india:22.96, us:7.23, seIn:1.45, seUs:0.79},
+  sentlen:{label:"Sentence length", unit:"words", india:14.97, us:17.05, flip:true},
+  you:{label:"“you” subjects", unit:"per 1k subjects", india:93.1, us:71.5},
+};
+const FP = ["verbless","subord","stacks","polite"];               // Figure 1 rows
+const ALL6 = ["verbless","subord","stacks","polite","sentlen","you"];
+const PERIODS = ["2025","2026 H1","2026 Q3"];
+const COHORTS = [
+  {name:"Claude", color:"var(--claude)", n:[51,413,256], v:{
+    verbless:[269.42,227.60,207.79], subord:[1113.08,801.21,968.09],
+    stacks:[13.88,12.54,12.92], polite:[95.03,39.24,30.82],
+    sentlen:[14.59,12.80,15.59], you:[110.60,40.45,31.54]}},
+  {name:"Copilot", color:"var(--copilot)", n:[47,29,30], v:{
+    verbless:[230.77,257.14,186.97], subord:[1430.77,1085.71,1005.67],
+    stacks:[16.23,15.60,18.62], polite:[56.36,48.85,6.59],
+    sentlen:[17.06,16.90,17.19], you:[88.11,62.50,25.42]}},
+];
+const SMALL_N = 100;
+const NS = "http://www.w3.org/2000/svg";
+const idx = (v,m)=> (v-m.us)/(m.india-m.us)*100;
+const el = (tag,attrs,parent)=>{ const e=document.createElementNS(NS,tag);
+  for(const k in attrs) e.setAttribute(k,attrs[k]); if(parent)parent.appendChild(e); return e; };
+
+/* ---------- legends ---------- */
+function legend(target){
+  const box = document.getElementById(target);
+  for(const c of COHORTS){
+    const s=document.createElement("span"); s.className="key";
+    s.innerHTML=`<span class="swatch" style="background:${c.color}"></span>${c.name}`;
+    box.appendChild(s);
+  }
+  const o=document.createElement("span"); o.className="key";
+  o.innerHTML=`<span class="dotkey"></span>under ${SMALL_N} texts`;
+  box.appendChild(o);
+}
+legend("legend1"); legend("legend2");
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById("tip");
+function hover(target, html){
+  target.addEventListener("pointerenter", e=>{ tip.innerHTML=html; tip.style.opacity=1; });
+  target.addEventListener("pointermove", e=>{
+    const pad=14, w=tip.offsetWidth, h=tip.offsetHeight;
+    let x=e.clientX+pad, y=e.clientY+pad;
+    if(x+w>innerWidth-8) x=e.clientX-w-pad;
+    if(y+h>innerHeight-8) y=e.clientY-h-pad;
+    tip.style.left=x+"px"; tip.style.top=y+"px";
+  });
+  target.addEventListener("pointerleave", ()=>{ tip.style.opacity=0; });
+}
+
+/* ---------- Figure 1: vertical arrows on the India axis, US at bottom ---------- */
+(function(){
+  const W=860, H=470, L=64, R=16, T=54, B=40;
+  const ymin=-60, ymax=930;
+  const svg=document.getElementById("svg1");
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.setAttribute("width","100%");
+  const Y=v=> T+(ymax-v)/(ymax-ymin)*(H-T-B);
+
+  // shaded 0-100 corridor, US line at the bottom of it
+  el("rect",{x:L,y:Y(100),width:W-L-R,height:Y(0)-Y(100),fill:"var(--band-us)"},svg);
+  for(const [v,lab] of [[0,"US 22\u201324"],[100,"India 22\u201324"]]){
+    el("line",{x1:L,y1:Y(v),x2:W-R,y2:Y(v),stroke:"var(--axis)","stroke-width":1.4},svg);
+    const t=el("text",{x:L+4,y:Y(v)-4,class:"band-label"},svg); t.textContent=lab;
+  }
+  for(const v of [300,500,700,900]){
+    el("line",{x1:L,y1:Y(v),x2:W-R,y2:Y(v),stroke:"var(--grid)","stroke-width":1},svg);
+    const t=el("text",{x:L-8,y:Y(v)+4,"text-anchor":"end"},svg); t.textContent=v;
+  }
+  const axisNote=el("text",{x:L+(W-L-R)/2,y:H-8,"text-anchor":"middle"},svg);
+  axisNote.textContent="index: 0 = US baseline \u00b7 100 = India baseline \u00b7 arrows run 2025 \u2192 2026 Q3";
+
+  const colW=(W-L-R)/FP.length;
+  FP.forEach((key,ci)=>{
+    const m=METRICS[key];
+    const cx=L+ci*colW+colW/2;
+    const name=el("text",{x:cx,y:18,"text-anchor":"middle",class:"metric-name"},svg);
+    name.textContent=m.label;
+    const unit=el("text",{x:cx,y:33,"text-anchor":"middle",class:"metric-unit"},svg);
+    unit.textContent=m.unit;
+    if(ci<FP.length-1)
+      el("line",{x1:L+(ci+1)*colW,y1:T,x2:L+(ci+1)*colW,y2:H-B,
+        stroke:"var(--grid)","stroke-width":1,"stroke-dasharray":"2 4"},svg);
+
+    COHORTS.forEach((c,li)=>{
+      const x=cx+(li===0?-26:26);
+      const p=[0,1,2].map(i=>idx(c.v[key][i],m));
+      const lo2=Math.min(...p), hi2=Math.max(...p);
+      el("line",{x1:x,y1:Y(lo2),x2:x,y2:Y(hi2),stroke:c.color,"stroke-width":2},svg);
+      // arrowhead at Q3, pointing the way the last move went (up = India-ward)
+      const dir=Math.sign(p[2]-p[1])||Math.sign(p[2]-p[0])||1, ay=Y(p[2]);
+      el("path",{d:`M ${x} ${ay} l -4 ${7*dir} l 8 0 z`,fill:c.color},svg);
+      el("circle",{cx:x,cy:Y(p[1]),r:2.6,fill:c.color},svg);
+      const open=c.n[0]<SMALL_N;
+      el("circle",{cx:x,cy:Y(p[0]),r:4.5,fill:open?"var(--surface)":c.color,
+        stroke:c.color,"stroke-width":2},svg);
+      if(ci===0){
+        const lab=el("text",{x:x+(li===0?-9:9),y:Y(p[0])+4,
+          "text-anchor":li===0?"end":"start",class:"cohort-label"},svg);
+        lab.textContent=c.name;
+      }
+      const hit=el("rect",{x:x-colW/4,y:T,width:colW/2,height:H-T-B,fill:"transparent"},svg);
+      hover(hit,`<b>${c.name}</b> \u00b7 ${m.label}<br>`+
+        PERIODS.map((pp,i)=>`${pp}: index ${p[i].toFixed(0)} (${c.v[key][i]} ${m.unit}, n=${c.n[i]})`).join("<br>"));
+    });
+  });
+})();
+
+/* ---------- Figure 2: small multiples ---------- */
+(function(){
+  const host=document.getElementById("panels");
+  for(const key of ALL6){
+    const m=METRICS[key];
+    const vals=COHORTS.flatMap(c=>c.v[key]).concat([m.india,m.us]);
+    let lo=Math.min(...vals), hi=Math.max(...vals);
+    const pad=(hi-lo)*0.14||1; lo-=pad; hi+=pad;
+    const W=300,H=210,L=46,R=14,T=26,B=30;
+    const X=i=> L+i*(W-L-R)/2;
+    const Y=v=> m.flip ? T+(v-lo)/(hi-lo)*(H-T-B) : T+(hi-v)/(hi-lo)*(H-T-B);
+
+    const fig=document.createElement("div"); fig.className="panel"; host.appendChild(fig);
+    const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,width:"100%",role:"img",
+      "aria-label":m.label},fig);
+
+    const title=el("text",{x:L,y:14,class:"metric-name"},svg); title.textContent=m.label;
+    const unit=el("text",{x:W-R,y:14,"text-anchor":"end",class:"metric-unit"},svg);
+    unit.textContent=m.unit;
+    if(m.flip){
+      const rev=el("text",{x:W-R,y:25,"text-anchor":"end",class:"metric-unit"},svg);
+      rev.textContent="axis reversed";
+    }
+
+    // baseline bands or dashed lines
+    for(const side of ["india","us"]){
+      const base=m[side], se=side==="india"?m.seIn:m.seUs;
+      const lab=side==="india"?"India 22–24":"US 22–24";
+      if(se){
+        const h=Math.max(Y(base-se)-Y(base+se),3);
+        el("rect",{x:L,y:Y(base+se),width:W-L-R,height:h,
+          fill:side==="india"?"var(--band-in)":"var(--band-us)"},svg);
+      } else {
+        el("line",{x1:L,y1:Y(base),x2:W-R,y2:Y(base),stroke:"var(--axis)",
+          "stroke-width":1.2,"stroke-dasharray":"4 3"},svg);
+      }
+      const t=el("text",{x:W-R-14,y:Y(base)-4,"text-anchor":"end",class:"band-label"},svg);
+      t.textContent=lab;
+    }
+    // y ticks
+    for(const v of [lo+pad,hi-pad]){
+      const t=el("text",{x:L-6,y:Y(v)+4,"text-anchor":"end"},svg);
+      t.textContent=v>=100?v.toFixed(0):v.toFixed(1);
+    }
+    // x labels
+    PERIODS.forEach((p,i)=>{
+      const t=el("text",{x:X(i),y:H-8,"text-anchor":i===0?"start":i===2?"end":"middle"},svg);
+      t.textContent=p;
+    });
+    // series
+    for(const c of COHORTS){
+      const pts=c.v[key].map((v,i)=>[X(i),Y(v)]);
+      el("path",{d:"M"+pts.map(p=>p.join(" ")).join(" L "),fill:"none",
+        stroke:c.color,"stroke-width":2},svg);
+      pts.forEach((p,i)=>{
+        const open=c.n[i]<SMALL_N;
+        el("circle",{cx:p[0],cy:p[1],r:4,fill:open?"var(--surface)":c.color,
+          stroke:c.color,"stroke-width":2},svg);
+        const hit=el("circle",{cx:p[0],cy:p[1],r:11,fill:"transparent"},svg);
+        hover(hit,`<b>${c.name}</b> · ${PERIODS[i]}<br>${m.label}: ${c.v[key][i]}<br>${m.unit} · n=${c.n[i]}`);
+      });
+    }
+  }
+})();
+
+/* ---------- data table ---------- */
+(function(){
+  const t=document.getElementById("datatable");
+  let html="<thead><tr><th>cohort</th><th>period</th><th>n</th>"+
+    ALL6.map(k=>`<th>${METRICS[k].label}</th>`).join("")+"</tr></thead><tbody>";
+  html+=`<tr><td>human India 22–24</td><td>baseline</td><td>4,836</td>`+
+    ALL6.map(k=>`<td>${METRICS[k].india}</td>`).join("")+"</tr>";
+  html+=`<tr><td>human US 22–24</td><td>baseline</td><td>4,801</td>`+
+    ALL6.map(k=>`<td>${METRICS[k].us}</td>`).join("")+"</tr>";
+  for(const c of COHORTS) PERIODS.forEach((p,i)=>{
+    html+=`<tr><td>${c.name}</td><td>${p}</td><td>${c.n[i]}</td>`+
+      ALL6.map(k=>`<td>${c.v[k][i]}</td>`).join("")+"</tr>";
+  });
+  t.innerHTML=html+"</tbody>";
+})();
+</script>
+
+</body></html>
+
+  <p class="hub__item-desc">Unpublished note, August 2026. Not pre-registered. It measures how text is built, not who wrote it, and it makes no claim about any group of people.</p>
+
+<footer class="hub__contact">
+    <ul class="hub__contact-list">
+      <li><a href="mailto:adam@adamzacharywasserman.com">adam@adamzacharywasserman.com</a></li>
+      <li><a href="mailto:adam.wasserman@openhonest.org">adam.wasserman@openhonest.org</a></li>
+      <li><a href="https://orcid.org/0009-0002-8865-6583">ORCID</a></li>
+      <li><a href="https://github.com/adamzwasserman">GitHub</a></li>
+      <li><a href="https://emusings.substack.com">Substack</a></li>
+      <li><a href="https://news.ycombinator.com/user?id=adamzwasserman">Hacker News</a></li>
+      <li><a href="https://hackernoon.com/u/azw">Hackernoon</a></li>
+    </ul>
+  </footer>
+
+</main>
+
+</body>
+</html>
+
+
+</main>
+
+</body>
+</html>
+
+
+</main>
+
+</body>
+</html>

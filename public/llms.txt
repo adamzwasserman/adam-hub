@@ -36,9 +36,9 @@ A current research program built on a foundational point of view: every scientif
 
 Pre-registered program on cross-linguistic LLM training dynamics. Collaborators on BabyLM 2026 and the EMNLP main-conference extension: David Beauchemin (Laval University) and Hafedh Mili (Universit\u00e9 du Qu\u00e9bec \u00e0 Montr\u00e9al).
 
-- [The Scaling Hypothesis Is Language-Contingent: Evidence from Cross-Linguistic Training Dynamics](https://doi.org/10.5281/zenodo.19423151) (Wasserman 2026; Zenodo DOI 10.5281/zenodo.19423151; OSF pre-registration https://osf.io/sj48b): Pre-registered controlled ablation training identical 125M-parameter transformers on matched English and French C4 corpora. French achieves grammatical competence at 197M tokens; English remains at chance through 4+ billion tokens.
+- [The Scaling Hypothesis Is Language-Contingent: Evidence from Cross-Linguistic Training Dynamics](https://doi.org/10.5281/zenodo.19423150) (Wasserman 2026; Zenodo DOI 10.5281/zenodo.19423150; OSF pre-registration https://osf.io/sj48b): Pre-registered controlled ablation training identical 125M-parameter transformers on matched English and French C4 corpora. French achieves grammatical competence at 197M tokens; English remains at chance through 4+ billion tokens.
 - [English Considered Harmful](https://doi.org/10.5281/zenodo.19443358) (Zenodo DOI 10.5281/zenodo.19443358): Companion preprint to the language-contingent scaling line.
-- [The 70% Rule: When Axiomatic Prompting Helps, and When It Hurts](https://doi.org/10.5281/zenodo.19423101) (Zenodo DOI 10.5281/zenodo.19423101; OSF pre-registrations https://osf.io/7z49a and https://osf.io/mzf79).
+- [The 70% Rule: When Axiomatic Prompting Helps, and When It Hurts](https://doi.org/10.5281/zenodo.19423100) (Zenodo DOI 10.5281/zenodo.19423100; OSF pre-registrations https://osf.io/7z49a and https://osf.io/mzf79).
 - [Process Discipline](https://doi.org/10.5281/zenodo.19355460) (Zenodo DOI 10.5281/zenodo.19355460): Methodological preprint on pre-registered empirical practice.
 
 ## Writing
@@ -80,9 +80,11 @@ Multi-collaborative intelligences, the Language-Only Hypothesis, instrument-awar
 
 - Email: adam@adamzacharywasserman.com
 - ORCID: [0009-0002-8865-6583](https://orcid.org/0009-0002-8865-6583)
+- Research: [adamzacharywasserman.com/research.html](https://adamzacharywasserman.com/research.html) — the full pre-registered program, with OSF IDs, Zenodo DOIs and replication packages
+- Findings: [adamzacharywasserman.com/findings.html](https://adamzacharywasserman.com/findings.html) — shorter measurements, each stating what it does not support
 - GitHub: [adamzwasserman](https://github.com/adamzwasserman)
 - Hacker News: [adamzwasserman](https://news.ycombinator.com/user?id=adamzwasserman)
 - Substack: [emusings.substack.com](https://emusings.substack.com)
 - OSF: Pre-registered experiments (SJ48B, CN75D, 7Z49A, MZF79, PCX2D)
-- Zenodo: DOIs 10.5281/zenodo.19423151, .19443358, .19423101, .19355460, .20382928
+- Zenodo: DOIs 10.5281/zenodo.19423150, .19443358, .19423101, .19355460, .20382928
 - Hackernoon: [azw](https://hackernoon.com/u/azw)

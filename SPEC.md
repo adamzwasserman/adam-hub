@@ -67,10 +67,10 @@ Each with status indicator and link where available.
 
 All four deposited preprints with Zenodo DOIs and OSF pre-registrations. Collaborators on BabyLM 2026 / EMNLP 2026: David Beauchemin (Laval) and Hafedh Mili (UQAM).
 
-- **The Scaling Hypothesis Is Language-Contingent** (Zenodo 10.5281/zenodo.19423151; OSF SJ48B)
-- **Right Tool, Right Job: Why Training Language Matters More Than Training Data** (BabyLM 2026, accepted for presentation at EMNLP 2026 Budapest, Oct 2026)
+- **The Scaling Hypothesis Is Language-Contingent** (Zenodo 10.5281/zenodo.19423150; OSF SJ48B)
+- **Right Tool, Right Job: Native-Language Evaluation, Tokenizer Sensitivity, and Methodological Findings from a French-Only BabyLM** (BabyLM 2026, accepted for presentation at EMNLP 2026 Budapest, Oct 2026)
 - **English Considered Harmful** (Zenodo 10.5281/zenodo.19443358)
-- **The 70% Rule** (Zenodo 10.5281/zenodo.19423101; OSF 7Z49A, MZF79)
+- **The 70% Rule** (Zenodo 10.5281/zenodo.19423100; OSF 7Z49A, MZF79)
 - **Process Discipline** (Zenodo 10.5281/zenodo.19355460)
 
 #### 4. Writing
