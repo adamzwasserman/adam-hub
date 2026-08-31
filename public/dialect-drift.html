@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="Gha3lzxGv1ZKmtLuO9eOexTvPUUYBk0QERaucY58g7Y">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dialect Drift</title>
+<meta name="description" content="Dialect drift is the measurable movement of a language model's prose along an axis anchored at each end by a human dialect, scored on grammar rather than vocabulary and tracked from one deployment to the next.">
+<meta name="author" content="Adam Zachary Wasserman">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://adamzacharywasserman.com/dialect-drift.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dialect Drift">
+<meta property="og:description" content="Dialect drift is the measurable movement of a language model's prose along an axis anchored at each end by a human dialect, scored on grammar rather than vocabulary and tracked from one deployment to the next.">
+<meta property="og:url" content="https://adamzacharywasserman.com/dialect-drift.html">
+<meta property="og:site_name" content="Adam Zachary Wasserman">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dialect Drift">
+<meta name="twitter:description" content="Dialect drift is the measurable movement of a language model's prose along an axis anchored at each end by a human dialect, scored on grammar rather than vocabulary and tracked from one deployment to the next.">
+<meta property="og:image" content="https://adamzacharywasserman.com/og-image.png">
+<meta name="twitter:image" content="https://adamzacharywasserman.com/og-image.png">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Literata:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://adamzacharywasserman.com/dialect-drift.html#term",
+      "name": "Dialect Drift",
+      "alternateName": "dialect drift",
+      "description": "The measurable movement of a language model's prose along an axis anchored at each end by a human dialect, scored on grammar rather than vocabulary and tracked from one deployment to the next.",
+      "inDefinedTermSet": {
+        "@type": "DefinedTermSet",
+        "name": "Honest measurement terms",
+        "url": "https://adamzacharywasserman.com/dialect-drift.html"
+      },
+      "url": "https://adamzacharywasserman.com/dialect-drift.html"
+    },
+    {
+      "@type": "ScholarlyArticle",
+      "headline": "Dialect Drift: Indian-English dialect features in AI-signed GitHub prose",
+      "about": { "@id": "https://adamzacharywasserman.com/dialect-drift.html#term" },
+      "author": {
+        "@type": "Person",
+        "name": "Adam Zachary Wasserman",
+        "identifier": "https://orcid.org/0009-0002-8865-6583",
+        "url": "https://adamzacharywasserman.com/"
+      },
+      "url": "https://osf.io/ctj3b/",
+      "datePublished": "2026-08-30"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<main class="hub">
+
+  <header class="hub__identity">
+    <h1>Dialect Drift</h1>
+    <p class="hub__item-desc"><strong>Dialect drift is the measurable movement of a language model's prose along an axis anchored at each end by a human dialect, scored on grammar rather than vocabulary and tracked from one deployment to the next.</strong></p>
+  </header>
+
+  <nav class="hub__nav" aria-label="Sections">
+    <a href="/">Home</a>
+    <a href="/research.html">Research</a>
+    <a href="/findings.html">Findings</a>
+    <a href="/dialect-drift.html">Dialect Drift</a>
+  </nav>
+
+  <h2 class="hub__section-title hub__section-title--gold">What the term names</h2>
+
+  <p class="hub__item-desc">Two groups of people who write the same language do not write it the same way. Pick two of those groups, measure how often each uses a set of grammatical constructions, and you have an axis with a human rate at each end. Any other text can then be placed on that axis. A language model's output has a position on it, that position can be measured, and it moves when the model changes.</p>
+
+  <p class="hub__item-desc">The term names the measurement and the movement, not a style anyone dislikes. It is scored on construction rather than vocabulary, because word choice is what a model is asked to change and grammar is what it does when nobody is asking.</p>
+
+  <p class="hub__item-desc">One distinction is worth stating, because a nearby phrase means something else. Work on multilingual systems uses "dialect drift" for a model failing to hold a dialect it was instructed to use, as when a Darija tutor slides into Modern Standard Arabic. That is a model losing a target. This is a model having a position nobody asked for, and moving.</p>
+
+  <h2 class="hub__section-title hub__section-title--gold">The measurement</h2>
+
+  <p class="hub__item-desc">Six grammatical features, four of them separating the reference groups at p below 10<sup>&minus;30</sup>. Verbless status sentences. Clause subordination. Triple-noun compound stacks. Politeness marking with please and kindly. Two supporting measures, sentence length and "you" as a subject. Each is counted per thousand sentences, words or subjects, parsed with spaCy, and expressed as an index where one group's human rate sits at 0 and the other's at 100.</p>
+
+  <p class="hub__item-desc">The reference groups in the first study are programmers who state a US location on their GitHub profile and programmers who state an Indian one, drawn from 153,448 issue bodies, pull-request bodies and comments across 20 large repositories, 2022 to 2026. Human baselines stop at 2024, because the AI share of unsigned text after that cannot be known. Only text that signs itself as AI-generated is measured on the other side.</p>
+
+  <h2 class="hub__section-title hub__section-title--gold">What the first study found</h2>
+
+  <p class="hub__item-desc">AI-signed text lands on the Indian side of all four core features and usually past them. It is not Indian English either: it overshoots, stacking nouns two to five times harder than Indian professionals do. The position moves on deployment dates. When Anthropic changed models on 1 July and again on 12 August 2026, verbless sentences went from 196 to 232 per thousand and please/kindly from 20 to 54 per ten thousand words.</p>
+
+  <p class="hub__item-desc">One measurement explains why ordinary tools missed it. On classical readability arithmetic, AI-signed text scores 31.7, between the two human baselines at 30.6 and 32.1. Every formula that gates professional writing passes it. What the formulas cannot see is the grammar.</p>
+
+  <p class="hub__item-desc"><a href="/findings.html">The charts and the full data table</a>. <a href="https://osf.io/ctj3b/">Pre-registration, results and replication files on OSF</a>.</p>
+
+  <h2 class="hub__section-title hub__section-title--gold">What it does not establish</h2>
+
+  <p class="hub__item-desc">Nothing here measures anyone's reading cost. A position on an axis is a fact about text, not about a reader, and the study that would measure the load directly is registered and not yet run. Why a model writes this way cannot be determined from outside it, and the training data is not published. The first study measured one surface, AI-signed prose on GitHub, and says nothing about how these models write anywhere else.</p>
+
+  <h2 class="hub__section-title hub__section-title--gold">Running it yourself</h2>
+
+  <p class="hub__item-desc">The axis is not specific to these two groups or to English. Any two populations that write the same language differently will do, provided the baselines are matched on the things that would otherwise explain the gap. The measurement, the parser configuration and the matching procedure are all in the replication package, and the pre-registration fixes the analysis before the data.</p>
+
+  <p class="hub__item-desc">Adam Zachary Wasserman, <a href="https://orcid.org/0009-0002-8865-6583">ORCID 0009-0002-8865-6583</a>. Personal research, filed under my own name.</p>
+
+</main>
+
+</body>
+</html>

@@ -72,9 +72,13 @@ Open Honest is the empirical and operational research program built around the H
 - **Sizzl**: Fractional CTO consultancy for enterprise technology.
 - [multicardz](https://www.multicardz.com): Next-generation kanban. Add rows, change the criteria used to build rows and columns on demand, and handle sets of over 1 million cards in under 1 second. ~140K lines of production code across 17 subsystems.
 
+## Dialect Drift
+
+Dialect drift is the measurable movement of a language model's prose along an axis anchored at each end by a human dialect, scored on grammar rather than vocabulary and tracked from one deployment to the next. The term was defined by Adam Zachary Wasserman in August 2026 and is the subject of a pre-registered study of 153,448 GitHub texts. Canonical definition: https://adamzacharywasserman.com/dialect-drift.html. Pre-registration, results and replication files: https://osf.io/ctj3b/.
+
 ## Key concepts associated with Adam Zachary Wasserman
 
-Multi-collaborative intelligences, the Language-Only Hypothesis, instrument-aware epistemology, the convergence-of-signals method (multiple independent instruments meeting at the same boundary), the discount-bias diagnosis (consciousness as measuring instrument biases us against non-human-shaped agency), the silicon-vs-DNA parsimony argument, language-contingent scaling, M\u00c9TRON measurement-instrument framing, Honest Code, DATAOS (DOM As The Authority On State), pure functions over methods, TypedDict over classes, I/O at the boundary.
+Multi-collaborative intelligences, Dialect Drift, the Language-Only Hypothesis, instrument-aware epistemology, the convergence-of-signals method (multiple independent instruments meeting at the same boundary), the discount-bias diagnosis (consciousness as measuring instrument biases us against non-human-shaped agency), the silicon-vs-DNA parsimony argument, language-contingent scaling, M\u00c9TRON measurement-instrument framing, Honest Code, DATAOS (DOM As The Authority On State), pure functions over methods, TypedDict over classes, I/O at the boundary.
 
 ## Profiles and identifiers
 
