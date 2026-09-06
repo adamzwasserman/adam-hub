@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta charset="UTF-8">
 <meta name="google-site-verification" content="Gha3lzxGv1ZKmtLuO9eOexTvPUUYBk0QERaucY58g7Y">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,12 +20,20 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Dialect Drift">
 <meta name="twitter:description" content="Dialect drift is the measurable movement of a language model's prose along an axis anchored at each end by a human dialect, scored on grammar rather than vocabulary and tracked from one deployment to the next.">
-<meta property="og:image" content="https://adamzacharywasserman.com/og-image.png">
-<meta name="twitter:image" content="https://adamzacharywasserman.com/og-image.png">
+<meta property="og:image" content="https://adamzacharywasserman.com/dialect-drift-card.png">
+<meta name="twitter:image" content="https://adamzacharywasserman.com/dialect-drift-card.png">
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Literata:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
+
+<style>
+/* This page runs several paragraphs per section, which the shared sheet has
+   never had to space. Scoped here so the other pages are untouched. */
+.hub__item-desc + .hub__item-desc { margin-top: 1rem; }
+.hub__item-desc + .hub__section-title { margin-top: 2.5rem; }
+.hub__identity .hub__item-desc { font-size: 1.05rem; }
+</style>
 
 <script type="application/ld+json">
 {
@@ -78,15 +87,13 @@
 
   <h2 class="hub__section-title hub__section-title--gold">What the term names</h2>
 
-  <p class="hub__item-desc">Two groups of people who write the same language do not write it the same way. Pick two of those groups, measure how often each uses a set of grammatical constructions, and you have an axis with a human rate at each end. Any other text can then be placed on that axis. A language model's output has a position on it, that position can be measured, and it moves when the model changes.</p>
+  <p class="hub__item-desc">Dialects are differences in the way a given language is spoken and written in different geographic regions. Pick two regions, measure how often each uses a set of grammatical constructions, and you have an axis with a human rate at each end. Any other text can then be placed on that axis. A language model's output has a position on it, that position can be measured, and it moves when the model changes.</p>
 
-  <p class="hub__item-desc">The term names the measurement and the movement, not a style anyone dislikes. It is scored on construction rather than vocabulary, because word choice is what a model is asked to change and grammar is what it does when nobody is asking.</p>
-
-  <p class="hub__item-desc">One distinction is worth stating, because a nearby phrase means something else. Work on multilingual systems uses "dialect drift" for a model failing to hold a dialect it was instructed to use, as when a Darija tutor slides into Modern Standard Arabic. That is a model losing a target. This is a model having a position nobody asked for, and moving.</p>
+  <p class="hub__item-desc">"Dialect Drift" names the measurement and the movement, not a style anyone dislikes. It is scored on construction rather than vocabulary, because although word choice is the most obvious distinguishing feature of dialects, it is not as profound as grammar differences.</p>
 
   <h2 class="hub__section-title hub__section-title--gold">The measurement</h2>
 
-  <p class="hub__item-desc">Six grammatical features, four of them separating the reference groups at p below 10<sup>&minus;30</sup>. Verbless status sentences. Clause subordination. Triple-noun compound stacks. Politeness marking with please and kindly. Two supporting measures, sentence length and "you" as a subject. Each is counted per thousand sentences, words or subjects, parsed with spaCy, and expressed as an index where one group's human rate sits at 0 and the other's at 100.</p>
+  <p class="hub__item-desc">Six grammatical features, four of them separating the reference groups at p below 10<sup>−30</sup>. Verbless status sentences. Clause subordination. Triple-noun compound stacks. Politeness marking with please and kindly. Two supporting measures, sentence length and "you" as a subject. Each is counted per thousand sentences, words or subjects, parsed with spaCy, and expressed as an index where one group's human rate sits at 0 and the other's at 100.</p>
 
   <p class="hub__item-desc">The reference groups in the first study are programmers who state a US location on their GitHub profile and programmers who state an Indian one, drawn from 153,448 issue bodies, pull-request bodies and comments across 20 large repositories, 2022 to 2026. Human baselines stop at 2024, because the AI share of unsigned text after that cannot be known. Only text that signs itself as AI-generated is measured on the other side.</p>
 
@@ -96,7 +103,7 @@
 
   <p class="hub__item-desc">One measurement explains why ordinary tools missed it. On classical readability arithmetic, AI-signed text scores 31.7, between the two human baselines at 30.6 and 32.1. Every formula that gates professional writing passes it. What the formulas cannot see is the grammar.</p>
 
-  <p class="hub__item-desc"><a href="/findings.html">The charts and the full data table</a>. <a href="https://osf.io/ctj3b/">Pre-registration, results and replication files on OSF</a>.</p>
+  <p class="hub__item-desc"><a href="/dialect-drift-report.html">The full report, with charts and the complaint record</a>. <a href="https://osf.io/ctj3b/">Pre-registration, results and replication files on OSF</a>.</p>
 
   <h2 class="hub__section-title hub__section-title--gold">What it does not establish</h2>
 
@@ -106,9 +113,7 @@
 
   <p class="hub__item-desc">The axis is not specific to these two groups or to English. Any two populations that write the same language differently will do, provided the baselines are matched on the things that would otherwise explain the gap. The measurement, the parser configuration and the matching procedure are all in the replication package, and the pre-registration fixes the analysis before the data.</p>
 
-  <p class="hub__item-desc">Adam Zachary Wasserman, <a href="https://orcid.org/0009-0002-8865-6583">ORCID 0009-0002-8865-6583</a>. Personal research, filed under my own name.</p>
-
-</main>
+  <p class="hub__item-desc">Adam Zachary Wasserman, <a href="https://orcid.org/0009-0002-8865-6583">ORCID 0009-0002-8865-6583</a>. Personal research, filed under my own name.</p></main>
 
 </body>
 </html>

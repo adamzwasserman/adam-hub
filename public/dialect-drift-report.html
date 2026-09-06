@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Dialect Drift: Claude's GitHub Prose Measured Against Human Dialects</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Six grammatical features, measured on 153,448 GitHub texts, place Claude's AI-signed prose past the India-located human baseline on every one, and the position moves with each model deployment.">
+<meta name="author" content="Adam Zachary Wasserman">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://adamzacharywasserman.com/dialect-drift-report.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dialect Drift: Claude's GitHub Prose Measured Against Human Dialects">
+<meta property="og:description" content="Six grammatical features, measured on 153,448 GitHub texts, place Claude's AI-signed prose past the India-located human baseline on every one, and the position moves with each model deployment.">
+<meta property="og:url" content="https://adamzacharywasserman.com/dialect-drift-report.html">
+<meta property="og:image" content="https://adamzacharywasserman.com/dialect-drift-card.png">
+<meta property="og:site_name" content="Adam Zachary Wasserman">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dialect Drift: Claude's GitHub Prose Measured Against Human Dialects">
+<meta name="twitter:description" content="Six grammatical features, measured on 153,448 GitHub texts, place Claude's AI-signed prose past the India-located human baseline on every one, and the position moves with each model deployment.">
+<meta name="twitter:image" content="https://adamzacharywasserman.com/dialect-drift-card.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Dialect Drift: Indian-English dialect features in AI-signed GitHub prose",
+  "about": { "@id": "https://adamzacharywasserman.com/dialect-drift.html#term" },
+  "author": {
+    "@type": "Person",
+    "name": "Adam Zachary Wasserman",
+    "identifier": "https://orcid.org/0009-0002-8865-6583",
+    "url": "https://adamzacharywasserman.com/"
+  },
+  "url": "https://osf.io/ctj3b/",
+  "datePublished": "2026-08-30"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e;
+  --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7;
+  --border:rgba(11,11,11,.10);
+  --claude:#2a78d6; --copilot:#eb6834; --unattr:#1baf7a;
+  --band-in:rgba(11,11,11,.085); --band-us:rgba(11,11,11,.035);
+  --tip-bg:#0b0b0b; --tip-ink:#fcfcfb;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7;
+    --muted:#898781; --grid:#2c2c2a; --axis:#383835;
+    --border:rgba(255,255,255,.10);
+    --claude:#3987e5; --copilot:#d95926; --unattr:#199e70;
+    --band-in:rgba(255,255,255,.10); --band-us:rgba(255,255,255,.045);
+    --tip-bg:#fcfcfb; --tip-ink:#0b0b0b;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7;
+  --muted:#898781; --grid:#2c2c2a; --axis:#383835;
+  --border:rgba(255,255,255,.10);
+  --claude:#3987e5; --copilot:#d95926; --unattr:#199e70;
+  --band-in:rgba(255,255,255,.10); --band-us:rgba(255,255,255,.045);
+  --tip-bg:#fcfcfb; --tip-ink:#0b0b0b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15.5px; line-height:1.55;
+}
+.wrap{max-width:920px; margin:0 auto; padding:48px 24px 72px; display:flex; flex-direction:column; gap:36px}
+header{max-width:70ch}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:0 0 10px}
+h1{font-family:"Fraunces",Georgia,serif; font-weight:600; font-size:44px; line-height:1.05; margin:0 0 14px; text-wrap:balance}
+.standfirst{color:var(--ink2); font-size:16.5px; margin:0; max-width:62ch}
+figure{margin:0; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:22px 22px 16px}
+figcaption{display:flex; flex-direction:column; gap:2px; margin-bottom:14px}
+.fig-label{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+.fig-title{font-family:"Fraunces",Georgia,serif; font-weight:500; font-size:21px}
+.fig-sub{color:var(--ink2); font-size:13.5px; max-width:70ch}
+.legend{display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin:6px 0 12px; font-size:13px; color:var(--ink2)}
+.legend .key{display:inline-flex; align-items:center; gap:7px}
+.swatch{width:14px; height:3px; border-radius:2px; display:inline-block}
+.dotkey{width:9px; height:9px; border-radius:50%; display:inline-block; border:2px solid var(--muted); background:transparent}
+svg text{font-family:"IBM Plex Mono",monospace; fill:var(--muted); font-size:11px}
+svg .metric-name{font-family:"IBM Plex Sans",system-ui,sans-serif; fill:var(--ink); font-size:12.5px; font-weight:600}
+svg .metric-unit{fill:var(--muted); font-size:10.5px}
+svg .band-label{fill:var(--ink2); font-size:10.5px; font-family:"IBM Plex Sans",system-ui,sans-serif;
+  paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round}
+svg .cohort-label{font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11px; fill:var(--ink2)}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px}
+.panel{background:var(--surface)}
+.scrollx{overflow-x:auto}
+.tip{position:fixed; pointer-events:none; z-index:10; background:var(--tip-bg); color:var(--tip-ink);
+  font-family:"IBM Plex Mono",monospace; font-size:12px; line-height:1.45; padding:7px 10px;
+  border-radius:6px; opacity:0; transition:opacity .12s; max-width:260px}
+@media (prefers-reduced-motion: reduce){ .tip{transition:none} }
+.notes{max-width:72ch; color:var(--ink2); font-size:14px}
+.notes h2{font-family:"Fraunces",Georgia,serif; color:var(--ink); font-weight:600; font-size:22px; margin:0 0 10px}
+.notes p{margin:0 0 10px}
+details{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 20px}
+summary{cursor:pointer; font-weight:600; color:var(--ink)}
+summary:focus-visible{outline:2px solid var(--claude); outline-offset:3px}
+table{border-collapse:collapse; margin-top:14px; font-size:13px; font-variant-numeric:tabular-nums; width:100%}
+th,td{text-align:right; padding:5px 10px; border-bottom:1px solid var(--grid); white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em}
+blockquote.pullquote{font-family:"Fraunces",Georgia,serif; font-size:19px; line-height:1.5;
+  color:var(--ink); margin:18px 0; padding:10px 22px; border-left:3px solid var(--claude)}
+</style>
+</head>
+<body>
+<p style="max-width:920px;margin:24px auto 0;padding:0 24px;font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:13px"><a href="/" style="color:inherit">Adam Zachary Wasserman</a> &rsaquo; <a href="/dialect-drift.html" style="color:inherit">Dialect Drift</a> &rsaquo; Report</p>
+
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">GitHub corpus · human baselines 2022–24 · AI-signed text 2025–26</p>
+  <h1>Dialect Drift</h1>
+  <p class="standfirst">Programmers located in the US and programmers located in India
+  speak and write English differently. We measured this on GitHub using the location field in GitHub profiles. 
+  Authors with no location, an ambiguous one, or anywhere else in the world were removed from the analysis.</p> 
+  <p>The difference
+  between the two groups is not in their vocabulary but in their grammar. This analysis
+  measured six things — four core habits and two supporting measures — each
+  defined below with an example, and counted how
+  often each grammatical feature appears in human GitHub writing from 2022–24 conversation comments, matched on repository and year, before AI coding tools, when self-labeled AI text was under 0.05% of the corpus.&nbsp;</p><p>These two human rates are anchor points against which we then map the prevalence of the grammatical features in AI-written GitHub text from 2025 on. We only use self-labeled AI text, so that results remain unambiguous.</p>
+</header>
+
+<section class="notes" style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:22px 22px 12px">
+  <h2>What we found, plainly</h2>
+  <p>Claude Code (and the API) does not write American English.</p>
+  <p>Nor does it write Indian professional English. Claude's GitHub output is its own
+  dialect. On the four habits that separate the two human cohorts, it sits past the
+  India-located rate: about three times the please, double the noun stacks, status
+  lines with no verbs.</p>
+  <p>The complaints on Twitter/X mirror the measurement. When Anthropic deployed model
+  changes on July 1 and again on August 12, 2026, the complaints moved within days,
+  and they split by geography. Accounts based in India complain of verbosity, density,
+  formality, condescension. None says the text is unreadable. Accounts based outside
+  India say outright that "Claudish"—as it has been dubbed—is unreadable. As of
+  August 30, 2026, a little over five weeks after Anthropic shipped Opus 5 on
+  July 24, programmers were publishing fixes for that unreadability at more than two
+  public repositories per week.</p>
+  <p>A German-located English-writing control, reported below, sits near the US rates
+  on three of the four habits. The far end of the axis is the India-located register,
+  not "non-native English."</p>
+</section>
+
+<section class="notes">
+  <h2>Six Grammatical features, with examples</h2>
+  <p>These four are the strongest separators (all p&nbsp;&lt;&nbsp;10<sup>−30</sup>)
+  and are what Figure&nbsp;1 charts. Figure&nbsp;2 adds two supporting measures, defined
+  at the end of this list.</p>
+  <p><strong>Verbless status sentences.</strong> A status stated with no verb; the reader
+  supplies the "is" themselves. "Identities complete." "Two of six done." "Alignment
+  pending." An American writes the verb in: "The identities are complete." Counted per
+  thousand sentences.</p>
+  <p><strong>Clause subordination.</strong> Folding one clause inside another with words
+  like which, that, because, when. "The test that failed passed when I reran it" folds
+  twice; "The test failed. I reran it. It passed." folds zero times. India-located
+  professional prose folds less and states more; US-located prose folds more. Counted
+  per thousand sentences, so on this habit the <em>lower</em> number is the India
+  side. Every chart is oriented so the India side reads upward. The two Figure&nbsp;2
+  panels that require flipping the axis (subordination and sentence length) are marked
+  "axis reversed."</p>
+  <p><strong>Triple-noun compounds.</strong> Three or more nouns stacked into one name:
+  "study-lifecycle handler cap," "fund price override table." The unstacked version reads
+  "the cap on handlers for the study lifecycle." Counted per thousand words.</p>
+  <p><strong>Politeness marking.</strong> The words please and kindly, as in "Kindly
+  review and revert." Counted per ten thousand words. India-located professional prose
+  uses them about three times as often as US-located prose.</p>
+  <p><strong>Supporting measure: sentence length.</strong> Words per sentence.
+  India-located professional prose runs shorter (15.0 words against the US 17.1), which pairs with its
+  lower subordination: fewer folded clauses make shorter sentences.</p>
+  <p><strong>Supporting measure: "you" subjects.</strong> How often the subject of a verb
+  is the other person, as in "you can check the logs from your end." Counted per thousand
+  subjects. India-located professional prose addresses the reader about 30% more often
+  (93 vs 72).</p>
+</section>
+
+<figure id="fig1">
+  <figcaption>
+    <span class="fig-label">Figure 1</span>
+    <span class="fig-title">Position on the US → India axis, 2025 → Opus 5 era</span>
+    <span class="fig-sub">In every panel the US human rate sits at 0 and the
+    India-located human rate at 100, with the corridor between them shaded. Up to the
+    India line all panels share one scale. Above the line each panel compresses its own
+    scale to fit; read the labeled values, and do not compare distances across panels
+    except inside the shaded band. An arrow runs from a cohort's 2025 position to its
+    Opus 5-era position (Aug 12–27, 2026). The small dots are the windows in between
+    (Jan 1–Jun 8, and the Fable era Jul 1–Aug 11). Jun 9–30, the
+    release-and-suspension window, is excluded.</span>
+  </figcaption>
+  <div class="legend" id="legend1"></div>
+  <div class="scrollx"><svg id="svg1" role="img" aria-label="Arrow chart of India-axis positions by metric and cohort"></svg></div>
+</figure>
+
+<figure id="fig2">
+  <figcaption>
+    <span class="fig-label">Figure 2</span>
+    <span class="fig-title">Raw trajectories against the human baseline bands</span>
+    <span class="fig-sub">The four habits plus the two supporting measures, in native
+    units per panel. Shaded bands are the pre-2025 human baselines ±2 standard errors;
+    dashed where no interval was computed; open markers flag cells under 100 texts.
+    Scales and directions follow Figure&nbsp;1: India side up ("axis reversed" where
+    that requires flipping), compression past the India band at the break mark.</span>
+  </figcaption>
+  <div class="legend" id="legend2"></div>
+  <div class="grid2" id="panels"></div>
+</figure>
+
+<section class="notes">
+  <h2>What this adds up to</h2>
+  <p>The trajectory is not one line. Claude-signed text spent a year drifting from far
+  past the India-located baseline back toward it, and by the Fable era (July 1 to
+  August 11, 2026) it sat on that baseline on verblessness and politeness. Then the
+  fleet changed again. From August 12, when Opus 5 arrived, the text snapped back
+  toward its 2025 extremes — verbless sentences up from 196 to 232 per thousand,
+  please/kindly up from 20 to 54 per ten thousand words — on a window of 76 texts.</p>
+  <p>Classical readability arithmetic never caught this. Average sentence length plus
+  the share of long words puts Claude-signed text at 31.7, between the two human
+  baselines (30.6 and 32.1). The split is in construction type, which readability
+  formulas do not measure.</p>
+  </section>
+
+<figure id="fig3">
+  <figcaption>
+    <span class="fig-label">Figure 3</span>
+    <span class="fig-title">The complaint record</span>
+    <span class="fig-sub">Relative volume of public complaints on Twitter/X that Claude's writing is
+    unintelligible: cannot parse, inscrutable, "translate Claude". Sampled by Grok (xAI) on Aug 30, 2026.</span>
+  </figcaption>
+  <div class="scrollx"><svg id="svg3" role="img" aria-label="Bar timeline of unintelligibility complaint volume"></svg></div>
+</figure>
+
+<section class="notes">
+  <h2>What the complaint record corroborates</h2>
+  <h3>Two changes, two instruments agree</h3>
+  <p>Claude's writing changed twice in 2026, and both times the complaints rose within
+  days. After Claude&nbsp;5 opened to everyone on July&nbsp;1, Figure&nbsp;2 shows the
+  writing sitting on the India-located line through July. That same month people
+  stopped joking about the style and started saying they could not read it. On
+  August&nbsp;12, Opus&nbsp;5 took over, and the writing swung back: more verbless
+  lines, three times the please. Within a week the complaint bars jump from 40 to 50,
+  then to 80.</p>
+  <p>The complaints come from Twitter/X and GitHub issue threads. The writing changes
+  come from parsing GitHub text. The two agree on the dates.</p>
+
+  <p>Treat the bar heights and the dates differently. The dates are checkable and two
+  independent instruments landed on them. The heights are a reconstruction from search
+  density and are not verified, so the shape is a sketch. The named accounts below are
+  the firmer evidence in this section, because anyone can go and read them.</p>
+
+  <h3>Who complains about what</h3>
+  <p>A search of X and GitHub on 30&nbsp;August&nbsp;2026 for complaints about Claude's
+  writing asked specifically whether the unintelligibility charge appears in
+  India-context accounts. It found four such accounts complaining about the writing,
+  and none complaining that they could not read it:</p>
+  <ul>
+    <li><strong>@aniketkrishna</strong> (Haldwani/Mumbai in the post): his wife's face
+    dropped at "Claudish mode." He still liked the answer. Taste, not parse failure.</li>
+    <li><strong>Shifa Garg</strong> (Bangalore): "Shashi Tharoor's descendant…
+    verbose, so confusing." Confusing, not opaque.</li>
+    <li><strong>@navneet0693</strong> (OSS/Drupal bio): "PR descriptions, dense… I
+    pulled my Gemma to understand it." The closest to the US complaint from an
+    Indian-coded account, and still framed as density rather than another language.</li>
+    <li><strong>Muji Singh Rangi</strong> (ISSF India): condescending, not unreadable.</li>
+  </ul>
+  <p>The negative finding is the stronger half. No cluster of Indian engineers saying
+  "this is unintelligible," "another language," or "I cannot read it." That exact wording
+  concentrates in US and EU developer accounts and in GitHub issues such as
+  <a href="https://github.com/anthropics/claude-code/issues/83356">#83356</a>. India is
+  Claude's second market. If the parse failure were universal, the same wording would
+  show up there in volume. It does not.</p>
+  <p>The overshoot is the likely reason the complaints differ. The AI text stacks nouns
+  two to five times harder than the India-located baseline, and it drops even more
+  clause chaining. India-context readers call the style stiff but readable. US and
+  other outside-India readers call it hard to parse.</p>
+  <p>What this establishes. The cohort making the unintelligibility complaint is not
+  based in India. The search looked for that wording in India-context accounts and did
+  not find it, in the market where Claude has its second-largest user base, while the
+  same wording is easy to find elsewhere. Where outside India those accounts sit is
+  not something this study maps.</p>
+  <p>What it does not establish. It does not measure anyone's reading cost, and four
+  accounts found by search are not a sample. It is a fact about who files which
+  complaint, which is why the reading-cost prediction below is registered as a test
+  rather than stated as a result.</p>
+  <h3>Why 2025 was quiet</h3>
+  <p>The text was at its strangest in 2025, yet almost nobody complained, because
+  almost nobody saw it. AI-signed text was about half a percent of the corpus then,
+  and over four percent in 2026. People complain when strange text reaches them, so
+  volume follows both how strange the text is and how much of it they see. The last
+  jump, on August&nbsp;22, needed neither: an "English&nbsp;→&nbsp;Claudish"
+  translator went viral on X that day, and "Claudish" became the name for the dialect.
+  The text did not change that week; we checked.</p>
+  <p>The complaint itself changed over time. Through 2025 and into early 2026, people
+  mocked Claude's catchphrases: "it's not X, it's Y," "load-bearing," and the rest.
+  The text was annoying but readable. Starting in July 2026, the complaint became that
+  the text could not be read at all. The catchphrases were disappearing from the text
+  over those two years; the grammar — verbless lines, stacked nouns — stayed. Once
+  the funny phrases were gone, what remained was the grammar, and the complaint moved
+  from mockery to unreadability. That sequence is in the record. This study does not
+  measure the mechanism.</p>
+  </section>
+
+<section class="notes">
+  <h2>What we claim, and what we predict</h2>
+  <p>As of August 30, 2026, Claude Code's output sits outside the normal grammatical
+  range of both human cohorts, on the far side of the India-located one. That is a
+  reproducible measurement, made with controls. The complaint split is a pattern
+  consistent with it, not a demonstration: who files which complaint is not a
+  measurement of what anyone experienced.</p>
+  <p>From both we register a prediction, to be tested: readers whose working written
+  English matches the India-located baseline will have lower reading cost on Claude
+  Code than readers whose working written English matches the US-located baseline,
+  because more of the constructions are already familiar. The dialect measurements and
+  the fact that familiar constructions cost less to read predict the direction. The
+  test, registered August 30, 2026 and described in the methodology below, will
+  measure it.</p>
+  <p>Why Claude writes this way cannot be determined from the outside, and Anthropic does not publish who rates its training data. One boundary on everything above: we measured the Claude Code and API surface as it appears on GitHub. How Claude writes in its chat app and other harnesses is untested here.</p>
+</section>
+
+<section class="notes">
+  <h2>What Claude says about itself</h2>
+  <p>We asked Claude why its writing had changed so much. On August 30, 2026, in the
+  session that built this report, Claude Fable 5 answered:</p>
+  <blockquote class="pullquote">"The guess. My default sentence is built to survive
+  review, not to be read. Yours commits first: 'Claude Code does not write American
+  English.' Period. Mine guards first: 'writing onto GitHub through Claude Code and the
+  API.' Each added clause buys protection from an imagined objector and charges the
+  reader for it. I can override the default when the whole task is one paragraph in your
+  voice, and even then my draft narrated the study before stating the finding."</blockquote>
+  <p>This is an anecdote, not evidence. It comes from our own session, which this study's
+  rules exclude, and a model's account of its own training is a guess it cannot check;
+  Claude labels it one in its first two words. We print it because it names a mechanism
+  our measurements cannot reach: training that rewards sentences built to survive review
+  would produce exactly the guarded, packed prose measured above. We read it as a
+  possible indictment of the incentives in Anthropic's training pipeline.</p>
+</section>
+
+<section class="notes">
+  <h2>Reading and caveats</h2>
+  <p>The four Figure 1 metrics are the constructions that most separate India-located from
+  US-located professional GitHub prose in the 2022–24 baselines (all
+  p&nbsp;&lt;&nbsp;10<sup>−30</sup>, repo- and year-matched samples of ~4,800
+  comments per side): verbless status sentences, low clause subordination, triple-noun
+  compounds and please/kindly politeness marking.</p>
+  <p>A registered German control (methodology below) closes the nearest alternative
+  reading. German-located authors, a 13,958-comment English-writing cohort, write
+  three of the four habits at American rates: verbless index 8, noun stacks −19,
+  politeness 19 on the US→India axis. Those habits mark the India-located professional
+  register specifically, not non-native English in general.</p>
+  <p>Design rules. Human baselines end at 2024 because unsigned text after that has an
+  unknowable AI share; it is excluded from the study entirely. The measured cohorts are
+  only texts that sign themselves as AI-generated. GitHub signatures never name a model
+  version, so the 2026 windows measure the deployed fleet as it changed, not any single model.
+  Two kinds of date matter and differ: a model <em>ships</em> when Anthropic releases it
+  (Claude 5 general availability July 1; Opus 5 on July 24) and <em>arrives</em> when it
+  takes over the text being measured. For Opus 5 that is August 12, the day
+  claude-opus-5 output displaces its predecessor in the observed fleets. The 19-day gap
+  is rollout: defaults switching and users upgrading. A third signed
+  cohort whose signature names no model (chiefly Claude&nbsp;Code PR footers with the link
+  text stripped at harvest) is excluded: whether its divergent dialect position reflects different
+  authorship or human editing cannot be determined.</p>
+  <p>Sample sizes are honest but thin at the edges: Claude cells run 51–304 texts,
+  Copilot cells 12–47, so read Copilot's lines as sketch, not measurement. AI-signed
+  text is largely PR-body prose while the baselines are conversation comments; that genre
+  gap inflates verblessness and noun stacking for every AI cohort, though it cannot
+  manufacture the politeness or subordination signatures. Parsing is spaCy
+  <code>en_core_web_sm</code>; the parser is trained on US-style English, which may
+  flatten India-located parses slightly.</p>
+  </section>
+
+<details>
+  <summary>Methodology — enough to reproduce the study</summary>
+  <div class="notes" style="max-width:none; padding-top:10px">
+  <p><strong>Corpus.</strong> 153,448 GitHub issue bodies, pull-request bodies and comments
+  from 20 large repositories (terraform, vault, vscode, TypeScript, react, kubernetes,
+  airflow, spark, elasticsearch, grafana, prometheus, argo-cd, redis, node, cpython,
+  pandas, scikit-learn, transformers, ansible, bootstrap), created 2022-01-01 through
+  2026-08-27. Collected with the GitHub REST API: the per-repo issues and issue-comments
+  list endpoints, walked in ascending updated order with a rolling since-cursor, because
+  GitHub rejects list pagination past roughly 30,000 items. Author profiles resolved in
+  batches through the GraphQL API. A text is kept if, after stripping fenced code, inline
+  code, links and images, it has 40 to 800 words and at least 30 letters, and its author
+  is not a bot (login pattern and account type both checked).</p>
+  <p><strong>Location labels.</strong> The author's self-typed profile location is matched
+  against lists of US and Indian place names (cities, states, the countries), with US
+  abbreviations (US, USA, U.S., SF, DC) matched case-sensitively and strong-token
+  tiebreaks when both sides match. Only clear "india" or "us" authors enter the study;
+  empty, ambiguous and other locations are dropped.</p>
+  <p><strong>AI cohorts.</strong> A text counts as AI-signed only if it contains an
+  explicit self-signature: "generated with claude," "claude code," a co-authored-by
+  Claude line, "generated by/with copilot," "generated with/by/using ai/chatgpt/gpt/
+  cursor," "as an ai language model," or the robot emoji. Model attribution comes from
+  the model name inside the signature. Signed texts naming no model (chiefly Claude Code
+  footers whose link text the cleaner removed) are excluded from all charts.</p>
+  <p><strong>Parsing and the six counts.</strong> spaCy 3.8.16 with en_core_web_sm 3.8.0,
+  NER and lemmatizer disabled. Verbless sentence: no token tagged VBD, VBP, VBZ or MD,
+  and no bare-VB root. Subordination: dependencies advcl, ccomp, xcomp, acl, relcl.
+  Triple-noun stack: a compound-dependency token whose head is itself a compound.
+  Politeness: tokens "please" or "kindly." "You" subjects: nsubj or nsubjpass tokens
+  spelled "you," per thousand subjects. Sentence length: non-punctuation tokens per
+  sentence. Readability score where cited: average sentence length plus the percentage
+  of words with three or more syllables, syllables approximated by vowel groups.</p>
+  <p><strong>Baselines and statistics.</strong> Human baselines use conversation comments
+  only (bodies excluded, because issue templates inflate verblessness and compounds),
+  2022–24, with the US sample drawn to match the India group's counts per
+  repository-and-year stratum, random seed 42 (india n=4,836; us n=4,801). Rate
+  differences are tested with Poisson-approximation z tests on count rates.</p>
+  <p><strong>Time windows.</strong> 2025 whole; then 2026 split at fleet events:
+  Jan&nbsp;1–Jun&nbsp;8, Jul&nbsp;1–Aug&nbsp;11 (Fable era), and
+  Aug&nbsp;12–27 (Opus&nbsp;5 fleet takeover). Jun&nbsp;9–30, the release and
+  export-control suspension window, is excluded.</p>
+  <p><strong>Registered test of where the dialect enters training (registered Aug 30,
+  2026, before any analysis).</strong> Question: does the Indian-side dialect exist in
+  base models before preference training, or does post-training inject it? Stage&nbsp;0,
+  the gate: Qwen2.5-7B-Instruct and OLMo-2-7B-Instruct each write 500 GitHub comment
+  replies to contexts drawn from this corpus; the six-measure battery scores them. Gate
+  rule, fixed in advance: a model counts as showing the dialect if its axis index
+  exceeds 50 on at least three of the four core habits. If neither model passes, stage 1
+  is cancelled and the dialect is frontier-lab-specific, which also counts against
+  shared pretraining data as the cause, since these models eat the same web. Stage 1,
+  only if the gate passes: the same families' base checkpoints against their instruct
+  checkpoints, 2,000 completions each. Base near the human range with instruct jumping
+  Indian-side locates the seed in post-training; base already Indian-side locates it in
+  the data. A 20-completion smoke run was executed before this registration purely to
+  validate the job plumbing; its outputs are excluded from all analysis.
+  <strong>Outcome (Aug 30, 2026):</strong> the gate failed. Qwen passed 2 of 4 core
+  habits (verbless index 88, subordination 144, stacking −78, politeness 25); OLMo
+  passed 0 of 4. Stage 1 is cancelled per the rule. The dialect is specific to the
+  frontier labs' models, and shared pretraining data is disfavored as its cause. Noted
+  post hoc: the frontier hallmark, noun stacking at 2–5× the human baselines,
+  is absent from both open models entirely.</p>
+  <p><strong>Registered test of the reading-cost prediction (registered Aug 30, 2026,
+  not yet run).</strong> Adapt two copies of one small open language model, one on the
+  2022–24 India-located human baseline text, one on the matched US-located baseline
+  text. Measure each copy's perplexity on held-out India baseline text, held-out US
+  baseline text (the two calibration anchors), and on Claude-signed text. Prediction: on
+  Claude-signed text the India-adapted copy shows lower perplexity than the US-adapted
+  copy, patterning with the India anchor. Falsification: the US-adapted copy shows equal
+  or lower perplexity on Claude-signed text. Perplexity is the standard proxy for
+  processing predictability; a human reader study would measure the load directly and
+  remains the stronger follow-up.</p>
+  <p><strong>Registered third-cohort control: Germany (registered Sep 1, 2026, before
+  any analysis; run Sep 2).</strong> Question: are the four core habits India-specific,
+  or generic non-native professional English? Design: German-located authors'
+  conversation comments 2022–24 (n=13,958), from a re-harvest of the same 20 repos
+  keeping every located author, scored on the same measures against India and US
+  samples matched to Germany's repo-and-year strata (india n=4,279, us n=12,898, seed
+  42; India's matched rates sit on the headline baselines, so the partial match did not
+  distort composition). Decision rule, fixed in advance: Germany past axis index 50 on
+  at least 3 of 4 core habits renames the finding to generic non-native register; below
+  50 on at least 3 rejects that explanation. <strong>Outcome:</strong> rejected.
+  Germany indexes verbless 8, noun stacks −19, politeness 19, subordination 56 — one
+  of four past 50. A large second-language cohort writes three of the four markers at
+  American rates.</p>
+  <p><strong>Code and data.</strong> Harvester: harvest_gh_issues.py with run.sh
+  (resumable; state in gh_corpus/state.json). Analyses: marker_rates.py, revert_split.py,
+  ai_share_and_drift.py, grammar_compare.py, ai_grammar.py, fable_windows.py. Data:
+  comments.jsonl (full text), features.csv, authors.jsonl. All results are tabulated in
+  RESULTS.md alongside the scripts. This page's source is dialect_drift.html.</p>
+  </div>
+</details>
+
+<details>
+  <summary>Data table — every value plotted</summary>
+  <div class="scrollx"><table id="datatable"></table></div>
+</details>
+</div>
+
+<div class="tip" id="tip"></div>
+
+
+<script>
+const METRICS = {
+  verbless:{label:"Verbless sentences", unit:"per 1k sentences", india:198.5, us:137.2, seIn:5.2, seUs:4.5},
+  subord:{label:"Subordinate clauses", unit:"per 1k sentences", india:1193.7, us:1521.7, seIn:12.8, seUs:15.0, flip:true},
+  stacks:{label:"Triple-noun stacks", unit:"per 1k words", india:5.35, us:3.64, seIn:0.22, seUs:0.18},
+  polite:{label:"please / kindly", unit:"per 10k words", india:22.96, us:7.23, seIn:1.45, seUs:0.79},
+  sentlen:{label:"Sentence length", unit:"words", india:14.97, us:17.05, flip:true},
+  you:{label:"“you” subjects", unit:"per 1k subjects", india:93.1, us:71.5},
+};
+const FP = ["verbless","subord","stacks","polite"];               // Figure 1 rows
+const ALL6 = ["verbless","subord","stacks","polite","sentlen","you"];
+const PERIODS = ["2025", "Jan\u2013Jun \u201926", "Fable era", "Opus 5 era"];
+const PERIODS_SHORT = ["2025", "Jan\u2013Jun", "Fable", "Opus 5"];
+const COHORTS = [
+  {name:"Claude", color:"var(--claude)", n:[51,304,180,76], v:{
+    verbless:[269.4,235.2,195.7,232.1], subord:[1113.1,788.9,962.2,980.0],
+    stacks:[13.88,11.88,14.71,9.11], polite:[95.0,43.2,20.0,53.8],
+    sentlen:[14.59,12.47,15.89,15.00], you:[110.6,47.3,22.2,51.2]}},
+  {name:"Copilot", color:"var(--copilot)", n:[47,28,18,12], v:{
+    verbless:[230.8,257.3,212.6,150.7], subord:[1430.8,1087.9,917.9,1130.1],
+    stacks:[16.23,15.00,24.04,12.04], polite:[56.4,50.6,12.0,0.0],
+    sentlen:[17.06,16.73,16.08,18.77], you:[88.1,64.0,50.4,0.0]}},
+];
+const SMALL_N = 100;
+const NS = "http://www.w3.org/2000/svg";
+const idx = (v,m)=> (v-m.us)/(m.india-m.us)*100;
+const el = (tag,attrs,parent)=>{ const e=document.createElementNS(NS,tag);
+  for(const k in attrs) e.setAttribute(k,attrs[k]); if(parent)parent.appendChild(e); return e; };
+
+/* ---------- legends ---------- */
+function legend(target){
+  const box = document.getElementById(target);
+  for(const c of COHORTS){
+    const s=document.createElement("span"); s.className="key";
+    s.innerHTML=`<span class="swatch" style="background:${c.color}"></span>${c.name}`;
+    box.appendChild(s);
+  }
+  const o=document.createElement("span"); o.className="key";
+  o.innerHTML=`<span class="dotkey"></span>under ${SMALL_N} texts`;
+  box.appendChild(o);
+}
+legend("legend1"); legend("legend2");
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById("tip");
+function hover(target, html){
+  target.addEventListener("pointerenter", e=>{ tip.innerHTML=html; tip.style.opacity=1; });
+  target.addEventListener("pointermove", e=>{
+    const pad=14, w=tip.offsetWidth, h=tip.offsetHeight;
+    let x=e.clientX+pad, y=e.clientY+pad;
+    if(x+w>innerWidth-8) x=e.clientX-w-pad;
+    if(y+h>innerHeight-8) y=e.clientY-h-pad;
+    tip.style.left=x+"px"; tip.style.top=y+"px";
+  });
+  target.addEventListener("pointerleave", ()=>{ tip.style.opacity=0; });
+}
+
+/* ---------- Figure 1: aligned corridor; headroom compressed per panel ---------- */
+(function(){
+  const W=860, H=430, T=54, B=40, GUT=26;
+  const svg=document.getElementById("svg1");
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.setAttribute("width","100%");
+  const colW=(W-GUT*3)/FP.length;
+  // shared anchors: US and India lines at the same pixels in every panel
+  const Yus=330, Yin=220, s1=(Yus-Yin)/100, topPad=T+18;
+
+  FP.forEach((key,ci)=>{
+    const m=METRICS[key];
+    const x0=ci*(colW+GUT);
+    const cx=x0+colW/2;
+    const vals=COHORTS.flatMap(c=>c.v[key].map(v=>idx(v,m)));
+    const panelMax=Math.max(150, Math.max(...vals)*1.06);
+    const s2=(Yin-topPad)/(panelMax-100);
+    const Y=v=> v<=100 ? Yus-v*s1 : Yin-(v-100)*s2;
+
+    const name=el("text",{x:cx,y:18,"text-anchor":"middle",class:"metric-name"},svg);
+    name.textContent=m.label;
+    const unit=el("text",{x:cx,y:33,"text-anchor":"middle",class:"metric-unit"},svg);
+    unit.textContent=m.unit;
+
+    el("rect",{x:x0,y:Yin,width:colW,height:Yus-Yin,fill:"var(--band-us)"},svg);
+    for(const [v,lab] of [[0,"US"],[100,"India"]]){
+      el("line",{x1:x0,y1:Y(v),x2:x0+colW,y2:Y(v),stroke:"var(--axis)","stroke-width":1.4},svg);
+      const t=el("text",{x:x0+2,y:Y(v)-3,class:"band-label"},svg);
+      t.textContent=lab;
+    }
+    // scale-break mark where per-panel compression begins
+    el("path",{d:`M ${x0+colW-16} ${Yin-7} l 5 -4 M ${x0+colW-13} ${Yin-2} l 5 -4`,
+      stroke:"var(--muted)","stroke-width":1.2,fill:"none"},svg);
+    // this panel's own ticks above the line
+    const step=panelMax>800?400:panelMax>350?200:50;
+    for(let v=100+step; v<=panelMax; v+=step){
+      el("line",{x1:x0,y1:Y(v),x2:x0+colW,y2:Y(v),stroke:"var(--grid)","stroke-width":1},svg);
+      const t=el("text",{x:x0+2,y:Y(v)-3,class:"band-label"},svg);
+      t.textContent=String(v);
+    }
+
+    COHORTS.forEach((c,li)=>{
+      const x=cx+(li===0?-24:24);
+      const pv=c.v[key].map(v=>idx(v,m));
+      const lo2=Math.min(...pv), hi2=Math.max(...pv);
+      el("line",{x1:x,y1:Y(lo2),x2:x,y2:Y(hi2),stroke:c.color,"stroke-width":2},svg);
+      const dir=Math.sign(pv[3]-pv[2])||Math.sign(pv[3]-pv[0])||1, ay=Y(pv[3]);
+      el("path",{d:`M ${x} ${ay} l -4 ${7*dir} l 8 0 z`,fill:c.color},svg);
+      el("circle",{cx:x,cy:Y(pv[1]),r:2.6,fill:c.color},svg);
+      el("circle",{cx:x,cy:Y(pv[2]),r:2.6,fill:c.color},svg);
+      const open=c.n[0]<SMALL_N;
+      el("circle",{cx:x,cy:Y(pv[0]),r:4.5,fill:open?"var(--surface)":c.color,
+        stroke:c.color,"stroke-width":2},svg);
+      if(ci===0){
+        const lab=el("text",{x:x+(li===0?-9:9),y:Y(pv[0])+4,
+          "text-anchor":li===0?"end":"start",class:"cohort-label"},svg);
+        lab.textContent=c.name;
+      }
+      const hit=el("rect",{x:x-colW/4,y:T,width:colW/2,height:H-T-B,fill:"transparent"},svg);
+      hover(hit,`<b>${c.name}</b> \u00b7 ${m.label}<br>`+
+        PERIODS.map((pp,i)=>`${pp}: index ${pv[i].toFixed(0)} (${c.v[key][i]} ${m.unit}, n=${c.n[i]})`).join("<br>"));
+    });
+  });
+  const note=el("text",{x:W/2,y:H-8,"text-anchor":"middle"},svg);
+  note.textContent="0 = US \u00b7 100 = India \u00b7 shared scale below the India line, per-panel above it \u00b7 arrows run 2025 \u2192 Opus 5 era";
+})();
+
+/* ---------- Figure 2: small multiples ---------- */
+(function(){
+  const host=document.getElementById("panels");
+  for(const key of ALL6){
+    const m=METRICS[key];
+    const W=300,H=210,L=46,R=14,T=26,B=30;
+    const X=i=> L+i*(W-L-R)/3;
+    // oriented space: India-ward always increases
+    const F=v=> m.flip ? -v : v;
+    const rawvals=COHORTS.flatMap(c=>c.v[key]);
+    const fvals=rawvals.map(F), fus=F(m.us), fin=F(m.india);
+    let lo=Math.min(...fvals, fus), hi=Math.max(...fvals, fin);
+    lo-=((fin-lo)*0.15||0.5); hi+=((hi-fin)*0.10||0.5);
+    // full-size scale through the India band; compressed headroom beyond it
+    const hasUpper = hi > fin + 1e-9;
+    const lowerH=(H-T-B)*(hasUpper?0.58:1), upperH=(H-T-B)-lowerH;
+    const Y=v=>{ const fv=F(v);
+      return fv<=fin ? (H-B)-(fv-lo)/(fin-lo)*lowerH
+                     : (H-B)-lowerH-(fv-fin)/(hi-fin)*upperH; };
+
+    const fig=document.createElement("div"); fig.className="panel"; host.appendChild(fig);
+    const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,width:"100%",role:"img",
+      "aria-label":m.label},fig);
+
+    const title=el("text",{x:L,y:14,class:"metric-name"},svg); title.textContent=m.label;
+    const unit=el("text",{x:W-R,y:14,"text-anchor":"end",class:"metric-unit"},svg);
+    unit.textContent=m.unit;
+    if(m.flip){
+      const rev=el("text",{x:W-R,y:25,"text-anchor":"end",class:"metric-unit"},svg);
+      rev.textContent="axis reversed";
+    }
+
+    // baseline bands or dashed lines
+    for(const side of ["india","us"]){
+      const base=m[side], se=side==="india"?m.seIn:m.seUs;
+      const lab=side==="india"?"India 22–24":"US 22–24";
+      if(se){
+        const y1=Y(base+se), y2=Y(base-se);
+        el("rect",{x:L,y:Math.min(y1,y2),width:W-L-R,height:Math.max(Math.abs(y2-y1),3),
+          fill:side==="india"?"var(--band-in)":"var(--band-us)"},svg);
+      } else {
+        el("line",{x1:L,y1:Y(base),x2:W-R,y2:Y(base),stroke:"var(--axis)",
+          "stroke-width":1.2,"stroke-dasharray":"4 3"},svg);
+      }
+      const t=el("text",{x:W-R-14,y:Y(base)-4,"text-anchor":"end",class:"band-label"},svg);
+      t.textContent=lab;
+    }
+    // y ticks at the raw data extremes
+    for(const v of [Math.min(...rawvals,m.us,m.india), Math.max(...rawvals,m.us,m.india)]){
+      const t=el("text",{x:L-6,y:Y(v)+4,"text-anchor":"end"},svg);
+      t.textContent=v>=100?v.toFixed(0):v.toFixed(1);
+    }
+    // break mark where compression begins
+    if(hasUpper)
+      el("path",{d:`M ${W-R-13} ${Y(m.india)-6} l 5 -4 M ${W-R-10} ${Y(m.india)-1} l 5 -4`,
+        stroke:"var(--muted)","stroke-width":1.2,fill:"none"},svg);
+    // x labels
+    PERIODS_SHORT.forEach((p,i)=>{
+      const t=el("text",{x:X(i),y:H-8,"text-anchor":i===0?"start":i===3?"end":"middle"},svg);
+      t.textContent=p;
+    });
+    // series
+    for(const c of COHORTS){
+      const pts=c.v[key].map((v,i)=>[X(i),Y(v)]);
+      el("path",{d:"M"+pts.map(p=>p.join(" ")).join(" L "),fill:"none",
+        stroke:c.color,"stroke-width":2},svg);
+      pts.forEach((p,i)=>{
+        const open=c.n[i]<SMALL_N;
+        el("circle",{cx:p[0],cy:p[1],r:4,fill:open?"var(--surface)":c.color,
+          stroke:c.color,"stroke-width":2},svg);
+        const hit=el("circle",{cx:p[0],cy:p[1],r:11,fill:"transparent"},svg);
+        hover(hit,`<b>${c.name}</b> · ${PERIODS[i]}<br>${m.label}: ${c.v[key][i]}<br>${m.unit} · n=${c.n[i]}`);
+      });
+    }
+  }
+})();
+
+/* ---------- Figure 3: complaint timeline ---------- */
+(function(){
+  const ROWS=[
+    ["2024",0],["2025 H1",1],["2025 H2",2],["2026 Q1",3],
+    ["Apr \u201926",5],["May\u2013Jun",8],["Jul 1\u201315",20],["Jul 16\u201331",25],
+    ["Aug 1\u20137",40],["Aug 8\u201321",50],["Aug 22\u201326",80],["Aug 27\u201330",90],
+  ];
+  const EVENTS=[[6,"Claude 5 ships (Jun 9)"],[8,"Opus 5 ships (Jul 24)"],[9,"Opus 5 takes over fleet (Aug 12)"]];
+  const W=860, rowH=24, L=104, R=170, T=8;
+  const H=T+ROWS.length*rowH+14;
+  const svg=document.getElementById("svg3");
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.setAttribute("width","100%");
+  const X=v=> L+v/95*(W-L-R);
+  ROWS.forEach(([lab,v],i)=>{
+    const y=T+i*rowH;
+    const t=el("text",{x:L-8,y:y+rowH/2+4,"text-anchor":"end"},svg);
+    t.textContent=lab;
+    el("rect",{x:L,y:y+5,width:Math.max(X(v)-L,2),height:rowH-10,rx:2,
+      fill:"var(--axis)"},svg);
+    const n=el("text",{x:X(v)+6,y:y+rowH/2+4,class:"band-label"},svg);
+    n.textContent=v===0?"\u22480":String(v);
+  });
+  for(const [i,lab] of EVENTS){
+    const y=T+i*rowH;
+    el("line",{x1:L,y1:y,x2:W-24,y2:y,stroke:"var(--ink2)","stroke-width":1,
+      "stroke-dasharray":"5 3"},svg);
+    const t=el("text",{x:W-24,y:y-5,"text-anchor":"end",class:"band-label"},svg);
+    t.textContent=lab;
+  }
+})();
+
+/* ---------- data table ---------- */
+(function(){
+  const t=document.getElementById("datatable");
+  let html="<thead><tr><th>cohort</th><th>period</th><th>n</th>"+
+    ALL6.map(k=>`<th>${METRICS[k].label}</th>`).join("")+"</tr></thead><tbody>";
+  html+=`<tr><td>human India 22–24</td><td>baseline</td><td>4,836</td>`+
+    ALL6.map(k=>`<td>${METRICS[k].india}</td>`).join("")+"</tr>";
+  html+=`<tr><td>human US 22–24</td><td>baseline</td><td>4,801</td>`+
+    ALL6.map(k=>`<td>${METRICS[k].us}</td>`).join("")+"</tr>";
+  for(const c of COHORTS) PERIODS.forEach((p,i)=>{
+    html+=`<tr><td>${c.name}</td><td>${p}</td><td>${c.n[i]}</td>`+
+      ALL6.map(k=>`<td>${c.v[k][i]}</td>`).join("")+"</tr>";
+  });
+  t.innerHTML=html+"</tbody>";
+})();
+</script>
+</body>
+</html>

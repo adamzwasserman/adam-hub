@@ -43,7 +43,9 @@
 }
 
 html {
-  font-size: 16px;
+  /* 125% of the previous 16px. Every size on the site is in rem, so this
+     one number moves all of them and keeps the proportions intact. */
+  font-size: 20px;
   scroll-behavior: smooth;
 }
 
@@ -357,6 +359,12 @@ body {
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
-.hub__nav a { text-decoration: none; opacity: 1; }
+/* The nav never set a colour, so every link on every page fell back to the
+   browser default #0000EE: 2.10 against this background, against the 4.5 WCAG
+   AA asks for. :visited is stated too, or the browser supplies its purple the
+   moment someone has been to the page. */
+.hub__nav a,
+.hub__nav a:visited { color: var(--text); text-decoration: none; opacity: 1; }
+.hub__nav a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .hub__nav a[aria-current="page"] { opacity: 0.55; }
-.hub__nav a:hover { text-decoration: underline; }
+.hub__nav a:hover { color: var(--text-bright); text-decoration: underline; }
