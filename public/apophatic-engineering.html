@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="Gha3lzxGv1ZKmtLuO9eOexTvPUUYBk0QERaucY58g7Y">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apophatic Engineering</title>
+<meta name="description" content="Apophatic engineering is the discipline of building a system to state the boundary of what it cannot see, rather than letting silence read as coverage.">
+<meta name="author" content="Adam Zachary Wasserman">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://adamzacharywasserman.com/apophatic-engineering.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apophatic Engineering">
+<meta property="og:description" content="Apophatic engineering is the discipline of building a system to state the boundary of what it cannot see, rather than letting silence read as coverage.">
+<meta property="og:url" content="https://adamzacharywasserman.com/apophatic-engineering.html">
+<meta property="og:site_name" content="Adam Zachary Wasserman">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Apophatic Engineering">
+<meta name="twitter:description" content="Apophatic engineering is the discipline of building a system to state the boundary of what it cannot see, rather than letting silence read as coverage.">
+<meta property="og:image" content="https://adamzacharywasserman.com/og-image.png">
+<meta name="twitter:image" content="https://adamzacharywasserman.com/og-image.png">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Literata:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=2">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://adamzacharywasserman.com/apophatic-engineering.html#term",
+      "name": "Apophatic Engineering",
+      "alternateName": "apophatic engineering",
+      "description": "The discipline of building a system to state the boundary of what it cannot see or has not checked, rather than letting silence read as coverage: naming the unmeasured case instead of letting it default to a pass.",
+      "inDefinedTermSet": {
+        "@type": "DefinedTermSet",
+        "name": "Honest measurement terms",
+        "url": "https://adamzacharywasserman.com/apophatic-engineering.html"
+      },
+      "url": "https://adamzacharywasserman.com/apophatic-engineering.html"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<main class="hub">
+
+  <header class="hub__identity">
+    <h1>Apophatic Engineering</h1>
+    <p class="hub__item-desc"><strong>Apophatic engineering is the discipline of building a system to state the boundary of what it cannot see or has not checked, rather than letting silence read as coverage.</strong></p>
+  </header>
+
+  <nav class="hub__nav" aria-label="Sections">
+    <a href="/">Home</a>
+    <a href="/research.html">Research</a>
+    <a href="/findings.html">Findings</a>
+    <a href="/dialect-drift.html">Dialect Drift</a>
+    <a href="/apophatic-engineering.html">Apophatic Engineering</a>
+  </nav>
+
+  <h2 class="hub__section-title hub__section-title--gold">What the term names</h2>
+
+  <p class="hub__item-desc">Every instrument has a cone of light: the part of the world it can actually reveal. A test suite is silent on the cases its author never wrote. A dashboard that checks ten servers is silent on the eleventh it was never told about. A benchmark is silent on every axis it does not score. The ordinary failure is to treat that silence as a clean bill of health: no error reported, so assume no error exists.</p>
+
+  <p class="hub__item-desc">Apophatic engineering is the opposite habit, built into the system rather than applied as an afterthought. Instead of a check that stays quiet when it has nothing to say, the system reports what it could not check, and keeps that case separate from a case it checked and passed. The name borrows from <em>apophatic theology</em>, the tradition of saying what a thing is not because no positive statement reaches it. Here the thing not reached is simply the part of reality the instrument was never pointed at.</p>
+
+  <h2 class="hub__section-title hub__section-title--gold">Where the diagnosis comes from</h2>
+
+  <p class="hub__item-desc"><a href="/papers/the-robot-in-the-dark.html">The Robot in the Dark</a> names the error this discipline exists to prevent: mistaking an instrument's cone of light for the world, a mistake it calls instrument-phenomenon error. That paper is the diagnosis. Apophatic engineering is the practice built in response: design the instrument so the boundary of its cone is part of its output, not something a reader has to infer from what went unsaid.</p>
+
+  <h2 class="hub__section-title hub__section-title--gold">Three working instances, not a hypothesis</h2>
+
+  <p class="hub__item-desc">This is not a proposal for how systems might work. These already run.</p>
+
+  <p class="hub__item-desc"><strong>A status report that can't be checked says so.</strong> A daily monitoring report on this site's own authority metrics carries a line reading, on a day its check failed: "could not be checked today, so its status is unknown. Not the same as not yet." The unreached case gets its own sentence instead of silently inheriting whatever the last successful check found.</p>
+
+  <p class="hub__item-desc"><strong>A dashboard gives the unmeasured case its own column.</strong> A measured failure, a measured pass, and an unmeasured case are three different states. Collapsing the third into the second, because "no data" renders the same as "no problem," is the single most common way a dashboard goes quietly wrong. The fix is structural: the unmeasured case gets a visible column of its own, every time, not a shared bucket with a pass.</p>
+
+  <p class="hub__item-desc"><strong>A function signature that cannot lie about absence.</strong> <code>def f(x, timeout=30)</code> cannot distinguish a caller who chose 30 from one who never thought about timeouts at all; the default erases the difference before anything runs. Encoding absence as its own explicit, bounded case, resolved at the boundary rather than smuggled in as a default, closes the gap between "untested" and "assumed fine."</p>
+
+  <h2 class="hub__section-title hub__section-title--gold">What it does not establish</h2>
+
+  <p class="hub__item-desc">"Apophatic engineering" as a phrase is not unclaimed territory in the loosest sense: scattered writing already links apophasis to negative prompting, to zero-trust security, to subtractive design. None of it, as far as a search turns up, treats the phrase as a named discipline with a definition anyone is accountable to. This page stakes that definition; it does not yet carry the weight of a peer-reviewed or pre-registered study, which is why no DOI appears above. That paper is in progress.</p>
+
+  <p class="hub__item-desc">Adam Zachary Wasserman, <a href="https://orcid.org/0009-0002-8865-6583">ORCID 0009-0002-8865-6583</a>. Personal research, filed under my own name.</p></main>
+
+</body>
+</html>
